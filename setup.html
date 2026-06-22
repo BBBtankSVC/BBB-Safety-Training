@@ -423,7 +423,7 @@ service cloud.firestore {
     loadFirebaseSDK().then(() => {
       const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(cfg);
       const db  = firebase.firestore(app);
-      return db.collection('_connection_test').add({ test: true, ts: new Date().toISOString() });
+      return db.collection('training_records').add({ test: true, ts: new Date().toISOString() });
     }).then(() => {
       resultEl.innerHTML = '<span style="color:var(--green);font-weight:700;">✅ Connection successful! Firebase is working correctly.</span>';
     }).catch(err => {
