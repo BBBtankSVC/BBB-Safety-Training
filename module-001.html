@@ -881,6 +881,9 @@
       <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
     </div>
 
+    <!-- FIREBASE SYNC STATUS -->
+    <div id="firebase-sync-status" style="display:none; align-items:center; gap:10px; padding:12px 16px; border-radius:8px; border:2px solid var(--border); background:#F7F9FC; font-size:14px; font-weight:600; margin-bottom:14px;"></div>
+
     <!-- ACTION BUTTONS -->
     <div class="action-row" id="pass-actions" style="display:none">
       <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
@@ -990,8 +993,8 @@
       document.getElementById('cert-result').style.color = '#C0392B';
     }
 
-    // Save record to localStorage
-    saveRecord({
+    // Build the record object
+    const record = {
       id:           Date.now().toString(),
       module:       '001',
       moduleName:   'Accident Prevention Plan',
@@ -1004,18 +1007,73 @@
       dateISO:      isoDate,
       dateDisplay:  dateStr,
       completedAt:  new Date().toISOString()
-    });
+    };
+
+    // Save to localStorage
+    saveRecordLocal(record);
+
+    // Sync to Firebase (if configured)
+    syncToFirebase(record);
   }
 
-  /* ── SAVE RECORD ── */
-  function saveRecord(record) {
+  /* ── SAVE TO LOCALSTORAGE ── */
+  function saveRecordLocal(record) {
     try {
       const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
       records.push(record);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     } catch(e) {
-      console.error('Could not save record:', e);
+      console.error('Could not save record locally:', e);
     }
+  }
+
+  /* ── SYNC TO FIREBASE ── */
+  const FB_KEY = 'bbb_firebase_config';
+
+  function syncToFirebase(record) {
+    const raw = localStorage.getItem(FB_KEY);
+    if (!raw) return; // Firebase not configured — local-only mode
+
+    const syncEl = document.getElementById('firebase-sync-status');
+    if (syncEl) { syncEl.style.display = 'flex'; syncEl.innerHTML = '<span style="animation:spin 1s linear infinite;display:inline-block">⏳</span>&nbsp; Sending to Safety Director...'; }
+
+    loadFirebaseSDK().then(() => {
+      const cfg = JSON.parse(raw);
+      const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(cfg);
+      const db  = firebase.firestore(app);
+      return db.collection('training_records').add(record);
+    }).then(() => {
+      if (syncEl) {
+        syncEl.innerHTML = '✅ Record sent to Safety Director\'s dashboard.';
+        syncEl.style.background = '#EDFAF3';
+        syncEl.style.borderColor = '#1D8348';
+        syncEl.style.color = '#1D8348';
+      }
+    }).catch(err => {
+      console.error('Firebase sync error:', err);
+      if (syncEl) {
+        syncEl.innerHTML = '⚠️ Could not sync to Safety Director. Your local record is still saved — download your CSV as backup.';
+        syncEl.style.background = '#FFF8F4';
+        syncEl.style.borderColor = '#E8611A';
+        syncEl.style.color = '#C9510E';
+      }
+    });
+  }
+
+  function loadFirebaseSDK() {
+    if (window.firebase) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s1 = document.createElement('script');
+      s1.src = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';
+        s2.onload = resolve; s2.onerror = reject;
+        document.head.appendChild(s2);
+      };
+      s1.onerror = reject;
+      document.head.appendChild(s1);
+    });
   }
 
   /* ── DOWNLOAD CSV ── */
