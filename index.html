@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBB Tank Services — Safety Training Portal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0D1B2A;
+      --navy2:  #1A2E4A;
+      --orange: #E8611A;
+      --orange2:#C9510E;
+      --steel:  #5A7184;
+      --bg:     #F0F4F8;
+      --card:   #FFFFFF;
+      --text:   #1C2B3A;
+      --muted:  #6B7E8E;
+      --border: #D3DCE6;
+      --green:  #1D8348;
+      --yellow: #D4AC0D;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 0;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      border-bottom: 3px solid var(--orange);
+    }
+    .logo-block {
+      display: flex;
+      flex-direction: column;
+    }
+    .logo-block .company { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; color: #fff; }
+    .logo-block .tagline { font-size: 12px; color: #8FAEC8; letter-spacing: 1px; text-transform: uppercase; }
+    .header-badge {
+      margin-left: auto;
+      background: var(--orange);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header-sub {
+      padding: 14px 24px;
+      background: var(--navy2);
+      font-size: 14px;
+      color: #8FAEC8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-sub a {
+      color: #8FAEC8;
+      text-decoration: none;
+    }
+    .header-sub a:hover { color: white; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%);
+      color: white;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .hero h1 { font-size: clamp(24px, 5vw, 36px); font-weight: 800; margin-bottom: 12px; }
+    .hero p { font-size: 16px; color: #8FAEC8; max-width: 560px; margin: 0 auto 24px; }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 32px; font-weight: 800; color: var(--orange); }
+    .hero-stat .lbl { font-size: 12px; color: #8FAEC8; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── MAIN ── */
+    main { max-width: 960px; margin: 0 auto; padding: 32px 16px 60px; }
+
+    /* ── PROGRESS BANNER ── */
+    .progress-banner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .progress-banner h3 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .progress-bar-wrap { flex: 1; min-width: 200px; }
+    .progress-bar-bg { background: var(--border); border-radius: 8px; height: 10px; overflow: hidden; }
+    .progress-bar-fill { background: var(--orange); height: 100%; border-radius: 8px; transition: width 0.4s; width: 0%; }
+    .progress-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .records-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--navy);
+      color: white;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .records-btn:hover { background: var(--navy2); }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    /* ── MODULE GRID ── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .module-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.1s;
+      position: relative;
+    }
+    .module-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.10); transform: translateY(-2px); }
+
+    .module-card-inner {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 18px 18px 14px;
+    }
+    .module-card.locked .module-card-inner { cursor: default; pointer-events: none; }
+
+    .module-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .module-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+    .module-std { font-size: 12px; color: var(--muted); }
+
+    .module-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      background: #FAFBFC;
+    }
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-available { background: #D5F5E3; color: #1D8348; }
+    .status-passed    { background: #D5F5E3; color: #1D8348; }
+    .status-failed    { background: #FDECEA; color: #C0392B; }
+    .status-coming    { background: #EBF0F5; color: #6B7E8E; }
+
+    .score-chip {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .score-chip.pass { color: var(--green); }
+    .score-chip.fail { color: #C0392B; }
+
+    .card-arrow { font-size: 18px; color: var(--orange); }
+    .locked-icon { font-size: 16px; color: var(--border); }
+
+    /* ── INSTRUCTIONS BOX ── */
+    .info-box {
+      background: #FFF8F4;
+      border: 1px solid #F5C9A8;
+      border-left: 4px solid var(--orange);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .info-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--orange2); }
+    .info-box ul { padding-left: 18px; margin-top: 8px; }
+    .info-box li { margin-bottom: 4px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      color: #4A6785;
+      text-align: center;
+      font-size: 12px;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .hero-stats { gap: 20px; }
+      .module-grid { grid-template-columns: 1fr; }
+      .progress-banner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-block">
+      <span class="company">⚙ BBB Tank Services, LLC</span>
+      <span class="tagline">Safety &amp; Health Training Portal</span>
+    </div>
+    <span class="header-badge">Rev. 10/31/2025</span>
+  </div>
+  <div class="header-sub">
+    <span>Controlled Document</span>
+    <span style="margin: 0 4px;">·</span>
+    <a href="records.html">📋 View Training Records</a>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Safety Training Modules</h1>
+  <p>Complete each module, pass the quiz, and your record will be saved for safety audits.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="num" id="stat-total">50</div>
+      <div class="lbl">Total Modules</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num" id="stat-completed">0</div>
+      <div class="lbl">Completed</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num" id="stat-passed">0</div>
+      <div class="lbl">Passed</div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <div class="info-box">
+    <h3>📌 How Training Works</h3>
+    <ul>
+      <li>Click any available module to start reading the training content.</li>
+      <li>Complete the quiz at the end of the content (passing score: <strong>70% or higher</strong>).</li>
+      <li>Your name, score, and completion date will be saved automatically.</li>
+      <li>Visit <a href="records.html"><strong>Training Records</strong></a> to view, print, or export your training history for audits.</li>
+    </ul>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-banner">
+    <div class="progress-bar-wrap">
+      <h3>Your Progress on This Device</h3>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
+      <div class="progress-label" id="prog-label">Loading...</div>
+    </div>
+    <a href="records.html" class="records-btn">📋 Audit Records &amp; Export</a>
+  </div>
+
+  <!-- MODULE LIST -->
+  <div class="section-heading">All Training Modules</div>
+  <div class="module-grid" id="module-grid">
+
+    <!-- MODULE 001 - Available -->
+    <div class="module-card" id="card-001">
+      <a href="module-001.html" class="module-card-inner">
+        <div class="module-num">Module 001</div>
+        <div class="module-title">Accident Prevention Plan</div>
+        <div class="module-std">SHP-BBB-001</div>
+      </a>
+      <div class="module-footer">
+        <span class="status-badge status-available" id="status-001">Available</span>
+        <span class="score-chip" id="score-001"></span>
+        <span class="card-arrow">→</span>
+      </div>
+    </div>
+
+    <!-- MODULES 002–050 — Coming Soon (add html files as they are built) -->
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 002</div><div class="module-title">Aerial Lift Safety Program</div><div class="module-std">SHP-BBB-002</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 003</div><div class="module-title">Benzene Protection Program</div><div class="module-std">SHP-BBB-003</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 004</div><div class="module-title">Bloodborne Pathogens Exposure Control Plan</div><div class="module-std">SHP-BBB-004</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 005</div><div class="module-title">Confined Space Entry Program</div><div class="module-std">SHP-BBB-005</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 006</div><div class="module-title">Discipline in Support of Safety</div><div class="module-std">SHP-BBB-006</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 007</div><div class="module-title">Electrical Safety Program</div><div class="module-std">SHP-BBB-007</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 008</div><div class="module-title">Fall Protection Equipment Program</div><div class="module-std">SHP-BBB-008</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 009</div><div class="module-title">Fire Protection Program</div><div class="module-std">SHP-BBB-009</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 010</div><div class="module-title">Fire Watch &amp; Fire Protection</div><div class="module-std">SHP-BBB-010</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 011</div><div class="module-title">First Aid, CPR &amp; Emergency Medical Response</div><div class="module-std">SHP-BBB-011</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 012</div><div class="module-title">Forklift Safety Program</div><div class="module-std">SHP-BBB-012</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 013</div><div class="module-title">GFCI &amp; Assured Grounding Program</div><div class="module-std">SHP-BBB-013</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 014</div><div class="module-title">Hand &amp; Power Tool Safety Program</div><div class="module-std">SHP-BBB-014</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 015</div><div class="module-title">Hazard Communication Program</div><div class="module-std">SHP-BBB-015</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 016</div><div class="module-title">Hearing Conservation Program</div><div class="module-std">SHP-BBB-016</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 017</div><div class="module-title">In-Service Tank Work</div><div class="module-std">SHP-BBB-017</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 018</div><div class="module-title">Ladder Safety Program</div><div class="module-std">SHP-BBB-018</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 019</div><div class="module-title">Lead Safety Program</div><div class="module-std">SHP-BBB-019</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 020</div><div class="module-title">Control of Hazardous Energy / Lockout &amp; Tagout</div><div class="module-std">SHP-BBB-020</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 021</div><div class="module-title">Mobile Cranes, Hoists &amp; Rigging Safety</div><div class="module-std">SHP-BBB-021</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 022</div><div class="module-title">Personal Protective Equipment Program</div><div class="module-std">SHP-BBB-022</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 023</div><div class="module-title">Process Safety Management Program</div><div class="module-std">SHP-BBB-023</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 024</div><div class="module-title">Respiratory Protection Program</div><div class="module-std">SHP-BBB-024</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 025</div><div class="module-title">Scaffold Safety Program</div><div class="module-std">SHP-BBB-025</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 026</div><div class="module-title">Stop Work Authority</div><div class="module-std">SHP-BBB-026</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 027</div><div class="module-title">Welding Safety &amp; Hot Work Program</div><div class="module-std">SHP-BBB-027</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 028</div><div class="module-title">Emergency Action Plan</div><div class="module-std">SHP-BBB-028</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 029</div><div class="module-title">Asbestos Policy</div><div class="module-std">SHP-BBB-029</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 030</div><div class="module-title">General Housekeeping</div><div class="module-std">SHP-BBB-030</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 031</div><div class="module-title">HSE Orientation Process</div><div class="module-std">SHP-BBB-031</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 032</div><div class="module-title">Safety Incentive Program</div><div class="module-std">SHP-BBB-032</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 033</div><div class="module-title">Fit for Duty</div><div class="module-std">SHP-BBB-033</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 034</div><div class="module-title">Behavior Based Safety Program</div><div class="module-std">SHP-BBB-034</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 035</div><div class="module-title">Risk Assessment</div><div class="module-std">SHP-BBB-035</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 036</div><div class="module-title">Job Competency</div><div class="module-std">SHP-BBB-036</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 037</div><div class="module-title">Preventive Maintenance</div><div class="module-std">SHP-BBB-037</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 038</div><div class="module-title">Safe Driving Program</div><div class="module-std">SHP-BBB-038</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 039</div><div class="module-title">NFPA 70E Hazards</div><div class="module-std">SHP-BBB-039</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 040</div><div class="module-title">Fatigue Management</div><div class="module-std">SHP-BBB-040</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 041</div><div class="module-title">Management of Change</div><div class="module-std">SHP-BBB-041</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 042</div><div class="module-title">Mechanical Integrity</div><div class="module-std">SHP-BBB-042</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 043</div><div class="module-title">Ammonia Awareness</div><div class="module-std">SHP-BBB-043</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 044</div><div class="module-title">Cold Cutting</div><div class="module-std">SHP-BBB-044</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 045</div><div class="module-title">Flagger Spotter Program</div><div class="module-std">SHP-BBB-045</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 046</div><div class="module-title">Root Cause Analysis</div><div class="module-std">SHP-BBB-046</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 047</div><div class="module-title">Hexavalent Chromium</div><div class="module-std">SHP-BBB-047</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 048</div><div class="module-title">Working Alone</div><div class="module-std">SHP-BBB-048</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 049</div><div class="module-title">Subcontractor Safety Manual</div><div class="module-std">SHP-BBB-049</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+    <div class="module-card locked"><div class="module-card-inner"><div class="module-num">Module 050</div><div class="module-title">Hydrogen Sulfide Awareness</div><div class="module-std">SHP-BBB-050</div></div><div class="module-footer"><span class="status-badge status-coming">Coming Soon</span><span class="locked-icon">🔒</span></div></div>
+
+  </div>
+</main>
+
+<footer>
+  BBB Tank Services, LLC · Safety Training Portal · Rev. 10/31/2025 · Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</footer>
+
+<script>
+  // ── Storage key
+  const STORAGE_KEY = 'bbb_training_records';
+
+  function getRecords() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+
+  function updateUI() {
+    const records = getRecords();
+    // Map best passing score per module
+    const bestByModule = {};
+    records.forEach(r => {
+      const k = r.module;
+      if (!bestByModule[k] || r.percentage > bestByModule[k].percentage) {
+        bestByModule[k] = r;
+      }
+    });
+
+    const total = 50;
+    const passed = Object.values(bestByModule).filter(r => r.passed).length;
+    const attempted = Object.keys(bestByModule).length;
+
+    // Stats
+    document.getElementById('stat-completed').textContent = attempted;
+    document.getElementById('stat-passed').textContent = passed;
+
+    // Progress bar
+    const pct = Math.round((passed / total) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent = passed + ' of ' + total + ' modules passed (' + pct + '%)';
+
+    // Module 001 status
+    const r001 = bestByModule['001'];
+    if (r001) {
+      const el = document.getElementById('status-001');
+      const sc = document.getElementById('score-001');
+      if (r001.passed) {
+        el.className = 'status-badge status-passed';
+        el.textContent = '✓ Passed';
+        sc.className = 'score-chip pass';
+        sc.textContent = r001.percentage + '%';
+      } else {
+        el.className = 'status-badge status-failed';
+        el.textContent = '✗ Failed';
+        sc.className = 'score-chip fail';
+        sc.textContent = r001.percentage + '%';
+      }
+    }
+  }
+
+  updateUI();
+</script>
+</body>
+</html>
