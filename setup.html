@@ -314,17 +314,13 @@ service cloud.firestore {
   /* ── PARSE CONFIG ── */
   function parseConfig(raw) {
     let text = raw.trim();
-    // Strip const/let/var declaration
-    text = text.replace(/^(const|let|var)\s+\w+\s*=\s*/, '');
-    // Strip trailing semicolon
-    text = text.replace(/;\s*$/, '');
-    // Strip comments
-    text = text.replace(/\/\/.*$/gm, '');
-    // Convert JS object keys to quoted JSON keys
-    text = text.replace(/(\w+)\s*:/g, '"$1":');
-    // Fix double-quoted keys that got double-quoted
-    text = text.replace(/"+"(\w+)"+":/g, '"$1":');
-    return JSON.parse(text);
+    const start = text.indexOf("{");
+    const end   = text.lastIndexOf("}");
+    if (start === -1 || end === -1) throw new Error("No config object found");
+    text = text.slice(start, end + 1);
+    const result = new Function("return (" + text + ")")();
+    if (!result || typeof result !== "object") throw new Error("Not a valid object");
+    return result;
   }
 
   /* ── SAVE CONFIG ── */
