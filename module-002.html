@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 002 — Aerial Lift Safety Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0D1B2A; --navy2:#1A2E4A; --orange:#E8611A; --orange2:#C9510E;
+      --bg:#F0F4F8; --card:#FFFFFF; --text:#1C2B3A; --muted:#6B7E8E;
+      --border:#D3DCE6; --green:#1D8348; --red:#C0392B; --radius:10px;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+
+    header { background:var(--navy); color:white; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+    .header-inner { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:3px solid var(--orange); }
+    .back-link { color:#8FAEC8; text-decoration:none; font-size:14px; white-space:nowrap; }
+    .back-link:hover { color:white; }
+    .header-title { font-size:15px; font-weight:700; color:white; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-std { font-size:12px; color:var(--orange); font-weight:700; white-space:nowrap; }
+
+    .read-progress-wrap { background:var(--navy2); padding:8px 20px; display:flex; align-items:center; gap:12px; }
+    .read-progress-label { font-size:12px; color:#8FAEC8; white-space:nowrap; }
+    .read-progress-bg { flex:1; background:rgba(255,255,255,0.15); border-radius:8px; height:6px; }
+    .read-progress-fill { background:var(--orange); height:100%; border-radius:8px; width:0; transition:width 0.3s; }
+    .scroll-pct { font-size:12px; color:#8FAEC8; min-width:36px; text-align:right; }
+
+    main { max-width:820px; margin:0 auto; padding:28px 16px 80px; }
+
+    .module-banner { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:white; border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+    .module-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--orange); font-weight:700; margin-bottom:8px; }
+    .module-banner h1 { font-size:clamp(20px,4vw,28px); font-weight:800; margin-bottom:10px; }
+    .module-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#8FAEC8; }
+
+    .content-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+    .section-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:16px; font-weight:700; }
+    .section-body { padding:20px 22px; }
+    .section-body p { margin-bottom:14px; }
+    .section-body p:last-child { margin-bottom:0; }
+
+    .callout { border-radius:8px; padding:14px 16px; margin:14px 0; font-size:15px; }
+    .callout-orange { background:#FFF4EE; border-left:4px solid var(--orange); }
+    .callout-blue   { background:#EEF4FF; border-left:4px solid #2E6AE8; }
+    .callout-green  { background:#EDFAF3; border-left:4px solid var(--green); }
+    .callout-red    { background:#FEF0EE; border-left:4px solid var(--red); }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; opacity:0.75; }
+
+    .resp-list { list-style:none; padding:0; margin:10px 0; }
+    .resp-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; }
+    .resp-list li::before { content:'✓'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+
+    .rule-list { list-style:none; padding:0; margin:10px 0; }
+    .rule-list li { padding:9px 12px 9px 36px; border-radius:6px; margin-bottom:5px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:14px; line-height:1.5; }
+    .rule-list li::before { content:'▸'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+
+    .role-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; margin:14px 0; }
+    .role-card { background:#F7F9FC; border:1px solid var(--border); border-radius:8px; padding:14px; }
+    .role-card .role-title { font-size:13px; font-weight:800; color:var(--orange); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .role-card .role-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+
+    .key-fact { display:flex; align-items:center; gap:14px; background:var(--navy); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; }
+    .key-fact .fact-num { font-size:28px; font-weight:800; color:var(--orange); white-space:nowrap; }
+    .key-fact .fact-lbl { font-size:14px; color:#8FAEC8; line-height:1.4; }
+
+    .section-divider { height:1px; background:var(--border); margin:14px 0; }
+
+    /* CHECKLIST */
+    .checklist { margin:10px 0; }
+    .check-item { display:flex; gap:10px; padding:8px 12px; border-radius:6px; margin-bottom:5px; background:#F7F9FC; border:1px solid var(--border); font-size:14px; line-height:1.4; }
+    .check-item .check-num { color:var(--orange); font-weight:800; flex-shrink:0; min-width:24px; }
+
+    /* QUIZ */
+    #quiz-section { background:var(--card); border:2px solid var(--orange); border-radius:var(--radius); overflow:hidden; margin-top:32px; }
+    .quiz-header { background:var(--orange); color:white; padding:20px 24px; }
+    .quiz-header h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+    .quiz-header p { font-size:14px; opacity:0.9; }
+    .quiz-body { padding:24px; }
+
+    .name-block { margin-bottom:28px; }
+    .name-block label { display:block; font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .name-block input { width:100%; padding:12px 16px; font-size:16px; border:2px solid var(--border); border-radius:8px; background:#F7F9FC; color:var(--text); transition:border-color 0.2s; }
+    .name-block input:focus { outline:none; border-color:var(--orange); background:white; }
+    .name-block input.error { border-color:var(--red); }
+
+    .question-block { margin-bottom:28px; }
+    .question-num { font-size:12px; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .question-text { font-size:16px; font-weight:600; margin-bottom:14px; line-height:1.5; }
+    .options { display:flex; flex-direction:column; gap:8px; }
+    .option-label { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:15px; line-height:1.4; }
+    .option-label:hover { border-color:var(--orange); background:#FFF8F4; }
+    .option-label input[type="radio"] { margin-top:3px; accent-color:var(--orange); flex-shrink:0; width:18px; height:18px; }
+    .option-label.correct-ans { border-color:var(--green); background:#EDFAF3; }
+    .option-label.wrong-ans   { border-color:var(--red);   background:#FEF0EE; }
+    .question-divider { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+
+    .submit-wrap { text-align:center; margin-top:12px; }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:15px 48px; font-size:17px; font-weight:700; border-radius:8px; cursor:pointer; width:100%; max-width:360px; transition:background 0.2s; }
+    .submit-btn:hover { background:var(--orange2); }
+    .submit-btn:disabled { background:var(--muted); cursor:not-allowed; }
+
+    #results-section { display:none; }
+    .result-card { border-radius:var(--radius); padding:28px; margin-bottom:20px; text-align:center; }
+    .result-card.pass { background:#EDFAF3; border:2px solid var(--green); }
+    .result-card.fail { background:#FEF0EE; border:2px solid var(--red); }
+    .result-icon  { font-size:52px; margin-bottom:12px; }
+    .result-title { font-size:26px; font-weight:800; margin-bottom:6px; }
+    .result-card.pass .result-title { color:var(--green); }
+    .result-card.fail .result-title { color:var(--red); }
+    .result-score { font-size:48px; font-weight:800; margin:12px 0 4px; }
+    .result-card.pass .result-score { color:var(--green); }
+    .result-card.fail .result-score { color:var(--red); }
+    .result-sub { font-size:15px; color:var(--muted); margin-bottom:16px; }
+
+    .cert-block { background:white; border:2px solid var(--navy); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+    .cert-block h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .cert-table { width:100%; border-collapse:collapse; }
+    .cert-table td { padding:9px 0; border-bottom:1px solid var(--border); font-size:15px; }
+    .cert-table td:first-child { color:var(--muted); font-size:13px; width:40%; }
+    .cert-table td:last-child { font-weight:700; }
+    .cert-company { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+
+    .action-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .btn { flex:1; min-width:140px; padding:13px 18px; border-radius:8px; font-size:14px; font-weight:700; border:none; cursor:pointer; text-align:center; text-decoration:none; display:inline-block; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.88; }
+    .btn-primary { background:var(--navy);   color:white; }
+    .btn-orange  { background:var(--orange); color:white; }
+    .btn-green   { background:var(--green);  color:white; }
+    .btn-outline { background:white; color:var(--navy); border:2px solid var(--navy); }
+
+    .retake-btn { width:100%; padding:13px; font-size:16px; font-weight:700; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer; margin-top:8px; }
+
+    @media print {
+      header,.read-progress-wrap,.module-banner,.content-card,#quiz-section,.action-row,.retake-btn,footer { display:none !important; }
+      body { background:white; }
+      #results-section { display:block !important; }
+    }
+
+    footer { background:var(--navy); color:#4A6785; text-align:center; font-size:12px; padding:20px; margin-top:40px; }
+
+    @media(max-width:600px) { .role-grid { grid-template-columns:1fr; } main { padding:20px 12px 60px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← All Modules</a>
+    <span class="header-title">Aerial Lift Safety Program</span>
+    <span class="header-std">SHP-BBB-002</span>
+  </div>
+  <div class="read-progress-wrap">
+    <span class="read-progress-label">Reading progress</span>
+    <div class="read-progress-bg"><div class="read-progress-fill" id="read-fill"></div></div>
+    <span class="scroll-pct" id="scroll-pct">0%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="module-banner">
+    <div class="module-eyebrow">Module 002 · SHP-BBB-002</div>
+    <h1>Aerial Lift Safety Program</h1>
+    <div class="module-meta">
+      <span>📅 Rev. 10/31/2025</span>
+      <span>⚖ OSHA 29 CFR 1926.453 &amp; 1910.67</span>
+      <span>⏱ ~15 min read</span>
+      <span>📝 10-question quiz</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — PURPOSE & SCOPE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📋</span><span class="section-title">1 &amp; 2. Purpose &amp; Scope</span></div>
+    <div class="section-body">
+      <div class="callout callout-orange">
+        <strong>Purpose</strong>
+        This program establishes the minimum requirements for the safe operation of aerial lifts by BBB Tank Services personnel and contractors. No employee may operate an aerial lift without completing training, certification, and authorization first.
+      </div>
+      <p>This program applies to all company and contractor personnel who operate aerial lifts at any BBB Tank Services work location. Each new or transfer-affected employee required to operate aerial lifts must be <strong>trained, certified, and authorized</strong> before operating any equipment.</p>
+      <p>The goal is to prevent accidents, injuries, and property damage caused by the unsafe operation of aerial lift equipment.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — RESPONSIBILITIES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">👷</span><span class="section-title">3. Responsibilities</span></div>
+    <div class="section-body">
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-title">Site Supervisor</div>
+          <div class="role-desc">Has ultimate authority. Responsible for ensuring this Aerial Lift Safety Program is fully implemented at the job site.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Department Supervisors</div>
+          <div class="role-desc">Responsible for initial proficiency training, authorizing qualified individuals, and implementing all policies in their area.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Safety Representative</div>
+          <div class="role-desc">Responsible for providing or obtaining safety training to designated personnel. Conducts classroom instruction and written testing.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Operators</div>
+          <div class="role-desc">Must demonstrate competency through training and experience. Primary responsibility is to use aerial lifts safely at all times.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — SPECIFICATIONS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">⚙</span><span class="section-title">4. Aerial Lift Specifications</span></div>
+    <div class="section-body">
+      <p>All aerial lifts acquired for use on or after <strong>January 22, 1973</strong> must be designed and constructed in accordance with <strong>ANSI A92.2-1969</strong> standards for Vehicle Mounted Elevating and Rotating Work Platforms.</p>
+      <p>Aerial lifts acquired before January 22, 1973 that do not meet these requirements <strong>will not be used</strong> unless they have been modified to conform to ANSI A92.2-1969 requirements.</p>
+      <div class="callout callout-blue">
+        <strong>Obstructed Rear View</strong>
+        When an aerial lift has an obstructed view to the rear, the vehicle must have either a <strong>reverse signal alarm</strong> audible above surrounding noise, or an <strong>observer</strong> to signal the operator when it is safe to back up.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — SAFETY TRAINING -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🎓</span><span class="section-title">5. Safety Training Requirements</span></div>
+    <div class="section-body">
+      <div class="callout callout-red">
+        <strong>Mandatory — No Exceptions</strong>
+        Only trained and authorized operators are permitted to operate aerial lifts. This is non-negotiable.
+      </div>
+      <p>Safety training must cover all of the following:</p>
+      <ul class="resp-list">
+        <li>Federal OSHA regulations in 29 CFR 1910.67 (Vehicle-mounted elevating and rotating work platforms)</li>
+        <li>Basic principles and safe work procedures for aerial lifts</li>
+        <li>Pre-work operator inspection procedures</li>
+        <li>Safe work procedures for authorized personnel</li>
+        <li>Safe operations near other personnel, pedestrians, electrical sources, and obstructions</li>
+        <li>Recognizing hazards specific to aerial lift operations</li>
+      </ul>
+      <div class="callout callout-blue">
+        <strong>Written Test Required</strong>
+        Each participant will receive written materials and complete a written test immediately following classroom instruction. Participants must pass this test at a score acceptable to the EH&amp;S Office to receive certification.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 & 7 — CERTIFICATION -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🏅</span><span class="section-title">6 &amp; 7. Certification Process &amp; Badge System</span></div>
+    <div class="section-body">
+      <p>Certification is a three-step process:</p>
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-title">Step 1 — Basic Competency</div>
+          <div class="role-desc">Determined by the department supervisor after sufficient direct observation of the operator's ability to operate the equipment safely.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Step 2 — Classroom Instruction</div>
+          <div class="role-desc">Safety Trainer presents instruction and gives a written test. Trainer issues written certification to participants who pass.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Step 3 — Direct Observation</div>
+          <div class="role-desc">Conducted by the PIT Crew on a department-by-department basis. Department supervisor must concur with each certification.</div>
+        </div>
+      </div>
+      <div class="callout callout-green">
+        <strong>Certification Badge</strong>
+        Operators who complete all three steps are issued a <strong>color-coded badge</strong> that must be worn or carried on their person when operating aerial lift equipment at any company workplace.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 — OPERATOR QUALIFICATIONS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">✅</span><span class="section-title">8. Qualifications of Aerial Lift Operators</span></div>
+    <div class="section-body">
+      <ul class="resp-list">
+        <li>Only trained and authorized persons may operate aerial lifts.</li>
+        <li>Operators must be qualified as to <strong>visual, auditory, physical, and mental ability</strong> to operate the equipment safely.</li>
+        <li>Only employees determined by the supervisor to be competent by reason of training and experience may operate aerial lifts.</li>
+        <li>Employees being trained under direct supervision may operate equipment during the training period only.</li>
+      </ul>
+      <div class="callout callout-red">
+        <strong>Medical Disqualification</strong>
+        No employee known to have defective uncorrected eyesight or hearing, or suffering from heart disease, epilepsy, or other ailments that may suddenly incapacitate them, will be permitted to operate an aerial lift.
+      </div>
+      <div class="callout callout-orange">
+        <strong>Unsafe Operation Warning</strong>
+        Unsafe or improper operation of an aerial lift can result in <strong>death or serious injury</strong> to the operator or others, and damage to product, facilities, or other property.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 — GENERAL OPERATION REQUIREMENTS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🏗</span><span class="section-title">9. General Requirements — Aerial Boom Lifts</span></div>
+    <div class="section-body">
+      <div class="key-fact">
+        <div class="fact-num">Daily</div>
+        <div class="fact-lbl">Controls must be checked and tested <strong>each day prior to use</strong> to confirm they are in safe operating condition.</div>
+      </div>
+
+      <ul class="rule-list">
+        <li>All personnel in the platform must wear an <strong>approved safety harness with lanyard attached to the platform attachment point</strong>.</li>
+        <li>Never exceed the manufacturer's specified load limits for booms and baskets.</li>
+        <li>Aerial lifts may only be used as intended by the manufacturer — no field modifications unless certified by the manufacturer.</li>
+        <li>A malfunctioning lift must be <strong>shut down until repaired</strong>.</li>
+        <li>Instruction on warning placards must be legible at all times.</li>
+        <li>Personnel must always stand on the floor of the platform — never on boxes, planks, or railings.</li>
+        <li>Ground controls will not be operated unless permission is obtained from personnel in the platform, except in an emergency.</li>
+        <li>Before raising or extending the boom, the machine must be positioned on a <strong>firm, level, and uniform supporting surface</strong>.</li>
+      </ul>
+
+      <div class="key-fact">
+        <div class="fact-num">10 ft</div>
+        <div class="fact-lbl">Minimum clearance distance between any part of the aerial lift (or its load) and any electrical line or apparatus carrying <strong>up to 50,000 volts (50 kV)</strong>. Add 1 foot for every additional 30,000 volts.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10 — DRIVING/TOWING -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🚗</span><span class="section-title">10. Driving &amp; Towing Rules</span></div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li>Always post a lookout when driving in areas where vision is restricted.</li>
+        <li>Machine must be in a stowed position and turntable secured when towing.</li>
+        <li>Always position boom in line with the direction of travel.</li>
+        <li>Always secure turntable prior to any extended traveling.</li>
+        <li><strong>Never permit personnel on the machine or platform when towing.</strong></li>
+        <li>Machine must be mechanically assisted when traveling grades exceeding 15 degrees.</li>
+        <li>Do not travel on soft or uneven surfaces — tipping can occur.</li>
+      </ul>
+      <div class="callout callout-red">
+        <strong>⚠ No Highway Towing</strong>
+        Towing is permitted only for emergency travel on the job site. <strong>No highway towing permitted.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 11 — OPERATION RULES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">⚠</span><span class="section-title">11. Critical Operation Rules</span></div>
+    <div class="section-body">
+      <ul class="rule-list">
+        <li>This machine is <strong>NOT electronically insulated</strong> — always maintain clearance from electrical lines.</li>
+        <li>Never use the boom for any purpose other than positioning personnel and their tools and equipment.</li>
+        <li>Check clearances above, on sides, and below the platform when raising, lowering, swinging, and telescoping the boom.</li>
+        <li>Keep mud, oil, grease, and slippery substances off footwear and platform decks.</li>
+        <li>Enter and exit through the gate <strong>only</strong>.</li>
+        <li>Never exceed the manufacturer's rated platform capacity.</li>
+        <li>Do not allow ground personnel in areas around and under a raised platform.</li>
+        <li><strong>Approved hard hats</strong> must be worn by all operating and ground personnel.</li>
+        <li>Always secure the safety harness lanyard to the platform attachment point — <strong>NEVER to an adjacent object or structure.</strong></li>
+        <li>Never attempt to free the machine by lifting it off the ground with the boom.</li>
+        <li>Stow the boom and shut off all power before leaving the machine.</li>
+      </ul>
+      <div class="callout callout-red">
+        <strong>100% Tie-Off Required</strong>
+        Never exit the aerial lift without being properly tied off to an adjacent structure with a <strong>5,000 lb anchor point</strong>. 100% tie-off is always required while entering or exiting the aerial lift.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 12 — SCISSOR LIFT PRE-START -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🔧</span><span class="section-title">12. Scissor Lift — Pre-Start Inspection</span></div>
+    <div class="section-body">
+      <p>Conduct a walk-around inspection at the <strong>beginning of each shift</strong> prior to using a scissor lift. This inspection must include:</p>
+
+      <div class="checklist">
+        <div class="check-item"><span class="check-num">1.</span><span>Check scissor end joints for cracks and broken weld points.</span></div>
+        <div class="check-item"><span class="check-num">2.</span><span>Check hydraulic cylinders, hoses, and fittings.</span></div>
+        <div class="check-item"><span class="check-num">3.</span><span>Check drive axles, wheels, and hubs for loose, damaged, or missing parts.</span></div>
+        <div class="check-item"><span class="check-num">4.</span><span>Check tires for cracks, cuts, bulges, and proper inflation.</span></div>
+        <div class="check-item"><span class="check-num">5.</span><span>Check battery cables for fraying or broken insulation; verify terminal posts are not loose.</span></div>
+        <div class="check-item"><span class="check-num">6.</span><span>Check for corrosion and cracking around battery terminals.</span></div>
+        <div class="check-item"><span class="check-num">7.</span><span>On propane or diesel lifts, check the fuel tank for cracks, broken welds, or damage — <strong>always outdoors, never indoors.</strong></span></div>
+        <div class="check-item"><span class="check-num">8.</span><span>Make sure a <strong>fire extinguisher</strong> is on hand.</span></div>
+        <div class="check-item"><span class="check-num">9.</span><span>Check outriggers, stabilizers, and guardrails.</span></div>
+        <div class="check-item"><span class="check-num">10.</span><span>Read the rating capacity and placard.</span></div>
+      </div>
+
+      <div class="callout callout-blue">
+        <strong>Out of Service Lifts</strong>
+        After conducting the walk-around, elevate the lift from ground controls as a functional test. Any lift out of service for <strong>3 months or longer</strong> must be inspected by a qualified mechanic before use.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 13 & 14 — SCISSOR LIFT TRAINING & FALL PROTECTION -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🦺</span><span class="section-title">13 &amp; 14. Scissor Lift Training &amp; Fall Protection</span></div>
+    <div class="section-body">
+      <p>All new employees whose job requires operating a scissor lift must be <strong>trained before operation</strong>. Operators must:</p>
+      <ul class="resp-list">
+        <li>Read the manufacturer's operating manual prior to first-time operation.</li>
+        <li>Understand all factory control functions before being authorized to operate.</li>
+        <li>Inspect the work area for hazards: uneven surfaces, debris, and overhead obstructions or electrical lines.</li>
+        <li>Keep 10–35 feet between the lift and any power lines. Add more distance for swaying lines and platform movement.</li>
+      </ul>
+
+      <div class="section-divider"></div>
+      <p><strong>Fall protection rules for scissor lifts:</strong></p>
+      <ul class="rule-list">
+        <li>Guard rails must be in place at all times.</li>
+        <li>You must be tied off to the <strong>lift</strong>, not to an adjacent structure.</li>
+        <li>Keep pedestrians at least <strong>6 feet away</strong> from the lift.</li>
+        <li>Never drive the lift on a slope exceeding the grade on the placard.</li>
+        <li>Never stand on boxes, ladders, planks, or railings on the platform.</li>
+        <li>Platform must be within <strong>one foot</strong> of an adjacent structure before attempting to enter it.</li>
+        <li>Never leave cords from power tools hanging off the platform.</li>
+        <li>Before raising or lowering, make sure other employees on the lift are aware the platform is about to move.</li>
+        <li>Retract stabilizers and leveling jacks prior to moving the lift.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 Knowledge Check — Module 002</h2>
+      <p>Answer all 10 questions. You need 70% (7/10) or higher to pass.</p>
+    </div>
+    <div class="quiz-body">
+
+      <div class="name-block">
+        <label for="employee-name">Your Full Name (required for records)</label>
+        <input type="text" id="employee-name" placeholder="First Last" autocomplete="name">
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block">
+        <div class="question-num">Question 1 of 10</div>
+        <div class="question-text">Who has ultimate responsibility for ensuring the Aerial Lift Safety Program is implemented at the job site?</div>
+        <div class="options" id="q1">
+          <label class="option-label"><input type="radio" name="q1" value="a"> The Company Safety Representative.</label>
+          <label class="option-label"><input type="radio" name="q1" value="b"> The Site Supervisor.</label>
+          <label class="option-label"><input type="radio" name="q1" value="c"> Each individual certified operator.</label>
+          <label class="option-label"><input type="radio" name="q1" value="d"> The Department Supervisor only.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q2 -->
+      <div class="question-block">
+        <div class="question-num">Question 2 of 10</div>
+        <div class="question-text">What must ALL personnel in the aerial lift platform wear at all times?</div>
+        <div class="options" id="q2">
+          <label class="option-label"><input type="radio" name="q2" value="a"> A hard hat and safety glasses only.</label>
+          <label class="option-label"><input type="radio" name="q2" value="b"> An approved safety harness with lanyard attached to the platform attachment point.</label>
+          <label class="option-label"><input type="radio" name="q2" value="c"> A safety vest and steel-toed boots.</label>
+          <label class="option-label"><input type="radio" name="q2" value="d"> A fall arrest harness attached to the nearest adjacent structure.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q3 -->
+      <div class="question-block">
+        <div class="question-num">Question 3 of 10</div>
+        <div class="question-text">What is the minimum required clearance between any part of an aerial lift and electrical lines rated at 50 kV or below?</div>
+        <div class="options" id="q3">
+          <label class="option-label"><input type="radio" name="q3" value="a"> 3 feet.</label>
+          <label class="option-label"><input type="radio" name="q3" value="b"> 5 feet.</label>
+          <label class="option-label"><input type="radio" name="q3" value="c"> 10 feet.</label>
+          <label class="option-label"><input type="radio" name="q3" value="d"> 25 feet.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q4 -->
+      <div class="question-block">
+        <div class="question-num">Question 4 of 10</div>
+        <div class="question-text">How often must aerial lift controls be checked and tested?</div>
+        <div class="options" id="q4">
+          <label class="option-label"><input type="radio" name="q4" value="a"> Weekly, at the start of each work week.</label>
+          <label class="option-label"><input type="radio" name="q4" value="b"> Each day prior to use.</label>
+          <label class="option-label"><input type="radio" name="q4" value="c"> Monthly, during scheduled safety inspections.</label>
+          <label class="option-label"><input type="radio" name="q4" value="d"> Only when a new operator is assigned to the equipment.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q5 -->
+      <div class="question-block">
+        <div class="question-num">Question 5 of 10</div>
+        <div class="question-text">If a malfunction occurs while operating an aerial lift, what should the operator do?</div>
+        <div class="options" id="q5">
+          <label class="option-label"><input type="radio" name="q5" value="a"> Continue operating carefully and report it at the end of the shift.</label>
+          <label class="option-label"><input type="radio" name="q5" value="b"> Attempt to repair the machine themselves to avoid delays.</label>
+          <label class="option-label"><input type="radio" name="q5" value="c"> Shut down the machine and notify proper authorities.</label>
+          <label class="option-label"><input type="radio" name="q5" value="d"> Tag the machine and continue using it at reduced load.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q6 -->
+      <div class="question-block">
+        <div class="question-num">Question 6 of 10</div>
+        <div class="question-text">Before raising or extending the boom, what surface must the machine be positioned on?</div>
+        <div class="options" id="q6">
+          <label class="option-label"><input type="radio" name="q6" value="a"> Any available surface, provided the operator has been certified.</label>
+          <label class="option-label"><input type="radio" name="q6" value="b"> Gravel or compacted dirt only.</label>
+          <label class="option-label"><input type="radio" name="q6" value="c"> A firm, level, and uniform supporting surface.</label>
+          <label class="option-label"><input type="radio" name="q6" value="d"> Surfaces with no more than a 15-degree slope.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q7 -->
+      <div class="question-block">
+        <div class="question-num">Question 7 of 10</div>
+        <div class="question-text">Where must the safety harness lanyard be secured when working in an aerial lift?</div>
+        <div class="options" id="q7">
+          <label class="option-label"><input type="radio" name="q7" value="a"> To the nearest fixed structure on the building or tank being worked on.</label>
+          <label class="option-label"><input type="radio" name="q7" value="b"> To the proper attachment point on the platform — never to an adjacent object or structure.</label>
+          <label class="option-label"><input type="radio" name="q7" value="c"> To the boom arm for maximum reach and mobility.</label>
+          <label class="option-label"><input type="radio" name="q7" value="d"> It is not required to secure the lanyard when inside a basket with guardrails.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q8 -->
+      <div class="question-block">
+        <div class="question-num">Question 8 of 10</div>
+        <div class="question-text">How far must pedestrians be kept from a scissor lift during operation?</div>
+        <div class="options" id="q8">
+          <label class="option-label"><input type="radio" name="q8" value="a"> At least 3 feet away.</label>
+          <label class="option-label"><input type="radio" name="q8" value="b"> At least 6 feet away.</label>
+          <label class="option-label"><input type="radio" name="q8" value="c"> At least 10 feet away.</label>
+          <label class="option-label"><input type="radio" name="q8" value="d"> At least 15 feet away.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q9 -->
+      <div class="question-block">
+        <div class="question-num">Question 9 of 10</div>
+        <div class="question-text">When must fuel system checks on propane or diesel-powered scissor lifts be conducted?</div>
+        <div class="options" id="q9">
+          <label class="option-label"><input type="radio" name="q9" value="a"> Indoors only, to avoid wind affecting the inspection.</label>
+          <label class="option-label"><input type="radio" name="q9" value="b"> In any location the supervisor designates.</label>
+          <label class="option-label"><input type="radio" name="q9" value="c"> Outdoors only — never indoors.</label>
+          <label class="option-label"><input type="radio" name="q9" value="d"> Only by a certified mechanic in a shop environment.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q10 -->
+      <div class="question-block">
+        <div class="question-num">Question 10 of 10</div>
+        <div class="question-text">Is an operator permitted to exit the aerial lift without being tied off to an adjacent structure?</div>
+        <div class="options" id="q10">
+          <label class="option-label"><input type="radio" name="q10" value="a"> Yes, if the platform is lower than 6 feet from the ground.</label>
+          <label class="option-label"><input type="radio" name="q10" value="b"> Yes, if the operator has their certification badge on their person.</label>
+          <label class="option-label"><input type="radio" name="q10" value="c"> No — 100% tie-off to a 5,000 lb anchor point is always required when entering or exiting.</label>
+          <label class="option-label"><input type="radio" name="q10" value="d"> Yes, if the supervisor provides verbal authorization.</label>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div id="result-card-pass" class="result-card pass" style="display:none">
+      <div class="result-icon">🏆</div>
+      <div class="result-title">Training Complete — PASSED!</div>
+      <div class="result-score" id="pass-pct"></div>
+      <div class="result-sub" id="pass-sub"></div>
+    </div>
+    <div id="result-card-fail" class="result-card fail" style="display:none">
+      <div class="result-icon">⚠️</div>
+      <div class="result-title">Quiz Not Passed</div>
+      <div class="result-score" id="fail-pct"></div>
+      <div class="result-sub" id="fail-sub"></div>
+    </div>
+
+    <div id="firebase-sync-status" style="display:none; align-items:center; gap:10px; padding:12px 16px; border-radius:8px; border:2px solid var(--border); background:#F7F9FC; font-size:14px; font-weight:600; margin-bottom:14px;"></div>
+
+    <div class="cert-block" id="cert-block" style="display:none">
+      <h3>📄 Training Completion Record</h3>
+      <table class="cert-table">
+        <tr><td>Employee Name</td><td id="cert-name">—</td></tr>
+        <tr><td>Module</td><td>002 — Aerial Lift Safety Program</td></tr>
+        <tr><td>Standard #</td><td>SHP-BBB-002</td></tr>
+        <tr><td>Score</td><td id="cert-score">—</td></tr>
+        <tr><td>Result</td><td id="cert-result">—</td></tr>
+        <tr><td>Date Completed</td><td id="cert-date">—</td></tr>
+        <tr><td>Company</td><td>BBB Tank Services, LLC</td></tr>
+      </table>
+      <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
+    </div>
+
+    <div class="action-row" id="pass-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
+      <button class="btn btn-green"   onclick="downloadCSV()">⬇ Download CSV</button>
+      <a      class="btn btn-orange"  href="director.html">📊 Director Dashboard</a>
+      <a      class="btn btn-outline" href="index.html">← Back to Modules</a>
+    </div>
+    <button class="retake-btn" id="retake-btn" style="display:none" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+  </div>
+
+</main>
+
+<footer>BBB Tank Services, LLC · Safety Training Portal · SHP-BBB-002 · Rev. 10/31/2025</footer>
+
+<script>
+  /* SCROLL PROGRESS */
+  document.addEventListener('scroll', () => {
+    const el  = document.documentElement;
+    const h   = el.scrollHeight - el.clientHeight;
+    const pct = h > 0 ? Math.round((el.scrollTop / h) * 100) : 0;
+    document.getElementById('read-fill').style.width  = pct + '%';
+    document.getElementById('scroll-pct').textContent = pct + '%';
+  }, { passive:true });
+
+  /* ANSWER KEY */
+  const ANSWERS = { q1:'b', q2:'b', q3:'c', q4:'b', q5:'c', q6:'c', q7:'b', q8:'b', q9:'c', q10:'c' };
+  const STORAGE_KEY = 'bbb_training_records';
+  const FB_KEY      = 'bbb_firebase_config';
+
+  function submitQuiz() {
+    const name = document.getElementById('employee-name').value.trim();
+    if (!name) {
+      document.getElementById('employee-name').classList.add('error');
+      document.getElementById('employee-name').focus();
+      alert('Please enter your full name before submitting.');
+      return;
+    }
+    for (let i = 1; i <= 10; i++) {
+      if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+        alert(`Please answer Question ${i} before submitting.`);
+        document.getElementById(`q${i}`).scrollIntoView({ behavior:'smooth', block:'center' });
+        return;
+      }
+    }
+
+    let correct = 0;
+    for (const [q, ans] of Object.entries(ANSWERS)) {
+      const sel = document.querySelector(`input[name="${q}"]:checked`);
+      const val = sel ? sel.value : null;
+      document.querySelectorAll(`#${q} .option-label`).forEach(label => {
+        const radio = label.querySelector('input[type="radio"]');
+        if (radio.value === ans) label.classList.add('correct-ans');
+        else if (radio.value === val && val !== ans) label.classList.add('wrong-ans');
+        radio.disabled = true;
+      });
+      if (val === ans) correct++;
+    }
+
+    const pct     = Math.round((correct / 10) * 100);
+    const passed  = pct >= 70;
+    const dateStr = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+    const isoDate = new Date().toISOString().slice(0, 10);
+
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('quiz-section').style.display   = 'none';
+    document.getElementById('results-section').style.display = 'block';
+    document.getElementById('results-section').scrollIntoView({ behavior:'smooth' });
+
+    document.getElementById('cert-name').textContent   = name;
+    document.getElementById('cert-score').textContent  = correct + '/10 (' + pct + '%)';
+    document.getElementById('cert-result').textContent = passed ? '✅ PASSED' : '❌ DID NOT PASS';
+    document.getElementById('cert-date').textContent   = dateStr;
+    document.getElementById('cert-block').style.display = 'block';
+
+    if (passed) {
+      document.getElementById('result-card-pass').style.display = 'block';
+      document.getElementById('pass-pct').textContent = pct + '%';
+      document.getElementById('pass-sub').textContent = correct + ' out of 10 correct. Record saved.';
+      document.getElementById('pass-actions').style.display = 'flex';
+      document.getElementById('cert-result').style.color = '#1D8348';
+    } else {
+      document.getElementById('result-card-fail').style.display = 'block';
+      document.getElementById('fail-pct').textContent = pct + '%';
+      document.getElementById('fail-sub').textContent = correct + ' out of 10 correct. You need 70% to pass. Review the material and try again.';
+      document.getElementById('retake-btn').style.display = 'block';
+      document.getElementById('cert-result').style.color = '#C0392B';
+    }
+
+    const record = {
+      id: Date.now().toString(), module:'002', moduleName:'Aerial Lift Safety Program',
+      standardNum:'SHP-BBB-002', employeeName:name, score:correct, totalQ:10,
+      percentage:pct, passed, dateISO:isoDate, dateDisplay:dateStr,
+      completedAt:new Date().toISOString()
+    };
+
+    // Save locally
+    try {
+      const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      records.push(record);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch(e) {}
+
+    // Sync to Firebase
+    syncToFirebase(record);
+  }
+
+  function syncToFirebase(record) {
+    const raw = localStorage.getItem(FB_KEY);
+    if (!raw) return;
+    const syncEl = document.getElementById('firebase-sync-status');
+    if (syncEl) { syncEl.style.display='flex'; syncEl.innerHTML='<span>⏳</span>&nbsp; Sending to Safety Director...'; }
+    loadFirebaseSDK().then(() => {
+      const cfg = JSON.parse(raw);
+      const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(cfg);
+      return firebase.firestore(app).collection('training_records').add(record);
+    }).then(() => {
+      if (syncEl) { syncEl.innerHTML='✅ Record sent to Safety Director\'s dashboard.'; syncEl.style.background='#EDFAF3'; syncEl.style.borderColor='#1D8348'; syncEl.style.color='#1D8348'; }
+    }).catch(err => {
+      if (syncEl) { syncEl.innerHTML='⚠️ Could not sync to Safety Director. Download your CSV as backup.'; syncEl.style.background='#FFF8F4'; syncEl.style.borderColor='#E8611A'; syncEl.style.color='#C9510E'; }
+    });
+  }
+
+  function loadFirebaseSDK() {
+    if (window.firebase) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s1 = document.createElement('script');
+      s1.src = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';
+        s2.onload = resolve; s2.onerror = reject;
+        document.head.appendChild(s2);
+      };
+      s1.onerror = reject;
+      document.head.appendChild(s1);
+    });
+  }
+
+  function downloadCSV() {
+    try {
+      const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const last = records.filter(r => r.module === '002').pop();
+      if (!last) return;
+      const headers = ['Employee Name','Module','Module Name','Standard #','Score','Percentage','Passed','Date Completed'];
+      const row = [`"${last.employeeName}"`, last.module, `"${last.moduleName}"`, last.standardNum, `${last.score}/10`, `${last.percentage}%`, last.passed ? 'YES' : 'NO', `"${last.dateDisplay}"`];
+      const csv  = headers.join(',') + '\n' + row.join(',');
+      const blob = new Blob([csv], { type:'text/csv' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = `BBB_Training_${last.employeeName.replace(/\s+/g,'_')}_Module002_${last.dateISO}.csv`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    } catch(e) { alert('Could not download CSV. Please print the record instead.'); }
+  }
+
+  function retakeQuiz() {
+    for (let i = 1; i <= 10; i++) {
+      document.querySelectorAll(`#q${i} .option-label`).forEach(label => {
+        label.classList.remove('correct-ans','wrong-ans');
+        const radio = label.querySelector('input[type="radio"]');
+        radio.checked = false; radio.disabled = false;
+      });
+    }
+    document.getElementById('employee-name').value = '';
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('results-section').style.display  = 'none';
+    document.getElementById('result-card-pass').style.display = 'none';
+    document.getElementById('result-card-fail').style.display = 'none';
+    document.getElementById('cert-block').style.display       = 'none';
+    document.getElementById('pass-actions').style.display     = 'none';
+    document.getElementById('retake-btn').style.display       = 'none';
+    document.getElementById('quiz-section').style.display     = 'block';
+    document.getElementById('quiz-section').scrollIntoView({ behavior:'smooth' });
+  }
+</script>
+</body>
+</html>

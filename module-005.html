@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 005 — Confined Space Entry Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0D1B2A; --navy2:#1A2E4A; --orange:#E8611A; --orange2:#C9510E;
+      --bg:#F0F4F8; --card:#FFFFFF; --text:#1C2B3A; --muted:#6B7E8E;
+      --border:#D3DCE6; --green:#1D8348; --red:#C0392B; --radius:10px;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+    header { background:var(--navy); color:white; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+    .header-inner { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:3px solid var(--orange); }
+    .back-link { color:#8FAEC8; text-decoration:none; font-size:14px; white-space:nowrap; }
+    .back-link:hover { color:white; }
+    .header-title { font-size:15px; font-weight:700; color:white; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-std { font-size:12px; color:var(--orange); font-weight:700; white-space:nowrap; }
+    .read-progress-wrap { background:var(--navy2); padding:8px 20px; display:flex; align-items:center; gap:12px; }
+    .read-progress-label { font-size:12px; color:#8FAEC8; white-space:nowrap; }
+    .read-progress-bg { flex:1; background:rgba(255,255,255,0.15); border-radius:8px; height:6px; }
+    .read-progress-fill { background:var(--orange); height:100%; border-radius:8px; width:0; transition:width 0.3s; }
+    .scroll-pct { font-size:12px; color:#8FAEC8; min-width:36px; text-align:right; }
+    main { max-width:820px; margin:0 auto; padding:28px 16px 80px; }
+    .module-banner { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:white; border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+    .module-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--orange); font-weight:700; margin-bottom:8px; }
+    .module-banner h1 { font-size:clamp(20px,4vw,28px); font-weight:800; margin-bottom:10px; }
+    .module-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#8FAEC8; }
+    .content-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+    .section-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:16px; font-weight:700; }
+    .section-body { padding:20px 22px; }
+    .section-body p { margin-bottom:14px; }
+    .section-body p:last-child { margin-bottom:0; }
+    .callout { border-radius:8px; padding:14px 16px; margin:14px 0; font-size:15px; }
+    .callout-orange { background:#FFF4EE; border-left:4px solid var(--orange); }
+    .callout-blue   { background:#EEF4FF; border-left:4px solid #2E6AE8; }
+    .callout-green  { background:#EDFAF3; border-left:4px solid var(--green); }
+    .callout-red    { background:#FEF0EE; border-left:4px solid var(--red); }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; opacity:0.75; }
+    .resp-list { list-style:none; padding:0; margin:10px 0; }
+    .resp-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; }
+    .resp-list li::before { content:'✓'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+    .role-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; margin:14px 0; }
+    .role-card { background:#F7F9FC; border:1px solid var(--border); border-radius:8px; padding:14px; }
+    .role-card .role-title { font-size:13px; font-weight:800; color:var(--orange); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .role-card .role-desc  { font-size:13px; color:var(--muted); line-height:1.5; }
+    .key-fact { display:flex; align-items:center; gap:14px; background:var(--navy); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; }
+    .key-fact .fact-num { font-size:22px; font-weight:800; color:var(--orange); white-space:nowrap; }
+    .key-fact .fact-lbl { font-size:14px; color:#8FAEC8; line-height:1.4; }
+    .section-divider { height:1px; background:var(--border); margin:14px 0; }
+    .def-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; margin:12px 0; }
+    .def-card { background:#F7F9FC; border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+    .def-term { font-size:13px; font-weight:800; color:var(--orange); margin-bottom:4px; }
+    .def-body { font-size:13px; color:var(--text); line-height:1.5; }
+    .step-list { list-style:none; padding:0; margin:10px 0; counter-reset:step; }
+    .step-list li { padding:10px 12px 10px 44px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; counter-increment:step; }
+    .step-list li::before { content:counter(step); position:absolute; left:12px; width:24px; height:24px; background:var(--orange); color:white; border-radius:50%; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; top:50%; transform:translateY(-50%); }
+    .danger-sign { background:var(--red); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; text-align:center; font-weight:800; font-size:16px; letter-spacing:1px; }
+    #quiz-section { background:var(--card); border:2px solid var(--orange); border-radius:var(--radius); overflow:hidden; margin-top:32px; }
+    .quiz-header { background:var(--orange); color:white; padding:20px 24px; }
+    .quiz-header h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+    .quiz-header p  { font-size:14px; opacity:0.9; }
+    .quiz-body { padding:24px; }
+    .name-block { margin-bottom:28px; }
+    .name-block label { display:block; font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .name-block input { width:100%; padding:12px 16px; font-size:16px; border:2px solid var(--border); border-radius:8px; background:#F7F9FC; color:var(--text); transition:border-color 0.2s; }
+    .name-block input:focus { outline:none; border-color:var(--orange); background:white; }
+    .name-block input.error { border-color:var(--red); }
+    .question-block { margin-bottom:28px; }
+    .question-num  { font-size:12px; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .question-text { font-size:16px; font-weight:600; margin-bottom:14px; line-height:1.5; }
+    .options { display:flex; flex-direction:column; gap:8px; }
+    .option-label { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:15px; line-height:1.4; }
+    .option-label:hover { border-color:var(--orange); background:#FFF8F4; }
+    .option-label input[type="radio"] { margin-top:3px; accent-color:var(--orange); flex-shrink:0; width:18px; height:18px; }
+    .option-label.correct-ans { border-color:var(--green); background:#EDFAF3; }
+    .option-label.wrong-ans   { border-color:var(--red);   background:#FEF0EE; }
+    .question-divider { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+    .submit-wrap { text-align:center; margin-top:12px; }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:15px 48px; font-size:17px; font-weight:700; border-radius:8px; cursor:pointer; width:100%; max-width:360px; transition:background 0.2s; }
+    .submit-btn:hover { background:var(--orange2); }
+    .submit-btn:disabled { background:var(--muted); cursor:not-allowed; }
+    #results-section { display:none; }
+    .result-card { border-radius:var(--radius); padding:28px; margin-bottom:20px; text-align:center; }
+    .result-card.pass { background:#EDFAF3; border:2px solid var(--green); }
+    .result-card.fail { background:#FEF0EE; border:2px solid var(--red); }
+    .result-icon  { font-size:52px; margin-bottom:12px; }
+    .result-title { font-size:26px; font-weight:800; margin-bottom:6px; }
+    .result-card.pass .result-title { color:var(--green); }
+    .result-card.fail .result-title { color:var(--red); }
+    .result-score { font-size:48px; font-weight:800; margin:12px 0 4px; }
+    .result-card.pass .result-score { color:var(--green); }
+    .result-card.fail .result-score { color:var(--red); }
+    .result-sub { font-size:15px; color:var(--muted); }
+    .cert-block { background:white; border:2px solid var(--navy); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+    .cert-block h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .cert-table { width:100%; border-collapse:collapse; }
+    .cert-table td { padding:9px 0; border-bottom:1px solid var(--border); font-size:15px; }
+    .cert-table td:first-child { color:var(--muted); font-size:13px; width:40%; }
+    .cert-table td:last-child  { font-weight:700; }
+    .cert-company { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+    .action-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .btn { flex:1; min-width:140px; padding:13px 18px; border-radius:8px; font-size:14px; font-weight:700; border:none; cursor:pointer; text-align:center; text-decoration:none; display:inline-block; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.88; }
+    .btn-primary { background:var(--navy);   color:white; }
+    .btn-orange  { background:var(--orange); color:white; }
+    .btn-green   { background:var(--green);  color:white; }
+    .btn-outline { background:white; color:var(--navy); border:2px solid var(--navy); }
+    .retake-btn  { width:100%; padding:13px; font-size:16px; font-weight:700; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer; margin-top:8px; }
+    @media print { header,.read-progress-wrap,.module-banner,.content-card,#quiz-section,.action-row,.retake-btn,footer { display:none !important; } body { background:white; } #results-section { display:block !important; } }
+    footer { background:var(--navy); color:#4A6785; text-align:center; font-size:12px; padding:20px; margin-top:40px; }
+    @media(max-width:600px) { .role-grid,.def-grid { grid-template-columns:1fr; } main { padding:20px 12px 60px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← All Modules</a>
+    <span class="header-title">Confined Space Entry Program</span>
+    <span class="header-std">SHP-BBB-005</span>
+  </div>
+  <div class="read-progress-wrap">
+    <span class="read-progress-label">Reading progress</span>
+    <div class="read-progress-bg"><div class="read-progress-fill" id="read-fill"></div></div>
+    <span class="scroll-pct" id="scroll-pct">0%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="module-banner">
+    <div class="module-eyebrow">Module 005 · SHP-BBB-005</div>
+    <h1>Confined Space Entry Program</h1>
+    <div class="module-meta">
+      <span>📅 Rev. 10/31/2025</span>
+      <span>⚖ OSHA 29 CFR 1910.146 &amp; 1926.21(b)(6)</span>
+      <span>⏱ ~20 min read</span>
+      <span>📝 10-question quiz</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — PURPOSE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📋</span><span class="section-title">1. Purpose &amp; Scope</span></div>
+    <div class="section-body">
+      <p>This program establishes requirements for protecting BBB Tank Services employees and subcontractors from the hazards associated with entry into <strong>permit-required confined spaces</strong>. It applies to all employees and subcontractors working within company-controlled worksites.</p>
+      <div class="callout callout-red">
+        <strong>Why Confined Spaces Are Deadly</strong>
+        Confined spaces can contain hazardous atmospheres, engulfment hazards, internal configuration hazards, and other recognized serious safety and health hazards. Many confined space fatalities occur when would-be rescuers enter without proper training or equipment. This program exists to prevent those deaths.
+      </div>
+      <div class="danger-sign">⚠ DANGER — PERMIT-REQUIRED CONFINED SPACE — DO NOT ENTER</div>
+      <p style="font-size:14px;color:var(--muted);">This sign (or similar language) must be posted wherever permit-required confined spaces exist at any BBB Tank Services worksite.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — DEFINITIONS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📖</span><span class="section-title">2. Key Definitions</span></div>
+    <div class="section-body">
+      <div class="def-grid">
+        <div class="def-card">
+          <div class="def-term">Confined Space</div>
+          <div class="def-body">Large enough to enter; has limited/restricted means for entry or exit; is NOT designed for continuous employee occupancy; or has inadequate ventilation.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Entry</div>
+          <div class="def-body">Occurs as soon as <strong>any part of the entrant's body breaks the plane of an opening</strong> into a permit space. All ensuing work activities inside are also considered "entry."</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Attendant</div>
+          <div class="def-body">An individual stationed <strong>outside</strong> a permit-required confined space who monitors authorized entrants and performs all assigned attendant duties.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Authorized Entrant</div>
+          <div class="def-body">An employee specifically authorized by the Company to enter a permit space.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Entry Supervisor</div>
+          <div class="def-body">The person responsible for determining if acceptable entry conditions are present, authorizing entry, overseeing operations, and terminating entry as required.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Isolation</div>
+          <div class="def-body">The process of completely protecting a permit space against release of energy or material — by blanking/blinding, lockout/tagout, double block and bleed, or disconnecting mechanical linkages.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Blanking / Blinding</div>
+          <div class="def-body">The absolute closure of a pipe, line, or duct by fastening a solid plate capable of withstanding maximum pressure with no leakage.</div>
+        </div>
+        <div class="def-card">
+          <div class="def-term">Competent Person</div>
+          <div class="def-body">One capable of identifying existing and predictable hazards AND who has the authority to take prompt corrective measures to eliminate them.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — GENERAL REQUIREMENTS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📝</span><span class="section-title">3. General Requirements</span></div>
+    <div class="section-body">
+      <ul class="resp-list">
+        <li>The Site Supervisor evaluates the workplace to determine if any permit-required confined spaces exist. The client may provide a list at remote locations.</li>
+        <li>Employees must be informed of the existence, location, and dangers of permit spaces — by posted danger signs or equally effective means.</li>
+        <li>If employees will NOT enter a permit space, measures will be taken to prevent all entry.</li>
+        <li>If employees WILL enter, a site-specific written permit space program must be developed and implemented before entry begins.</li>
+        <li>When entrance covers are removed, the opening must be <strong>immediately guarded</strong> by a railing, temporary cover, or barrier to prevent accidental falls and protect employees from falling objects.</li>
+      </ul>
+      <div class="callout callout-orange">
+        <strong>Program Review Triggers</strong>
+        The permit space program must be reviewed after: any unauthorized entry, detection of a hazard not covered by the permit, a prohibited condition being detected, any injury or near-miss during entry, any change in use or configuration of the space, or employee complaints about the program.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — SITE-SPECIFIC WRITTEN PROGRAM -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📄</span><span class="section-title">4. Site-Specific Written Program</span></div>
+    <div class="section-body">
+      <p>Before entry into any confined space at any BBB Tank Services worksite, a site-specific written program must be developed by the Site Supervisor with input from the Safety Director. It must comply with OSHA 29 CFR 1910.146 and include:</p>
+      <ul class="resp-list">
+        <li>Measures to prevent unauthorized entry.</li>
+        <li>Methods to identify and evaluate hazards of permit spaces before entry.</li>
+        <li>Acceptable entry conditions and methods to verify they are maintained throughout entry.</li>
+        <li>Methods used to isolate the permit space (lockout/tagout, blanking, blinding, etc.).</li>
+        <li>Purging, flushing, or ventilating procedures to eliminate atmospheric hazards.</li>
+        <li>Identification of authorized entrants, attendants, and entry supervisors.</li>
+        <li>Testing and monitoring equipment needed, ventilating equipment, communications equipment, PPE, and lighting.</li>
+        <li>Equipment for safe ingress and egress (ladders, etc.).</li>
+        <li>Rescue and emergency services provided and training required.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — ENTRY PROCEDURE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🚪</span><span class="section-title">5. Entry Procedure Guidelines</span></div>
+    <div class="section-body">
+
+      <div class="callout callout-red">
+        <strong>Mandatory — No Exceptions</strong>
+        All entrants must wear a <strong>safety harness with retrieval rope attached to the D-ring on the BACK of the harness</strong> at all times during confined space entry.
+      </div>
+
+      <p><strong>Before any employee enters a confined space, the internal atmosphere must be tested in this exact order:</strong></p>
+      <ol class="step-list">
+        <li><strong>Oxygen content</strong> — must be within acceptable range (19.5%–23.5%)</li>
+        <li><strong>Flammable gases and vapors</strong> — must be below lower explosive limit</li>
+        <li><strong>Potential toxic air contaminants</strong> — must be below permissible exposure limits</li>
+      </ol>
+
+      <div class="callout callout-blue">
+        <strong>Testing Must Use Calibrated Instruments</strong>
+        Atmospheric testing must be performed with a calibrated direct-reading instrument. The entry supervisor must notify all entrants of hazards and monitoring results. Entrants will review and sign the written permit.
+      </div>
+
+      <div class="section-divider"></div>
+      <p><strong>During Entry — Critical Rules:</strong></p>
+      <ul class="resp-list">
+        <li>No hazardous atmosphere may exist within the space while any employee is inside.</li>
+        <li>Forced air ventilation must be used to eliminate hazardous atmospheres before entry and must continue until all employees have left the space.</li>
+        <li>The atmosphere must be <strong>continuously monitored</strong> throughout the entry to ensure ventilation is working and oxygen levels are adequate.</li>
+        <li>If a hazardous atmosphere is detected during entry, <strong>all employees must leave the space immediately</strong>. The space must be evaluated and hazards mitigated before any re-entry.</li>
+        <li>All entrants must be <strong>signed in and out by the attendant</strong> every time they enter or exit.</li>
+        <li>The duration of the permit may not exceed the time required to complete the assigned task.</li>
+      </ul>
+
+      <div class="callout callout-orange">
+        <strong>Lockout/Tagout Required</strong>
+        Lockout/Tagout procedures must be followed during all permit-required confined space entries.
+      </div>
+
+      <div class="section-divider"></div>
+      <p><strong>Entry Permit:</strong> The entry supervisor signs the permit before entry begins. The completed permit is posted at the entry portal (or equally visible location) so all entrants can confirm pre-entry preparations are complete. Entry is terminated and the permit cancelled when operations are complete, a prohibited condition arises, or the work area emergency system is activated.</p>
+
+      <p><strong>At least one attendant</strong> must be stationed outside the permit space for the entire duration of entry operations. If one attendant monitors multiple spaces, the program must include procedures to allow response to any space emergency without compromising duties at other spaces.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 6 — ROLES & DUTIES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">👷</span><span class="section-title">6. Roles &amp; Duties of Each Position</span></div>
+    <div class="section-body">
+
+      <p style="font-weight:700;color:var(--orange);margin-bottom:8px;">Authorized Entrants must:</p>
+      <ul class="resp-list">
+        <li>Know the hazards that may be faced during entry — mode, signs, symptoms, and consequences of exposure.</li>
+        <li>Properly use all equipment as required by the permit.</li>
+        <li>Maintain communication with the attendant throughout entry.</li>
+        <li>Alert the attendant immediately when they recognize any warning sign, symptom of exposure, or a prohibited condition.</li>
+        <li>Exit the space as quickly as possible when ordered by the attendant or entry supervisor, when they recognize any warning sign, or when an evacuation alarm is activated.</li>
+      </ul>
+
+      <div class="section-divider"></div>
+      <p style="font-weight:700;color:var(--orange);margin-bottom:8px;">Attendants must:</p>
+      <ul class="resp-list">
+        <li>Know all hazards that may be faced, including behavioral effects of hazard exposure in entrants.</li>
+        <li>Continuously maintain an accurate count of all authorized entrants inside the space.</li>
+        <li><strong>Remain outside the permit space at all times during entry operations</strong> until relieved by another attendant.</li>
+        <li>Communicate with entrants continuously to monitor their status.</li>
+        <li>Order immediate evacuation if a prohibited condition is detected, behavioral effects of hazard exposure are observed in an entrant, an outside situation arises that could endanger entrants, or if the attendant cannot safely perform all duties.</li>
+        <li>Summon rescue and emergency services immediately when entrants may need assistance.</li>
+        <li>Warn unauthorized persons away from the permit space and advise them to exit immediately if they have entered.</li>
+        <li>Perform no duties that might interfere with the primary duty of monitoring and protecting authorized entrants.</li>
+      </ul>
+
+      <div class="callout callout-red">
+        <strong>⚠ Attendant Rescue Rule — Critical</strong>
+        If an entrant needs rescue, the attendant's <strong>sole responsibility</strong> is to sound the alarm to evacuate other entrants and summon emergency personnel. <strong>Under NO circumstance will an attendant enter the confined space by themselves.</strong>
+      </div>
+
+      <div class="section-divider"></div>
+      <p style="font-weight:700;color:var(--orange);margin-bottom:8px;">Entry Supervisors must:</p>
+      <ul class="resp-list">
+        <li>Know all hazards and verify that all tests, procedures, and equipment required by the permit are in place before authorizing entry.</li>
+        <li>Verify that rescue services are available and that means of summoning them are operable.</li>
+        <li>Terminate entry and cancel the permit when required.</li>
+        <li>Remove unauthorized individuals who enter or attempt to enter the permit space.</li>
+        <li>Verify at intervals that entry conditions remain consistent with the terms of the entry permit.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 7 — EMERGENCY RESPONSE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🚨</span><span class="section-title">7. Emergency Response &amp; Rescue</span></div>
+    <div class="section-body">
+      <ul class="resp-list">
+        <li>The Site Supervisor must confirm in advance that rescue and emergency services are available for IDLH situations, with phone numbers posted at the work location.</li>
+        <li>A reliable communication method (phone, cell, two-way radio) must be available at all times to summon emergency services.</li>
+        <li>If emergency services cannot respond in a timely manner, <strong>competent confined space rescue personnel must stand by at the work location</strong> during all confined space operations.</li>
+        <li>Dedicated rescue personnel must be trained, properly equipped, and authorized by the Operations Manager and Safety Director. Unauthorized personnel are prohibited from attempting a rescue.</li>
+        <li>Third-party rescue services must be allowed to survey the work location, select specialized equipment, and may decline the standby assignment.</li>
+        <li>All PPE for rescue personnel is provided by the Company at no cost.</li>
+      </ul>
+      <div class="key-fact">
+        <div class="fact-num">Annual</div>
+        <div class="fact-lbl">Authorized BBB rescue personnel must receive training and <strong>hands-on practice rescues annually</strong> to maintain proficiency.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 Knowledge Check — Module 005</h2>
+      <p>Answer all 10 questions. You need 70% (7/10) or higher to pass.</p>
+    </div>
+    <div class="quiz-body">
+
+      <div class="name-block">
+        <label for="employee-name">Your Full Name (required for records)</label>
+        <input type="text" id="employee-name" placeholder="First Last" autocomplete="name">
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block">
+        <div class="question-num">Question 1 of 10</div>
+        <div class="question-text">When exactly does "entry" into a permit-required confined space legally occur?</div>
+        <div class="options" id="q1">
+          <label class="option-label"><input type="radio" name="q1" value="a"> When the employee's entire body is inside the space.</label>
+          <label class="option-label"><input type="radio" name="q1" value="b"> As soon as any part of the entrant's body breaks the plane of an opening into the space.</label>
+          <label class="option-label"><input type="radio" name="q1" value="c"> When the entry supervisor signs the entry permit.</label>
+          <label class="option-label"><input type="radio" name="q1" value="d"> When the employee begins performing work inside the space.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q2 -->
+      <div class="question-block">
+        <div class="question-num">Question 2 of 10</div>
+        <div class="question-text">What must all entrants wear during confined space entry?</div>
+        <div class="options" id="q2">
+          <label class="option-label"><input type="radio" name="q2" value="a"> A hard hat and safety glasses only.</label>
+          <label class="option-label"><input type="radio" name="q2" value="b"> A SCBA with full face piece and chemical-resistant suit.</label>
+          <label class="option-label"><input type="radio" name="q2" value="c"> A safety harness with retrieval rope attached to the D-ring on the back of the harness.</label>
+          <label class="option-label"><input type="radio" name="q2" value="d"> A safety vest and steel-toed boots rated for confined space work.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q3 -->
+      <div class="question-block">
+        <div class="question-num">Question 3 of 10</div>
+        <div class="question-text">What is the correct order for testing the internal atmosphere of a confined space before entry?</div>
+        <div class="options" id="q3">
+          <label class="option-label"><input type="radio" name="q3" value="a"> Toxic contaminants → Oxygen content → Flammable gases.</label>
+          <label class="option-label"><input type="radio" name="q3" value="b"> Flammable gases → Toxic contaminants → Oxygen content.</label>
+          <label class="option-label"><input type="radio" name="q3" value="c"> Oxygen content → Flammable gases and vapors → Potential toxic air contaminants.</label>
+          <label class="option-label"><input type="radio" name="q3" value="d"> Any order is acceptable as long as all three are tested before entry.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q4 -->
+      <div class="question-block">
+        <div class="question-num">Question 4 of 10</div>
+        <div class="question-text">If a hazardous atmosphere is detected while employees are working inside a confined space, what must happen immediately?</div>
+        <div class="options" id="q4">
+          <label class="option-label"><input type="radio" name="q4" value="a"> Employees put on respirators and continue working while the supervisor investigates.</label>
+          <label class="option-label"><input type="radio" name="q4" value="b"> Each employee must leave the space immediately. The space is evaluated and hazards mitigated before any re-entry.</label>
+          <label class="option-label"><input type="radio" name="q4" value="c"> Only employees without respirators must exit. Those with respirators may stay.</label>
+          <label class="option-label"><input type="radio" name="q4" value="d"> The entry supervisor is notified and makes the decision on whether to exit.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q5 -->
+      <div class="question-block">
+        <div class="question-num">Question 5 of 10</div>
+        <div class="question-text">What must all entrants do every time they enter or exit a confined space?</div>
+        <div class="options" id="q5">
+          <label class="option-label"><input type="radio" name="q5" value="a"> Perform a personal atmospheric test with their own detector.</label>
+          <label class="option-label"><input type="radio" name="q5" value="b"> Sign in and out with the attendant.</label>
+          <label class="option-label"><input type="radio" name="q5" value="c"> Verbally confirm their name and job assignment to the entry supervisor.</label>
+          <label class="option-label"><input type="radio" name="q5" value="d"> Don and doff all PPE at the entry portal.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q6 -->
+      <div class="question-block">
+        <div class="question-num">Question 6 of 10</div>
+        <div class="question-text">If an entrant needs rescue inside a confined space, what is the attendant's sole responsibility?</div>
+        <div class="options" id="q6">
+          <label class="option-label"><input type="radio" name="q6" value="a"> Enter the space immediately with a rope to attempt a non-entry rescue.</label>
+          <label class="option-label"><input type="radio" name="q6" value="b"> Sound the alarm to evacuate other entrants and summon emergency personnel — the attendant must NOT enter the space.</label>
+          <label class="option-label"><input type="radio" name="q6" value="c"> Enter the space to assess the situation, then exit and call for help.</label>
+          <label class="option-label"><input type="radio" name="q6" value="d"> Wait for the entry supervisor's authorization before taking any action.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q7 -->
+      <div class="question-block">
+        <div class="question-num">Question 7 of 10</div>
+        <div class="question-text">How long must forced air ventilation continue during a confined space entry?</div>
+        <div class="options" id="q7">
+          <label class="option-label"><input type="radio" name="q7" value="a"> Until the initial atmospheric test shows acceptable conditions, then it can be shut off.</label>
+          <label class="option-label"><input type="radio" name="q7" value="b"> For the first 30 minutes of entry only.</label>
+          <label class="option-label"><input type="radio" name="q7" value="c"> Until all employees have left the space.</label>
+          <label class="option-label"><input type="radio" name="q7" value="d"> Only when toxic contaminants are detected inside the space.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q8 -->
+      <div class="question-block">
+        <div class="question-num">Question 8 of 10</div>
+        <div class="question-text">What must happen when an entrance cover is removed from a confined space opening?</div>
+        <div class="options" id="q8">
+          <label class="option-label"><input type="radio" name="q8" value="a"> The opening must be marked with orange cones and caution tape only.</label>
+          <label class="option-label"><input type="radio" name="q8" value="b"> The opening must be immediately guarded by a railing, temporary cover, or other barrier to prevent accidental falls and protect employees from falling objects.</label>
+          <label class="option-label"><input type="radio" name="q8" value="c"> A safety observer must stand next to the opening at all times.</label>
+          <label class="option-label"><input type="radio" name="q8" value="d"> The opening can remain unguarded as long as no employees are working nearby.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q9 -->
+      <div class="question-block">
+        <div class="question-num">Question 9 of 10</div>
+        <div class="question-text">Under what circumstances must the entry supervisor terminate entry and cancel the entry permit?</div>
+        <div class="options" id="q9">
+          <label class="option-label"><input type="radio" name="q9" value="a"> Only when the assigned task is fully completed.</label>
+          <label class="option-label"><input type="radio" name="q9" value="b"> When the entry operations are complete, a prohibited condition arises, or the work area emergency system is activated.</label>
+          <label class="option-label"><input type="radio" name="q9" value="c"> Only when directed to do so by the Company Safety Director.</label>
+          <label class="option-label"><input type="radio" name="q9" value="d"> When any employee requests to exit the space.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q10 -->
+      <div class="question-block">
+        <div class="question-num">Question 10 of 10</div>
+        <div class="question-text">How often must authorized BBB Tank Services rescue personnel perform hands-on practice rescues to maintain certification?</div>
+        <div class="options" id="q10">
+          <label class="option-label"><input type="radio" name="q10" value="a"> Every 5 years.</label>
+          <label class="option-label"><input type="radio" name="q10" value="b"> Every 3 years.</label>
+          <label class="option-label"><input type="radio" name="q10" value="c"> Every 6 months.</label>
+          <label class="option-label"><input type="radio" name="q10" value="d"> Annually.</label>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div id="result-card-pass" class="result-card pass" style="display:none">
+      <div class="result-icon">🏆</div><div class="result-title">Training Complete — PASSED!</div>
+      <div class="result-score" id="pass-pct"></div><div class="result-sub" id="pass-sub"></div>
+    </div>
+    <div id="result-card-fail" class="result-card fail" style="display:none">
+      <div class="result-icon">⚠️</div><div class="result-title">Quiz Not Passed</div>
+      <div class="result-score" id="fail-pct"></div><div class="result-sub" id="fail-sub"></div>
+    </div>
+    <div id="firebase-sync-status" style="display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;border:2px solid var(--border);background:#F7F9FC;font-size:14px;font-weight:600;margin-bottom:14px;"></div>
+    <div class="cert-block" id="cert-block" style="display:none">
+      <h3>📄 Training Completion Record</h3>
+      <table class="cert-table">
+        <tr><td>Employee Name</td><td id="cert-name">—</td></tr>
+        <tr><td>Module</td><td>005 — Confined Space Entry Program</td></tr>
+        <tr><td>Standard #</td><td>SHP-BBB-005</td></tr>
+        <tr><td>Score</td><td id="cert-score">—</td></tr>
+        <tr><td>Result</td><td id="cert-result">—</td></tr>
+        <tr><td>Date Completed</td><td id="cert-date">—</td></tr>
+        <tr><td>Company</td><td>BBB Tank Services, LLC</td></tr>
+      </table>
+      <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
+    </div>
+    <div class="action-row" id="pass-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
+      <button class="btn btn-green"   onclick="downloadCSV()">⬇ Download CSV</button>
+      <a      class="btn btn-orange"  href="director.html">📊 Director Dashboard</a>
+      <a      class="btn btn-outline" href="index.html">← Back to Modules</a>
+    </div>
+    <button class="retake-btn" id="retake-btn" style="display:none" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+  </div>
+
+</main>
+<footer>BBB Tank Services, LLC · Safety Training Portal · SHP-BBB-005 · Rev. 10/31/2025</footer>
+
+<script>
+  document.addEventListener('scroll',()=>{const el=document.documentElement,h=el.scrollHeight-el.clientHeight,p=h>0?Math.round((el.scrollTop/h)*100):0;document.getElementById('read-fill').style.width=p+'%';document.getElementById('scroll-pct').textContent=p+'%';},{passive:true});
+  const ANSWERS={q1:'b',q2:'c',q3:'c',q4:'b',q5:'b',q6:'b',q7:'c',q8:'b',q9:'b',q10:'d'};
+  const STORAGE_KEY='bbb_training_records',FB_KEY='bbb_firebase_config';
+
+  function submitQuiz(){
+    const name=document.getElementById('employee-name').value.trim();
+    if(!name){document.getElementById('employee-name').classList.add('error');document.getElementById('employee-name').focus();alert('Please enter your full name before submitting.');return;}
+    for(let i=1;i<=10;i++){if(!document.querySelector(`input[name="q${i}"]:checked`)){alert(`Please answer Question ${i} before submitting.`);document.getElementById(`q${i}`).scrollIntoView({behavior:'smooth',block:'center'});return;}}
+    let correct=0;
+    for(const[q,ans]of Object.entries(ANSWERS)){const sel=document.querySelector(`input[name="${q}"]:checked`),val=sel?sel.value:null;document.querySelectorAll(`#${q} .option-label`).forEach(l=>{const r=l.querySelector('input');if(r.value===ans)l.classList.add('correct-ans');else if(r.value===val&&val!==ans)l.classList.add('wrong-ans');r.disabled=true;});if(val===ans)correct++;}
+    const pct=Math.round((correct/10)*100),passed=pct>=70;
+    const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),isoDate=new Date().toISOString().slice(0,10);
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('results-section').style.display='block';
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+    document.getElementById('cert-name').textContent=name;
+    document.getElementById('cert-score').textContent=correct+'/10 ('+pct+'%)';
+    document.getElementById('cert-result').textContent=passed?'✅ PASSED':'❌ DID NOT PASS';
+    document.getElementById('cert-date').textContent=dateStr;
+    document.getElementById('cert-block').style.display='block';
+    if(passed){document.getElementById('result-card-pass').style.display='block';document.getElementById('pass-pct').textContent=pct+'%';document.getElementById('pass-sub').textContent=correct+' out of 10 correct. Record saved.';document.getElementById('pass-actions').style.display='flex';document.getElementById('cert-result').style.color='#1D8348';}
+    else{document.getElementById('result-card-fail').style.display='block';document.getElementById('fail-pct').textContent=pct+'%';document.getElementById('fail-sub').textContent=correct+' out of 10 correct. You need 70% to pass. Review the material and try again.';document.getElementById('retake-btn').style.display='block';document.getElementById('cert-result').style.color='#C0392B';}
+    const record={id:Date.now().toString(),module:'005',moduleName:'Confined Space Entry Program',standardNum:'SHP-BBB-005',employeeName:name,score:correct,totalQ:10,percentage:pct,passed,dateISO:isoDate,dateDisplay:dateStr,completedAt:new Date().toISOString()};
+    try{const r=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');r.push(record);localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}
+    syncToFirebase(record);
+  }
+
+  function syncToFirebase(record){
+    const raw=localStorage.getItem(FB_KEY);if(!raw)return;
+    const syncEl=document.getElementById('firebase-sync-status');
+    if(syncEl){syncEl.style.display='flex';syncEl.innerHTML='<span>⏳</span>&nbsp; Sending to Safety Director...';}
+    loadFirebaseSDK().then(()=>{const cfg=JSON.parse(raw),app=firebase.apps.length?firebase.apps[0]:firebase.initializeApp(cfg);return firebase.firestore(app).collection('training_records').add(record);})
+    .then(()=>{if(syncEl){syncEl.innerHTML='✅ Record sent to Safety Director\'s dashboard.';syncEl.style.background='#EDFAF3';syncEl.style.borderColor='#1D8348';syncEl.style.color='#1D8348';}})
+    .catch(()=>{if(syncEl){syncEl.innerHTML='⚠️ Could not sync to Safety Director. Download your CSV as backup.';syncEl.style.background='#FFF8F4';syncEl.style.borderColor='#E8611A';syncEl.style.color='#C9510E';}});
+  }
+
+  function loadFirebaseSDK(){
+    if(window.firebase)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';s2.onload=resolve;s2.onerror=reject;document.head.appendChild(s2);};
+      s1.onerror=reject;document.head.appendChild(s1);
+    });
+  }
+
+  function downloadCSV(){
+    try{const records=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),last=records.filter(r=>r.module==='005').pop();if(!last)return;
+    const csv='Employee Name,Module,Module Name,Standard #,Score,Percentage,Passed,Date Completed\n'+`"${last.employeeName}",${last.module},"${last.moduleName}",${last.standardNum},${last.score}/10,${last.percentage}%,${last.passed?'YES':'NO'},"${last.dateDisplay}"`;
+    const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`BBB_Training_${last.employeeName.replace(/\s+/g,'_')}_Module005_${last.dateISO}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+    catch(e){alert('Could not download CSV. Please print the record instead.');}
+  }
+
+  function retakeQuiz(){
+    for(let i=1;i<=10;i++){document.querySelectorAll(`#q${i} .option-label`).forEach(l=>{l.classList.remove('correct-ans','wrong-ans');const r=l.querySelector('input');r.checked=false;r.disabled=false;});}
+    document.getElementById('employee-name').value='';document.getElementById('submit-btn').disabled=false;
+    ['results-section','result-card-pass','result-card-fail','cert-block','pass-actions','retake-btn'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('quiz-section').style.display='block';document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
