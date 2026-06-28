@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 028 &ndash; Emergency Action Plan | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* ALARM TYPE CARDS */
+    .alarm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+    .alarm-card { border-radius: 8px; padding: 16px; border-left: 5px solid; }
+    .alarm-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .alarm-card p { font-size: .82rem; margin: 0; }
+    .ac-fire    { background: #FEF0EE; border-color: #C0392B; } .ac-fire h4 { color: #C0392B; }
+    .ac-h2s     { background: #FFFBEA; border-color: #9a7000; } .ac-h2s h4  { color: #7a5000; }
+    .ac-med     { background: #EDFAF2; border-color: #1D8348; } .ac-med h4  { color: var(--green); }
+    .ac-spill   { background: #EEF4FF; border-color: var(--navy2); } .ac-spill h4 { color: var(--navy2); }
+    .ac-weather { background: #F3E5F5; border-color: #6A1B9A; } .ac-weather h4 { color: #5b2c6f; }
+    .ac-sip     { background: #FBE9E7; border-color: #BF360C; } .ac-sip h4  { color: #7f2000; }
+
+    /* EVACUATION FLOW */
+    .evac-flow { margin: 14px 0; }
+    .evac-step { display: flex; gap: 14px; margin-bottom: 8px; align-items: flex-start; position: relative; }
+    .evac-step:not(:last-child)::after { content: ''; position: absolute; left: 17px; top: 38px; bottom: -8px; width: 2px; background: var(--border); }
+    .evac-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .9rem; color: #fff; z-index: 1; }
+    .en-red    { background: #C0392B; }
+    .en-orange { background: var(--orange); }
+    .en-green  { background: var(--green); }
+    .evac-content { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; flex: 1; }
+    .evac-content strong { display: block; color: var(--navy); font-size: .9rem; margin-bottom: 3px; }
+    .evac-content p { font-size: .84rem; color: #444; margin: 0; }
+
+    /* ROLE CARDS */
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:540px){ .role-grid { grid-template-columns: 1fr; } }
+    .role-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; border-top: 4px solid; }
+    .role-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 8px; }
+    .role-card ul { padding-left: 17px; font-size: .85rem; }
+    .role-card li { margin-bottom: 5px; }
+    .rc-coord { border-color: var(--orange); } .rc-coord h4 { color: var(--orange2); }
+    .rc-bbbs  { border-color: var(--navy2); } .rc-bbbs h4  { color: var(--navy2); }
+    .rc-worker { border-color: var(--green); } .rc-worker h4 { color: var(--green); }
+    .rc-host  { border-color: #7D3C98; } .rc-host h4 { color: #6A1B9A; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-027.html">&larr; Mod 27</a>
+    <a href="module-028.html" class="active">Mod 28</a>
+    <a href="module-029.html">Mod 29 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 28 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 028 &middot; SHP-BBB-028</div>
+  <h1>Emergency Action Plan</h1>
+  <p class="subtitle">What every BBB Tank Services employee must know before an emergency happens &mdash; alarms, evacuation, shelter-in-place, headcounts, and site-specific response procedures at petroleum tank facilities.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 35 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>State the OSHA standards that require a written Emergency Action Plan</li>
+      <li>Identify the six types of emergencies covered by the BBB EAP</li>
+      <li>Describe the roles and responsibilities during an emergency</li>
+      <li>Execute the correct response to each type of emergency alarm</li>
+      <li>Explain the difference between evacuation and shelter-in-place</li>
+      <li>Demonstrate the correct headcount procedure at the assembly point</li>
+      <li>Describe how to report an emergency correctly and quickly</li>
+      <li>Identify site-specific EAP requirements at customer petroleum facilities</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is an EAP &amp; Why Every Worker Must Know It</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>An <strong>Emergency Action Plan (EAP)</strong> is a written document that outlines the procedures employees must follow in the event of an emergency at a workplace. OSHA requires a written EAP for most workplaces under <strong>29 CFR 1910.38</strong> (General Industry) and <strong>29 CFR 1926.35</strong> (Construction). At BBB Tank Services, the EAP is not a document kept in a binder &mdash; it is a set of actions every employee must know by heart and be able to execute without hesitation.</p>
+
+      <p>The fundamental rule of emergency response is: <strong>you cannot learn what to do during an emergency.</strong> Workers who do not know the alarm signals, assembly points, and reporting procedures before an emergency occurs will lose critical seconds &mdash; and seconds matter in petroleum tank emergencies where fires spread rapidly, toxic vapors accumulate, and explosions can occur without warning.</p>
+
+      <h3>What the EAP Must Cover (OSHA 1910.38)</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Required EAP Elements</h4>
+          <ul>
+            <li>Procedures for reporting a fire or other emergency</li>
+            <li>Emergency escape routes and procedures</li>
+            <li>Procedures for workers who remain to operate critical equipment before evacuating</li>
+            <li>Procedures for accounting for all workers after evacuation</li>
+            <li>Rescue and medical duties for any workers designated to perform them</li>
+            <li>Names and contact information of persons to contact for more information</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Site Orientation Requirement</h4>
+          <ul>
+            <li>OSHA requires workers to be briefed on the EAP before being assigned to a job</li>
+            <li>At every customer site, the facility&rsquo;s own EAP must be reviewed during site orientation (see Module 023 &mdash; PSM)</li>
+            <li>The BBB supervisor is responsible for ensuring every crew member receives site EAP orientation before work begins</li>
+            <li>Workers must know the specific assembly point, alarm signals, and emergency contacts for every site they work at</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; The Three Things You Must Know Before Work Starts on Any Site:</strong>
+        <ol style="margin-top:8px;padding-left:18px">
+          <li>What does the emergency alarm sound like, and what does it mean?</li>
+          <li>Where is my primary and secondary assembly point?</li>
+          <li>Who is the site emergency coordinator and how do I reach them?</li>
+        </ol>
+        If you cannot answer all three, ask your supervisor before the work day begins.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Types of Emergencies &amp; Alarm Signals</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>BBB Tank Services employees may encounter several distinct types of emergencies at petroleum storage tank facilities. Each type requires a specific initial response. Knowing which emergency is occurring and what action it demands is the first decision you must make when an alarm sounds.</p>
+
+      <div class="alarm-grid">
+        <div class="alarm-card ac-fire">
+          <h4>&#128293; Fire or Explosion</h4>
+          <p>Continuous siren or horn; sometimes visual strobe. <strong>Evacuate immediately</strong> via designated route upwind. Do not attempt to fight a tank fire &mdash; evacuate the entire dike area. Call 911.</p>
+        </div>
+        <div class="alarm-card ac-h2s">
+          <h4>&#128168; H&sub2;S / Toxic Gas Release</h4>
+          <p>Intermittent horn or specific H&sub2;S alarm tone; sometimes PA announcement. <strong>Evacuate crosswind or upwind</strong> to designated assembly point. Do not re-enter without supplied-air respirator. Call site emergency coordinator.</p>
+        </div>
+        <div class="alarm-card ac-med">
+          <h4>&#128657; Medical Emergency</h4>
+          <p>Radio call &ldquo;Medical emergency at [location]&rdquo; or verbal alert. <strong>Do not move the victim</strong> unless in immediate danger. Designate someone to call 911 and someone to meet EMS at the gate. Keep the area clear.</p>
+        </div>
+        <div class="alarm-card ac-spill">
+          <h4>&#128167; Chemical or Petroleum Spill</h4>
+          <p>PA announcement or radio call. <strong>Stop ignition sources immediately</strong>. Evacuate downwind workers. Notify the facility coordinator. Do not attempt cleanup without proper PPE and authorization.</p>
+        </div>
+        <div class="alarm-card ac-weather">
+          <h4>&#9928; Severe Weather</h4>
+          <p>Tornado siren or weather alert radio. <strong>Move to the designated shelter</strong> (not a trailer or vehicle). Avoid elevated structures such as tank roofs or scaffolding during lightning and high-wind events.</p>
+        </div>
+        <div class="alarm-card ac-sip">
+          <h4>&#127968; Shelter-in-Place</h4>
+          <p>Specific SIP alarm tone or PA announcement: &ldquo;Shelter in place.&rdquo; <strong>Move to the designated solid building</strong>. Close all doors, windows, and HVAC. Do not evacuate outdoors during a toxic vapor release from an adjacent unit.</p>
+        </div>
+      </div>
+
+      <h3>Understanding Your Site&rsquo;s Alarm System</h3>
+      <p>No two petroleum facilities use identical alarm systems. During site orientation, confirm the following for every job site:</p>
+      <table class="std-table">
+        <thead><tr><th>Alarm Type</th><th>What to Confirm at Orientation</th></tr></thead>
+        <tbody>
+          <tr><td>Fire/General Alarm</td><td>Signal type (continuous horn, siren, PA), duration, and whether different signals mean different emergencies</td></tr>
+          <tr><td>H&sub2;S Alarm</td><td>Threshold that triggers site-wide alarm (often 10&ndash;15 ppm), alarm tone, and whether evacuation or shelter-in-place applies</td></tr>
+          <tr><td>All-Clear Signal</td><td>What signal or announcement confirms it is safe to return; never assume all-clear without hearing the designated signal</td></tr>
+          <tr><td>Drill vs. Real Alarm</td><td>How the facility communicates when an alarm is a drill; if uncertain, always respond as if the alarm is real</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>When in Doubt, Treat Every Alarm as Real.</strong> The consequence of evacuating unnecessarily for a drill is minor inconvenience. The consequence of ignoring a real alarm is potentially fatal. If you hear an alarm and cannot immediately confirm it is a drill, evacuate.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Emergency Roles &amp; Responsibilities</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Effective emergency response depends on everyone knowing their role before the emergency occurs. At a BBB Tank Services job site, emergency roles overlap with the host facility&rsquo;s own emergency organization. Understanding who is responsible for what prevents the confusion and delay that cost lives during real incidents.</p>
+
+      <div class="role-grid">
+        <div class="role-card rc-coord">
+          <h4>&#128680; Facility Emergency Coordinator (Host)</h4>
+          <ul>
+            <li>The host employer&rsquo;s designated person responsible for activating the facility EAP</li>
+            <li>Directs the overall emergency response including evacuation, shelter-in-place, and emergency services coordination</li>
+            <li>Has the authority to direct all personnel on site during an emergency, including contractors</li>
+            <li>BBB workers must follow instructions from the facility emergency coordinator during all emergencies on customer sites</li>
+          </ul>
+        </div>
+        <div class="role-card rc-bbbs">
+          <h4>&#128119; BBB Supervisor / Crew Lead</h4>
+          <ul>
+            <li>Responsible for accounting for all BBB Tank Services personnel after evacuation</li>
+            <li>Reports BBB headcount to the facility emergency coordinator at the assembly point</li>
+            <li>Has the authority and responsibility to order immediate evacuation of BBB crew without waiting for facility instruction when imminent danger exists</li>
+            <li>Maintains a current roster of all BBB and subcontract workers on the job site each day</li>
+          </ul>
+        </div>
+        <div class="role-card rc-worker">
+          <h4>&#128083; BBB Worker (All Personnel)</h4>
+          <ul>
+            <li>Know the emergency signals, assembly point, and EAP before work begins</li>
+            <li>Evacuate or shelter-in-place immediately when an alarm sounds; do not wait for a supervisor&rsquo;s order</li>
+            <li>Report to the designated assembly point and remain there until accounted for</li>
+            <li>Immediately inform the BBB supervisor if any BBB worker is missing, injured, or did not make it to the assembly point</li>
+            <li>Never re-enter an evacuated area without explicit authorization from the facility emergency coordinator</li>
+          </ul>
+        </div>
+        <div class="role-card rc-host">
+          <h4>&#128222; Emergency Services (911)</h4>
+          <ul>
+            <li>Call 911 for any fire, explosion, serious injury, or toxic release where professional emergency response is needed</li>
+            <li>Provide: facility address and gate number, nature of emergency, number of people potentially involved, and your callback number</li>
+            <li>Designate one person to meet emergency services at the facility entrance and guide them to the incident location</li>
+            <li>Never assume the facility has already called 911 &mdash; call directly if in doubt</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Critical Operations Personnel</h3>
+      <p>Some petroleum facilities require specific workers to remain at designated posts to perform shutdown or isolation tasks before evacuating. This is rare for BBB Tank Services contract crews &mdash; our personnel are almost always in the &ldquo;evacuate immediately&rdquo; category. However, if a BBB supervisor is specifically designated by the facility as a critical operations person for a given task, they must:</p>
+      <ul>
+        <li>Know exactly which actions to perform and in what sequence</li>
+        <li>Have a defined time limit for completing the actions before self-evacuating regardless of completion</li>
+        <li>Have a buddy who monitors their status during the critical operations period</li>
+        <li>Never exceed the defined time limit &mdash; no equipment is worth a life</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Evacuation Procedures &amp; Assembly Points</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>The Evacuation Sequence</h3>
+      <div class="evac-flow">
+        <div class="evac-step">
+          <div class="evac-num en-red">1</div>
+          <div class="evac-content">
+            <strong>Stop Work &amp; Secure Immediately</strong>
+            <p>Stop all work the instant an alarm sounds. If safe to do so in 5 seconds or less: close any open hatches, shut off ignition sources, drop tools. Do not spend more than 5 seconds securing anything &mdash; your life is worth more than any task state.</p>
+          </div>
+        </div>
+        <div class="evac-step">
+          <div class="evac-num en-red">2</div>
+          <div class="evac-content">
+            <strong>Alert All Nearby Workers</strong>
+            <p>As you leave, verbally alert any coworkers near you who may not have heard the alarm. Do not assume everyone has heard &mdash; tanks, equipment noise, and hearing protection can mask alarm signals.</p>
+          </div>
+        </div>
+        <div class="evac-step">
+          <div class="evac-num en-orange">3</div>
+          <div class="evac-content">
+            <strong>Use the Designated Escape Route</strong>
+            <p>Follow the pre-identified primary escape route. If blocked (fire, spill, collapse), use the alternate route. Do not take shortcuts through areas you haven&rsquo;t been trained on. In petroleum tank emergencies, moving upwind is the priority &mdash; vapors and toxic gases are heavier than air and travel downwind.</p>
+          </div>
+        </div>
+        <div class="evac-step">
+          <div class="evac-num en-orange">4</div>
+          <div class="evac-content">
+            <strong>Do Not Use Elevators, Go Downwind, or Re-Enter</strong>
+            <p>Never re-enter a building or area that has been evacuated. Never drive a vehicle through an active fire or vapor release area. If you become trapped, shelter in place and communicate your location.</p>
+          </div>
+        </div>
+        <div class="evac-step">
+          <div class="evac-num en-green">5</div>
+          <div class="evac-content">
+            <strong>Report to Assembly Point &amp; Stay</strong>
+            <p>Go directly to the designated assembly point. Report to the BBB supervisor. Stay at the assembly point until the all-clear is given by the facility emergency coordinator &mdash; not by a rumor, not by a coworker, only by the official all-clear signal or announcement.</p>
+          </div>
+        </div>
+        <div class="evac-step">
+          <div class="evac-num en-green">6</div>
+          <div class="evac-content">
+            <strong>Headcount &amp; Missing Person Report</strong>
+            <p>The BBB supervisor accounts for all BBB personnel by name. If anyone is unaccounted for, report immediately to the facility emergency coordinator &mdash; do not search for a missing worker yourself. Emergency responders will conduct the search.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Assembly Points at Petroleum Tank Sites</h3>
+      <p>Assembly points must be established and confirmed before work begins. Key rules:</p>
+      <ul>
+        <li><strong>Upwind location:</strong> Assembly points at petroleum facilities must be upwind of the tank farm. Since wind direction changes, know where &ldquo;upwind&rdquo; is from the specific facility&rsquo;s primary prevailing wind direction, and be prepared to relocate the assembly point if wind shifts during an emergency.</li>
+        <li><strong>Distance:</strong> A minimum of 500 feet from the tank farm boundary is typical for petroleum facilities. Some facilities specify distances of 1,000 feet or more based on their hazard analysis. Follow the facility&rsquo;s specified distance.</li>
+        <li><strong>Primary and alternate:</strong> Always know both the primary and the alternate assembly point. If the primary route is blocked, you must go to the alternate without hesitation.</li>
+        <li><strong>No vehicles:</strong> Never drive to the assembly point during an active emergency &mdash; vehicle traffic interferes with emergency responders and creates additional ignition risk in a flammable vapor environment.</li>
+      </ul>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Missing Worker</div>
+        <h4>The Headcount Problem</h4>
+        <p>A fire alarm sounds at a refinery tank farm. A BBB crew of five evacuates to the assembly point. The supervisor counts four workers. One crew member &mdash; a welder &mdash; is unaccounted for. Another crew member says &ldquo;he went to get tools from the truck, he&rsquo;ll be here.&rdquo; The supervisor is tempted to wait a few minutes before reporting.</p>
+        <p><strong>Correct response:</strong> Report the missing worker to the facility emergency coordinator immediately. Do not wait, do not assume, and do not send another crew member to look for him. Emergency responders will locate him and have the equipment and training to do so safely. Every minute of delay in reporting a missing worker potentially delays a rescue. He may be injured, trapped, or overwhelmed by smoke &mdash; or he may simply be at the truck and will check in shortly. Either way, report first and let the emergency coordinator make the determination.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Shelter-in-Place &amp; Specific Emergency Responses</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Shelter-in-Place &mdash; When and Why</h3>
+      <p><strong>Shelter-in-Place (SIP)</strong> is the opposite of evacuation: instead of moving away from the building, you move into a solid building and seal it to protect against an outdoor hazard. SIP is ordered when evacuating outdoors would expose workers to greater risk than staying inside &mdash; specifically when a toxic gas cloud (H&sub2;S, ammonia, chlorine) is moving across the facility in a way that would expose evacuees.</p>
+
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>When Shelter-in-Place Is Ordered</h4>
+          <ul>
+            <li>Toxic gas release from an adjacent process unit where outdoor evacuation would route workers through the gas cloud</li>
+            <li>Large-scale H&sub2;S release where the gas cloud covers the entire site perimeter</li>
+            <li>Tornado or severe weather warning where outdoor evacuation creates tornado risk</li>
+            <li>The facility emergency coordinator will specify when SIP applies &mdash; follow their instruction</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>How to Shelter-in-Place</h4>
+          <ul>
+            <li>Move to the designated SIP building immediately &mdash; solid construction, no open process areas</li>
+            <li>Close all doors, windows, and exterior openings</li>
+            <li>Shut off HVAC, fans, and any air intake systems</li>
+            <li>Seal gaps under doors with towels, tape, or clothing if available</li>
+            <li>Stay away from windows; move to interior rooms if possible</li>
+            <li>Do not leave until the all-clear is announced</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Medical Emergency Response</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Ensure scene safety first.</strong> Before approaching a downed worker, confirm the hazard that caused the injury is not still active (vapor release, energized equipment, falling hazard). Never become a second victim by entering an unsafe scene without appropriate protection.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Call for help immediately.</strong> Have someone call 911 AND the facility emergency number simultaneously. Do not delay calling 911 to notify the facility first &mdash; call both.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Do not move the victim</strong> unless they are in immediate physical danger (fire, toxic atmosphere). Moving an injured worker can worsen spinal injuries. Stabilize in place and wait for EMS unless the hazard demands immediate removal.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Provide basic care within your training.</strong> Workers with First Aid / CPR certification (Module 011) should provide care within their level of training. Workers without certification should keep the victim calm, warm, and still, and manage bystanders.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Meet EMS at the gate.</strong> Designate one person whose only job is to meet emergency services at the facility entrance and guide them directly to the victim. This single action can save critical minutes.</div></li>
+      </ol>
+
+      <h3>Severe Weather Response at Tank Sites</h3>
+      <ul>
+        <li><strong>Tornado warning:</strong> Move immediately to the designated tornado shelter &mdash; a solid masonry or concrete building, never a trailer, portable office, or vehicle. Tank roofs and scaffolding must be immediately cleared when a tornado warning is issued.</li>
+        <li><strong>Lightning:</strong> Suspend all work on tank roofs, scaffolding, and elevated surfaces when lightning is within 10 miles. Workers on metal structures or in open areas are at high risk. Move to a solid building &mdash; not under trees or near isolated tall structures.</li>
+        <li><strong>High winds:</strong> Scaffold work and elevated operations should be suspended when sustained winds exceed 25 mph or gusts exceed 35 mph. Loose materials on scaffolding become projectiles. Secure all equipment and descend before conditions deteriorate.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Reporting Emergencies &amp; Post-Emergency Procedures</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>How to Report an Emergency</h3>
+      <p>Effective emergency reporting is fast, specific, and calm. A panicked or vague report delays emergency response. Use this information structure every time:</p>
+
+      <div class="box box-info">
+        <strong>Emergency Report Structure &mdash; Memorize This:</strong>
+        <ol style="margin-top:10px;padding-left:18px;line-height:2">
+          <li><strong>Who you are:</strong> &ldquo;This is [name] with BBB Tank Services&rdquo;</li>
+          <li><strong>Where you are:</strong> Specific facility name, address, tank number, or GPS coordinates</li>
+          <li><strong>What happened:</strong> Fire / explosion / H&sub2;S release / injury / spill &mdash; be specific</li>
+          <li><strong>How many people involved:</strong> Number of injured, missing, or potentially exposed</li>
+          <li><strong>Your callback number:</strong> Stay on the line or be reachable at this number</li>
+        </ol>
+      </div>
+
+      <h3>Emergency Contact Numbers &mdash; Know These Before Work Starts</h3>
+      <table class="std-table">
+        <thead><tr><th>Contact</th><th>Number</th><th>When to Call</th></tr></thead>
+        <tbody>
+          <tr><td><strong>911</strong></td><td>911</td><td>Any fire, explosion, serious injury, or toxic release requiring emergency services. Always call 911 directly — never assume the facility has already called.</td></tr>
+          <tr><td><strong>Facility Emergency Hotline</strong></td><td>Provided at site orientation</td><td>All emergencies on the customer site; must be obtained before work begins</td></tr>
+          <tr><td><strong>BBB Tank Services Emergency Line</strong></td><td>Provided by your supervisor</td><td>Incidents involving BBB personnel, equipment, or property</td></tr>
+          <tr><td><strong>National Response Center (NRC)</strong></td><td>1-800-424-8802</td><td>Federally reportable chemical spills or releases; your supervisor handles this; for awareness only</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Post-Emergency Requirements</h3>
+      <p>After any emergency event &mdash; even one that did not result in injury &mdash; the following must occur before BBB Tank Services work resumes:</p>
+      <ul>
+        <li><strong>Scene clearance by facility:</strong> Only the facility emergency coordinator or authority having jurisdiction (AHJ) can authorize re-entry into an evacuated area. BBB supervisors may not make this determination independently.</li>
+        <li><strong>Incident report:</strong> Every emergency that involved BBB personnel, equipment, or property must be reported to BBB Tank Services management within the same shift. A written incident report must follow within 24 hours.</li>
+        <li><strong>Near-miss reporting:</strong> An emergency that was averted &mdash; a fire that was stopped before spreading, a worker who was rescued from a toxic atmosphere &mdash; is a near-miss. Near-misses must be reported with the same urgency as actual incidents. The near-miss that goes unreported becomes the next fatality.</li>
+        <li><strong>Equipment inspection:</strong> Any BBB equipment that was exposed to fire, chemical release, or flooding must be inspected before being returned to service. Scaffolding exposed to a structural event must be re-inspected by the competent person before re-use.</li>
+        <li><strong>Stop Work review:</strong> Following any significant emergency, the BBB supervisor must conduct a crew debrief to identify what happened, what the crew did well, and what needs to change before work continues.</li>
+      </ul>
+
+      <div class="box box-success">
+        <strong>&#10003; Your Pre-Work Emergency Checklist &mdash; Every Site, Every Day:</strong>
+        <ul style="margin-top:8px;">
+          <li>I know what the site&rsquo;s emergency alarm sounds like and what each signal means</li>
+          <li>I know where the primary and alternate assembly points are</li>
+          <li>I know the primary and alternate evacuation routes from my work location</li>
+          <li>I know whether my work area requires evacuation or shelter-in-place for different emergency types</li>
+          <li>I have the facility emergency phone number and 911 accessible on my radio or phone</li>
+          <li>I know who the BBB supervisor is and where they will be during the shift</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What are the three things every BBB Tank Services worker must know before starting work at any new site?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> The production schedule, tool inventory, and supervisor&rsquo;s cell phone number</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> What the emergency alarm sounds like, where the assembly point is, and who the site emergency coordinator is</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> The location of the nearest fire extinguisher, the site speed limit, and the facility security code</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> The emergency alarm, the name of the client, and the daily safety meeting time</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. A site-wide H&sub2;S alarm sounds while your crew is working inside a tank dike. Wind is blowing from the north. Which direction should you evacuate?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> Downwind (south) &mdash; the wind will carry the gas away from you as you run in the same direction</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Into the nearest building immediately regardless of wind direction &mdash; shelter-in-place always applies to H&sub2;S</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Crosswind or upwind (east, west, or north) to get out of the gas cloud&rsquo;s path</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> Stay in place and put on your respirator until the alarm stops</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. After evacuating to the assembly point, the BBB supervisor counts five workers but six were on the crew roster that morning. What must happen immediately?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Wait 10 minutes &mdash; the missing worker likely went to the restroom and will arrive shortly</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Send two coworkers to search the job site for the missing worker</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Report the missing worker to the facility emergency coordinator immediately &mdash; do not wait and do not search yourself</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Call the missing worker&rsquo;s cell phone and wait for a response before escalating</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. When is Shelter-in-Place the correct response instead of evacuation?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Whenever a fire alarm sounds inside a building &mdash; you should always stay indoors during any fire alarm</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> When evacuating outdoors would expose workers to greater hazard than staying inside a solid building, such as during a toxic gas cloud moving across the site</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Shelter-in-place applies only to weather emergencies, not chemical releases</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> When the supervisor decides the emergency is minor enough that full evacuation is unnecessary</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. You hear what sounds like the facility emergency alarm but are not certain it&rsquo;s real &mdash; it could be a test. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Continue working until a supervisor confirms the alarm is real &mdash; false alarms are common and disrupting work unnecessarily has consequences</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Ask nearby coworkers if they know whether it&rsquo;s a drill before deciding how to respond</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Evacuate immediately and treat it as a real emergency &mdash; if uncertain, always respond as if the alarm is real</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Listen for a second alarm before evacuating &mdash; real emergencies always produce multiple alarm signals</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. A coworker collapses inside a tank dike and is unresponsive. The gas monitor shows 0% LEL and 20.9% O&sub2;. What is the first action?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Immediately begin CPR while a coworker calls 911</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Confirm the scene is safe first &mdash; ensure no hazard caused the collapse &mdash; then call 911 and provide care within your training level</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Move the victim to a comfortable position and call the supervisor on the radio</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Do nothing until a supervisor arrives and assesses the situation</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. Who has the authority to authorize re-entry into an area that has been evacuated due to a facility emergency?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> The BBB Tank Services supervisor, once they determine the hazard has passed</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Any worker who has completed this Emergency Action Plan training module</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> The facility emergency coordinator or authority having jurisdiction (AHJ) &mdash; not the BBB supervisor independently</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> The most senior BBB crew member present at the assembly point</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. Your crew is working on a scaffold platform 30 feet above ground when a tornado warning siren activates. What is the correct response?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Stay on the scaffold &mdash; elevation keeps you above any flooding and provides a clear view of approaching weather</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Descend the scaffold immediately and move to the designated tornado shelter in a solid masonry or concrete building</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Move to the nearest vehicle and shelter with the windows up</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Continue working until the supervisor confirms the tornado warning is in your immediate area</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. What information must you give when calling 911 to report an emergency at a petroleum tank facility?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Your name, the facility name and address, the nature of the emergency, number of people involved, and your callback number</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Only the facility address &mdash; the 911 dispatcher will ask for everything else</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> The facility name and the number of injured workers &mdash; all other information can be provided when responders arrive</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Your name and the facility&rsquo;s 24-hour emergency line number so the dispatcher can get details directly from the facility</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. An emergency occurred on site but no one was injured and the hazard was controlled within 10 minutes. Does a BBB Tank Services incident report still need to be filed?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> No &mdash; incident reports are only required when injuries or property damage occur</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Only if OSHA requires it &mdash; minor incidents without injury do not trigger BBB reporting requirements</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Yes &mdash; any emergency event involving BBB personnel or property must be reported to BBB management within the same shift, with a written report within 24 hours</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Only if the facility emergency coordinator specifically requests one</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-027.html" class="nav-btn prev">&larr; Module 27</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-029.html" class="nav-btn next">Module 29 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-028 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'c', q3:'c', q4:'b', q5:'c',
+    q6:'b', q7:'c', q8:'b', q9:'a', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'The three non-negotiable pre-work requirements are: (1) know what the emergency alarm sounds like and what it means, (2) know where the primary and alternate assembly points are, and (3) know who the facility emergency coordinator is and how to reach them. These must be confirmed at site orientation, not learned during an emergency.',
+    q2:  'H2S and petroleum vapors are heavier than air and travel downwind. Evacuating downwind moves you into the gas cloud. Move crosswind or upwind to stay out of the cloud\'s path. At petroleum tank sites, always identify the wind direction as part of your pre-work planning so you know which direction to move instinctively if an alarm sounds.',
+    q3:  'Report the missing worker to the facility emergency coordinator immediately — do not wait, and do not send crew members to search. Emergency responders have the training, PPE, and communication systems to conduct a safe search. Delaying the report to "see if they show up" wastes critical time if the worker is injured or overcome by a hazardous atmosphere.',
+    q4:  'Shelter-in-Place is the correct response when evacuating outdoors would expose workers to greater hazard than remaining inside a solid building. This occurs when a toxic gas cloud covers evacuation routes. The facility emergency coordinator will designate when SIP applies — do not make this determination independently.',
+    q5:  'Always treat an unconfirmed alarm as real and evacuate. The consequence of evacuating unnecessarily during a drill is a brief work stoppage. The consequence of ignoring a real alarm can be fatal. Petroleum facilities have killed workers who paused to confirm an alarm was real before responding.',
+    q6:  'Scene safety always comes first. Confirm the hazard that caused the collapse is not still present before approaching. Then: call 911 AND the facility emergency number simultaneously, provide basic care within your training level, and designate someone to meet EMS at the gate. Moving an injured worker without cause can worsen spinal injuries.',
+    q7:  'Only the facility emergency coordinator or authority having jurisdiction (AHJ) can authorize re-entry into an evacuated area. The BBB supervisor does not have the authority to make this determination independently, even if they believe the hazard has passed. Process conditions at petroleum facilities can change rapidly and what appears safe may not be.',
+    q8:  'Scaffold platforms must be immediately cleared when a tornado warning is issued. Elevated structures are extremely dangerous during tornadoes — workers on scaffolding are exposed to flying debris and high winds with no protection. Move to the designated tornado shelter in a solid masonry or concrete structure. Vehicles are not adequate shelter.',
+    q9:  'A complete 911 report includes: who you are (name and company), where you are (facility name, address, and specific location within the facility), what happened (nature of the emergency), how many people are involved, and your callback number. Complete information speeds the response — dispatchers can pre-position appropriate equipment based on the type and scale of the emergency.',
+    q10: 'Yes — any emergency event involving BBB Tank Services personnel or property must be reported regardless of whether injuries occurred. Near-misses (emergencies averted without injury) are especially important to report because they reveal systemic hazards that, if uncorrected, will eventually cause injury. BBB requires same-shift notification to management and a written report within 24 hours.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'028', title:'Emergency Action Plan', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 028 complete! Your record has been saved. Proceed to Module 029.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

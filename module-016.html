@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 016 &ndash; Hearing Conservation Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    /* TOP NAV */
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    /* PROGRESS */
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 620px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    /* PAGE WRAP */
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    /* OBJECTIVES */
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    /* SECTION ACCORDION */
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p  { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    /* CALLOUT BOXES */
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong  { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong    { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    /* TWO / THREE COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    /* TABLE */
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* NOISE METER */
+    .noise-meter { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 16px 0; }
+    .noise-row { display: flex; align-items: center; padding: 9px 16px; border-bottom: 1px solid var(--border); gap: 14px; font-size: .87rem; }
+    .noise-row:last-child { border-bottom: none; }
+    .noise-db { font-weight: 800; font-size: .95rem; width: 56px; flex-shrink: 0; }
+    .noise-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 10px; overflow: hidden; }
+    .noise-bar { height: 100%; border-radius: 4px; }
+    .noise-label { width: 200px; flex-shrink: 0; color: var(--muted); font-size: .82rem; }
+    .n-safe   { background: #27ae60; }
+    .n-action { background: #f39c12; }
+    .n-pel    { background: #e67e22; }
+    .n-danger { background: #c0392b; }
+
+    /* STEPS */
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    /* HPD CARDS */
+    .hpd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 14px 0; }
+    .hpd-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; border-top: 3px solid var(--orange); }
+    .hpd-card h4 { color: var(--navy); font-size: .92rem; font-weight: 700; margin-bottom: 8px; }
+    .hpd-card .hpd-nrr { font-size: .8rem; background: var(--navy); color: var(--orange); display: inline-block; padding: 2px 9px; border-radius: 10px; margin-bottom: 8px; font-weight: 700; }
+    .hpd-card ul { padding-left: 17px; font-size: .85rem; color: #333; }
+    .hpd-card li { margin-bottom: 5px; }
+
+    /* SCENARIO */
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p  { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    /* QUIZ */
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    /* MODULE NAV */
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    /* FOOTER */
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-015.html">&larr; Mod 15</a>
+    <a href="module-016.html" class="active">Mod 16</a>
+    <a href="module-017.html">Mod 17 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 16 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 016 &middot; SHP-BBB-016</div>
+  <h1>Hearing Conservation Program</h1>
+  <p class="subtitle">Understanding noise hazards, OSHA exposure limits, hearing protection devices, and your rights and responsibilities under the BBB Tank Services Hearing Conservation Program.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 30 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Explain how excessive noise damages hearing permanently</li>
+      <li>State OSHA&rsquo;s Action Level and Permissible Exposure Limit for noise</li>
+      <li>Identify common noise sources at BBB Tank Services job sites</li>
+      <li>Describe the 5-dB exchange rate and how exposure time is calculated</li>
+      <li>Identify the three types of hearing protection devices and their correct use</li>
+      <li>Calculate effective noise reduction using a hearing protector&rsquo;s NRR</li>
+      <li>Explain the purpose and schedule of audiometric testing</li>
+      <li>State your rights and responsibilities under the BBB HCP</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> How Noise Damages Hearing</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Noise-induced hearing loss (NIHL) is one of the most common occupational injuries in the United States &mdash; and one of the most preventable. Unlike a broken bone, hearing loss is <strong>permanent and irreversible</strong>. There is no surgery or medication that restores noise-damaged hearing. Once it is gone, it is gone.</p>
+
+      <h3>The Mechanism of Noise Damage</h3>
+      <p>Inside the inner ear (cochlea) are thousands of microscopic hair cells that convert sound vibrations into nerve signals sent to the brain. These hair cells cannot regenerate. Excessive noise physically destroys them &mdash; bending, breaking, or tearing them from the basilar membrane. Early damage tends to occur in the 4,000 Hz frequency range, which is the range most important for understanding speech clearly.</p>
+
+      <div class="box box-danger">
+        <strong>&#9888; Noise Damage Is Cumulative and Painless.</strong> Hearing loss builds up over years of repeated exposure without any warning pain. By the time a worker notices they are struggling to hear conversations, significant permanent damage has already occurred. Tinnitus (constant ringing or buzzing in the ears) is often the first sign &mdash; and it is usually permanent.
+      </div>
+
+      <h3>Symptoms of Noise-Induced Hearing Loss</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Early Signs (Often Ignored)</h4>
+          <ul>
+            <li>Ringing, buzzing, or hissing in ears after work (tinnitus)</li>
+            <li>Muffled sounds for a few hours after a loud shift (temporary threshold shift)</li>
+            <li>Needing to turn up the TV or phone volume</li>
+            <li>Difficulty understanding speech in background noise</li>
+            <li>Asking people to repeat themselves frequently</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Advanced Signs</h4>
+          <ul>
+            <li>Permanent high-pitched ringing (chronic tinnitus)</li>
+            <li>Inability to understand conversations without lip-reading</li>
+            <li>Difficulty hearing high-frequency sounds (birds, alarms, children&rsquo;s voices)</li>
+            <li>Audiogram showing a notch at 4,000 Hz &mdash; the &ldquo;NIHL notch&rdquo;</li>
+            <li>Social withdrawal due to communication difficulty</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Why Tank Services Work Is High Risk</h3>
+      <p>BBB Tank Services employees are routinely exposed to some of the loudest equipment in industrial work. Common sources include:</p>
+      <div class="noise-meter">
+        <div class="noise-row">
+          <div class="noise-db" style="color:#27ae60">60 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-safe" style="width:37%"></div></div>
+          <div class="noise-label">Normal conversation &mdash; no risk</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#f39c12">85 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-action" style="width:56%"></div></div>
+          <div class="noise-label">OSHA Action Level &mdash; HCP enrollment required</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#e67e22">90 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-pel" style="width:62%"></div></div>
+          <div class="noise-label">OSHA PEL &mdash; max 8 hrs/day unprotected</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#c0392b">95 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-danger" style="width:68%"></div></div>
+          <div class="noise-label">Angle grinder / vacuum truck &mdash; max 4 hrs</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#c0392b">100 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-danger" style="width:75%"></div></div>
+          <div class="noise-label">Needle scaler / impact wrench &mdash; max 2 hrs</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#c0392b">105 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-danger" style="width:82%"></div></div>
+          <div class="noise-label">Pneumatic chipping hammer &mdash; max 1 hr</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#6b0000">110 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-danger" style="width:90%"></div></div>
+          <div class="noise-label">High-pressure water blasting &mdash; max 30 min</div>
+        </div>
+        <div class="noise-row">
+          <div class="noise-db" style="color:#6b0000">115 dB</div>
+          <div class="noise-bar-wrap"><div class="noise-bar n-danger" style="width:100%"></div></div>
+          <div class="noise-label">Maximum exposure even with protection &mdash; 15 min</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> OSHA Noise Standards &amp; Exposure Limits</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>OSHA regulates occupational noise exposure under <strong>29 CFR 1910.95</strong> (General Industry) and <strong>29 CFR 1926.52</strong> (Construction). These standards establish the maximum noise doses workers may receive and trigger requirements for hearing conservation programs.</p>
+
+      <h3>Key Exposure Limits</h3>
+      <table class="std-table">
+        <thead><tr><th>Limit</th><th>Level</th><th>What It Triggers</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Action Level (AL)</strong></td>
+            <td>85 dBA as an 8-hour TWA</td>
+            <td>Enrollment in Hearing Conservation Program; noise monitoring; audiometric testing; hearing protection made available (mandatory use begins at PEL)</td>
+          </tr>
+          <tr>
+            <td><strong>Permissible Exposure Limit (PEL)</strong></td>
+            <td>90 dBA as an 8-hour TWA</td>
+            <td>Mandatory engineering and administrative controls; mandatory hearing protection; feasible noise reduction required</td>
+          </tr>
+          <tr>
+            <td><strong>Maximum Instantaneous Exposure</strong></td>
+            <td>140 dBC peak sound pressure</td>
+            <td>Never to be exceeded, even for an instant &mdash; applies to impact and impulse noise (gunshots, explosions, hammering on steel)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>The 5-dB Exchange Rate (Time-Dose Relationship)</h3>
+      <p>OSHA uses a <strong>5 dB exchange rate</strong>: for every 5 dB increase in noise level, the permissible exposure time is cut in half. Starting from the 8-hour PEL of 90 dBA:</p>
+
+      <table class="std-table">
+        <thead><tr><th>Sound Level (dBA)</th><th>Maximum Exposure Time (Unprotected)</th></tr></thead>
+        <tbody>
+          <tr><td>90 dBA</td><td>8 hours</td></tr>
+          <tr><td>95 dBA</td><td>4 hours</td></tr>
+          <tr><td>100 dBA</td><td>2 hours</td></tr>
+          <tr><td>105 dBA</td><td>1 hour</td></tr>
+          <tr><td>110 dBA</td><td>30 minutes</td></tr>
+          <tr><td>115 dBA</td><td>15 minutes (maximum, regardless)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>NIOSH vs. OSHA Exchange Rate:</strong> NIOSH (National Institute for Occupational Safety and Health) recommends a stricter <strong>3 dB exchange rate</strong> and a 85 dBA PEL. Under NIOSH, exposure time halves with every 3 dB increase &mdash; meaning 88 dBA = 4 hours, 91 dBA = 2 hours, etc. BBB Tank Services follows the OSHA standard for compliance purposes but recommends workers treat NIOSH guidelines as best practice.
+      </div>
+
+      <h3>Time-Weighted Average (TWA) &amp; Noise Dose</h3>
+      <p>Because workers are exposed to different noise levels throughout a shift, OSHA uses a <strong>time-weighted average (TWA)</strong> to calculate total noise dose for the day. A noise dose of 100% equals the OSHA PEL. Exposures above 50% dose (the Action Level) trigger HCP requirements. Personal dosimeters worn on the worker&rsquo;s collar collect this data during a full work shift.</p>
+
+      <div class="box box-warning">
+        <strong>&#9888; Inside Tanks = Higher Exposure.</strong> Metal tank interiors reflect and amplify noise. A tool that measures 95 dBA in open air may measure 100&ndash;105 dBA inside a tank due to reverberant sound buildup. Always assume elevated noise exposure when working inside any metal-walled confined space.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Noise Monitoring &amp; Audiometric Testing</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Noise Monitoring</h3>
+      <p>When employee exposures may equal or exceed the Action Level (85 dBA TWA), BBB Tank Services is required to conduct noise monitoring to measure actual exposure levels. Monitoring results determine which employees must be enrolled in the Hearing Conservation Program.</p>
+
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Sound Level Meter (SLM)</h4>
+          <ul>
+            <li>Handheld device that measures noise level at a specific location and time</li>
+            <li>Used for area surveys and to identify noisy equipment</li>
+            <li>Good for comparing before/after engineering controls</li>
+            <li>Does not capture the worker&rsquo;s full-shift exposure</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Personal Noise Dosimeter</h4>
+          <ul>
+            <li>Worn on the worker&rsquo;s collar near the ear for a full shift</li>
+            <li>Continuously records noise exposure and calculates TWA and dose %</li>
+            <li>Most accurate method for determining individual worker exposure</li>
+            <li>Required when exposures may exceed the Action Level</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Audiometric Testing (Hearing Tests)</h3>
+      <p>Audiometric testing measures a worker&rsquo;s hearing ability across a range of frequencies. It is the only way to detect early noise-induced hearing loss before it becomes severe. Under OSHA 1910.95, audiometric testing is required for all employees whose noise exposures equal or exceed the Action Level.</p>
+
+      <table class="std-table">
+        <thead><tr><th>Test</th><th>When Required</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Baseline Audiogram</strong></td>
+            <td>Within 6 months of first enrollment in the HCP (or within 1 year if a mobile test van is used)</td>
+            <td>Establishes a baseline hearing threshold to compare all future tests against. Must be preceded by 14 hours of quiet (no noise exposure) before the test.</td>
+          </tr>
+          <tr>
+            <td><strong>Annual Audiogram</strong></td>
+            <td>At least once per year while enrolled in the HCP</td>
+            <td>Detects changes in hearing compared to the baseline. Identifies Standard Threshold Shifts (STS) that may indicate noise damage.</td>
+          </tr>
+          <tr>
+            <td><strong>Revised Baseline</strong></td>
+            <td>When an STS is confirmed or when hearing improves</td>
+            <td>Updated baseline used for future comparisons</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Standard Threshold Shift (STS)</h3>
+      <p>An STS occurs when a worker&rsquo;s hearing worsens by an average of <strong>10 dB or more</strong> at 2,000, 3,000, and 4,000 Hz in either ear compared to their baseline audiogram. When an STS is detected:</p>
+      <ul>
+        <li>BBB Tank Services must notify the affected employee in writing within 21 days</li>
+        <li>The employee&rsquo;s hearing protector use is evaluated &mdash; a higher-attenuation protector may be required</li>
+        <li>The employee is referred for additional audiological evaluation if the STS is work-related</li>
+        <li>The STS may be recordable on the OSHA 300 Log if it is work-related and meets severity criteria</li>
+      </ul>
+
+      <div class="box box-success">
+        <strong>&#10003; Your Right to Audiogram Results:</strong> You are entitled to a copy of your audiogram results. You also have the right to consult with a qualified audiologist or physician about your results. Ask your supervisor if you have questions about your hearing test.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Engineering &amp; Administrative Controls</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>OSHA&rsquo;s hierarchy of controls requires that engineering and administrative controls be used to reduce noise exposure to the PEL before relying on hearing protection. Hearing protection is the last line of defense &mdash; not the first solution.</p>
+
+      <h3>Engineering Controls</h3>
+      <p>Engineering controls physically reduce the amount of noise generated or the amount that reaches the worker&rsquo;s ear. They are the most effective and permanent solutions:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Noise Reduction at the Source</h4>
+          <ul>
+            <li>Selecting lower-noise tools and equipment where possible (e.g., electric vs. pneumatic)</li>
+            <li>Installing mufflers or silencers on pneumatic exhaust ports</li>
+            <li>Maintaining equipment &mdash; worn bearings, loose panels, and damaged components all add noise</li>
+            <li>Using rubber-lined or coated hoppers and chutes to reduce impact noise</li>
+            <li>Vibration isolation mounts on compressors and generators</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Noise Reduction at the Path</h4>
+          <ul>
+            <li>Noise barriers and enclosures around compressors and generators</li>
+            <li>Distance &mdash; noise decreases by 6 dB for every doubling of distance from the source</li>
+            <li>Sound-absorbing materials inside tank enclosures where feasible</li>
+            <li>Remote positioning of loud equipment away from workers</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Administrative Controls</h3>
+      <p>Administrative controls reduce exposure by limiting time workers spend in noisy areas:</p>
+      <ul>
+        <li><strong>Job rotation</strong> &mdash; rotating workers through noisy tasks limits individual dose accumulation</li>
+        <li><strong>Scheduling</strong> &mdash; performing the loudest operations when fewer workers are present</li>
+        <li><strong>Quiet zones</strong> &mdash; designated rest areas away from noise where workers can reduce dose during breaks</li>
+        <li><strong>Posting noise hazard areas</strong> &mdash; marking areas where noise exceeds 85 dBA so workers know to don hearing protection before entering</li>
+        <li><strong>Remote operation</strong> &mdash; operating loud equipment from a distance using extended controls or remote systems</li>
+      </ul>
+
+      <div class="box box-info">
+        <strong>The 6 dB Rule:</strong> Doubling the distance between a worker and a noise source reduces exposure by approximately 6 dB. Moving from 5 feet to 10 feet away from a generator running at 100 dBA reduces exposure to roughly 94 dBA. This is a simple, no-cost administrative control.
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Controls in Action</div>
+        <h4>The Noisy Generator</h4>
+        <p>A portable generator powering a work site produces 100 dBA at the work position. A crew member will be working within 5 feet of it for 6 hours. At 100 dBA, the OSHA limit is 2 hours &mdash; this exposure is three times the limit.</p>
+        <p><strong>Engineering control:</strong> Move the generator 40 feet away and run a longer power cable. At 40 feet, exposure drops to approximately 88 dBA &mdash; below the PEL for 8 hours. <strong>Administrative control:</strong> If relocation is not possible, rotate workers every 2 hours to limit individual dose. <strong>PPE as backup:</strong> Workers near the generator wear dual hearing protection (earplugs plus earmuffs) regardless of controls applied.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Hearing Protection Devices</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>When engineering and administrative controls do not bring exposure below the PEL, or while those controls are being implemented, <strong>Hearing Protection Devices (HPDs)</strong> must be worn. BBB Tank Services requires HPD use in all areas posted as hearing protection zones and whenever workers use or are near the equipment identified in Section 1.</p>
+
+      <h3>Types of Hearing Protection</h3>
+      <div class="hpd-grid">
+        <div class="hpd-card">
+          <h4>Foam Earplugs (Disposable)</h4>
+          <div class="hpd-nrr">NRR: 25&ndash;33 dB</div>
+          <ul>
+            <li>Most common and widely available</li>
+            <li>Must be rolled, inserted correctly, and allowed to expand</li>
+            <li>Ineffective when inserted incorrectly &mdash; proper technique is critical</li>
+            <li>Single-use; replace daily or when soiled</li>
+            <li>Not suitable for frequent insertion/removal during the shift</li>
+          </ul>
+        </div>
+        <div class="hpd-card">
+          <h4>Pre-Molded Earplugs (Reusable)</h4>
+          <div class="hpd-nrr">NRR: 22&ndash;30 dB</div>
+          <ul>
+            <li>Made of silicone or rubber; washable and reusable</li>
+            <li>Consistent fit &mdash; good for frequent removal during the shift</li>
+            <li>Must be fitted to individual ear canal size</li>
+            <li>Keep on a cord to prevent loss</li>
+            <li>Inspect regularly for hardening or deformation</li>
+          </ul>
+        </div>
+        <div class="hpd-card">
+          <h4>Earmuffs</h4>
+          <div class="hpd-nrr">NRR: 20&ndash;30 dB</div>
+          <ul>
+            <li>Hard cups with cushioned seals worn over the ears</li>
+            <li>Easier to put on and take off correctly than earplugs</li>
+            <li>Seal quality degrades with facial hair, glasses, or hard hat straps breaking the seal</li>
+            <li>Must be compatible with hard hat attachment</li>
+            <li>Inspect cushions &mdash; replace when hardened or cracked</li>
+          </ul>
+        </div>
+        <div class="hpd-card">
+          <h4>Dual Protection (Plugs + Muffs)</h4>
+          <div class="hpd-nrr">NRR: Combined</div>
+          <ul>
+            <li>Required when noise levels exceed 105 dBA</li>
+            <li>Combined NRR is NOT simply additive</li>
+            <li>OSHA method: take the higher NRR and add 5 dB</li>
+            <li>Provides maximum attenuation for highest-risk operations</li>
+            <li>Used during needle scaling, high-pressure water blasting, and confined space demolition</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Understanding NRR &mdash; Noise Reduction Rating</h3>
+      <p>Every hearing protector is tested and given a <strong>Noise Reduction Rating (NRR)</strong> measured in decibels. However, the NRR is measured under ideal laboratory conditions. In the real world, workers often insert earplugs incorrectly or have imperfect seal on earmuffs. OSHA requires a <strong>derating</strong> to account for this.</p>
+
+      <div class="box box-info">
+        <strong>OSHA Derating Formula:</strong><br>
+        <strong>Effective Protection (dB) = (NRR &minus; 7) &divide; 2</strong><br><br>
+        <strong>Example:</strong> Foam earplugs with NRR 29:<br>
+        Effective protection = (29 &minus; 7) &divide; 2 = <strong>11 dB of real-world attenuation</strong><br><br>
+        If the noise level is 100 dBA and your earplugs provide 11 dB effective attenuation, your protected exposure is approximately <strong>89 dBA</strong> &mdash; just below the OSHA PEL. This is why correct insertion technique is essential.
+      </div>
+
+      <h3>Correct Foam Earplug Insertion &mdash; Step by Step</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Wash your hands.</strong> Dirty hands contaminate the earplug and introduce bacteria into the ear canal, causing ear infections.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Roll the earplug into a tight, thin cylinder.</strong> Roll between your fingers until it is compressed to roughly half its normal diameter. No creases.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Pull the top of your ear up and back.</strong> Use your opposite hand to reach over your head and pull the ear upward and backward. This straightens the ear canal for a deep insertion.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Insert the rolled earplug deeply into the canal.</strong> Push it in until it sits deep &mdash; not just at the entrance. Hold it in place for 20&ndash;30 seconds while it expands to fill the canal.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Check the fit.</strong> Cup your hands over your ears and release. If sounds become noticeably more muffled when cupping, the earplugs are not inserted deeply enough &mdash; reinsert them.</div></li>
+      </ol>
+
+      <div class="box box-warning">
+        <strong>&#9888; Common Earplug Mistakes:</strong> Inserting only halfway (the most common error), not rolling small enough before inserting, not holding in place during expansion, and wearing earplugs with dirty hands. Any of these can reduce actual attenuation by 50% or more, turning a 29-NRR earplug into the equivalent of a 15-NRR protector.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> BBB Tank Services Hearing Conservation Program</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Program Requirements</h3>
+      <p>BBB Tank Services maintains a written Hearing Conservation Program in compliance with OSHA 29 CFR 1910.95. The program applies to all employees whose noise exposures equal or exceed the 85 dBA Action Level during any work shift. Key program elements:</p>
+
+      <table class="std-table">
+        <thead><tr><th>Program Element</th><th>BBB Tank Services Requirement</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Noise Monitoring</strong></td><td>Conducted when exposures may reach the Action Level; repeated when work processes, equipment, or controls change significantly</td></tr>
+          <tr><td><strong>Audiometric Testing</strong></td><td>Baseline within 6 months of enrollment; annual testing thereafter; follow-up testing when STS is detected</td></tr>
+          <tr><td><strong>Hearing Protection</strong></td><td>Available to all employees at or above Action Level; mandatory at or above the PEL (90 dBA) and in all posted hearing protection zones</td></tr>
+          <tr><td><strong>Training</strong></td><td>Annual training for all HCP participants covering noise effects, exposure limits, HPD selection and use, and audiometric testing</td></tr>
+          <tr><td><strong>Recordkeeping</strong></td><td>Audiometric test records retained for duration of employment; noise exposure records retained for 2 years; available to employees on request</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Hearing Protection Zones at BBB Tank Services</h3>
+      <p>Areas or operations requiring mandatory hearing protection are identified with orange-and-black <strong>&ldquo;Hearing Protection Required&rdquo;</strong> signs. You must don hearing protection <em>before</em> entering a posted zone &mdash; not after you are already inside. Common mandatory HPD zones include:</p>
+      <ul>
+        <li>All areas where needle scalers, pneumatic chippers, or water blasters are in operation</li>
+        <li>Interior of tanks during any powered tool use (reverberant noise amplification)</li>
+        <li>Within 25 feet of operating generators, compressors, or vacuum trucks</li>
+        <li>All grinding and cutting operations</li>
+        <li>Any area posted with a hearing protection sign, regardless of perceived noise level</li>
+      </ul>
+
+      <h3>Your Responsibilities</h3>
+      <ul>
+        <li><strong>Wear hearing protection</strong> whenever required &mdash; in posted zones, during designated operations, and at any time noise becomes uncomfortable</li>
+        <li><strong>Attend your annual audiometric test</strong> during company-scheduled testing. Missing your test means an undetected shift in your hearing may go unaddressed</li>
+        <li><strong>Inspect your hearing protectors</strong> before each use. Hardened or cracked earplug cushions, damaged earmuff cups, or stretched headbands reduce protection significantly</li>
+        <li><strong>Report damaged or lost hearing protectors</strong> to your supervisor immediately. Never go without protection because yours are damaged &mdash; replacements are available at no cost</li>
+        <li><strong>Report symptoms</strong> &mdash; if you notice ringing in your ears after a shift, muffled hearing, or difficulty understanding speech, report it to your supervisor and request a hearing evaluation</li>
+      </ul>
+
+      <div class="box box-success">
+        <strong>&#10003; Hearing Protection Is Free:</strong> BBB Tank Services provides hearing protection at no cost to all enrolled employees. You may request your preferred type of protector (foam plugs, pre-molded plugs, or earmuffs). You may also request a hearing protector fitting and insertion training session from your safety representative at any time.
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Know When to Act</div>
+        <h4>The Ringing After the Shift</h4>
+        <p>After a long day of needle scaling inside a crude oil storage tank, a crew member notices a persistent high-pitched ringing in both ears on the drive home. It is still there when he wakes up the next morning. He figures it will go away and does not mention it. Three months later, his annual audiogram shows a Standard Threshold Shift in both ears at 4,000 Hz.</p>
+        <p><strong>What should have happened:</strong> Ringing in the ears after a work shift &mdash; even temporary &mdash; is a warning sign of noise overexposure and possible temporary threshold shift. He should have reported the symptoms to his supervisor that day. An immediate evaluation could have confirmed the HPDs were not being inserted correctly, triggering retraining and preventing cumulative damage. Early reporting gives the program a chance to intervene before the STS becomes permanent.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. Noise-induced hearing loss is different from most other occupational injuries in a critical way. What is it?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> It only affects workers over age 50 who already have age-related hearing decline</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> It is permanent and irreversible &mdash; damaged hearing hair cells do not regenerate</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> It is fully treatable with hearing aids, which restore normal hearing</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> It only occurs from a single very loud noise event, not from repeated moderate exposure</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. What is the OSHA Action Level for noise, and what does reaching it require?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> 90 dBA TWA &mdash; requires mandatory hearing protection use at all times</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> 85 dBA TWA &mdash; triggers enrollment in the Hearing Conservation Program, noise monitoring, and audiometric testing</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> 100 dBA TWA &mdash; requires engineering controls and dual hearing protection</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> 80 dBA TWA &mdash; requires posting of noise hazard signs in the area</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. A worker uses an angle grinder producing 95 dBA. According to OSHA&rsquo;s 5 dB exchange rate, what is the maximum unprotected exposure time at this level?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> 8 hours &mdash; the full shift, since 95 dBA is below the PEL</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> 2 hours</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> 4 hours</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> 6 hours</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. Why are noise levels often higher inside a metal tank than the same tool produces in the open air?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> The oxygen concentration inside tanks is higher, which carries sound better</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Metal tank interiors reflect and amplify sound, creating reverberant noise buildup that can add 5&ndash;10 dB above open-air levels</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Tank interiors actually reduce noise because the walls absorb sound waves</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> The vibration of the tank walls cancels out lower frequencies, making only high frequencies louder</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. Using the OSHA derating formula, what is the effective real-world attenuation of foam earplugs with an NRR of 29?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> 29 dB &mdash; the full NRR applies in all conditions</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> 22 dB &mdash; subtract 7 from the NRR</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> 11 dB &mdash; calculated as (NRR &minus; 7) &divide; 2 = (29 &minus; 7) &divide; 2</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> 14.5 dB &mdash; divide the NRR by 2</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. When inserting foam earplugs, what is the most important technique step that workers most commonly skip?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Warming the earplug in your hands before rolling it so it stays soft</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Rolling the earplug tightly, pulling the ear up and back to straighten the canal, and inserting it deeply &mdash; then holding it in for 20&ndash;30 seconds while it expands</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Inserting just to the entrance of the ear canal so it does not get stuck</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Wetting the earplug with water first to help it slide in</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A Standard Threshold Shift (STS) in an audiogram means:</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> The worker scored below average on the test compared to the general population</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> The worker&rsquo;s hearing has improved significantly since their baseline test</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> The worker&rsquo;s hearing has worsened by an average of 10 dB or more at 2,000, 3,000, and 4,000 Hz in either ear compared to their baseline audiogram</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> The worker failed the audiogram and is no longer eligible for hearing protection under the HCP</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. You notice ringing in your ears at the end of a needle-scaling shift inside a tank. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Take a pain reliever and rest &mdash; it will resolve on its own by morning</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Report the symptom to your supervisor before the next shift so your hearing protection fit and technique can be evaluated</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Switch to earmuffs for the next shift and do not mention it unless the ringing persists for more than a week</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Nothing &mdash; temporary ringing after loud work is normal and expected and does not indicate any problem</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. What is the first and most preferred method to reduce worker noise exposure, according to the hierarchy of controls?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Providing the highest-NRR hearing protectors available</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Rotating workers through noisy tasks to spread exposure across the crew</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Engineering controls &mdash; reducing noise at the source or along its path to the worker</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Posting hearing protection signs and enforcing HPD use in noise zones</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. When are you required to wear hearing protection at a BBB Tank Services job site?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Only when operating power tools yourself &mdash; bystanders are not required to wear HPDs</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Only when noise levels exceed 100 dBA, since lower levels are not dangerous with brief exposure</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Whenever you are in a posted hearing protection zone, using or near designated noisy equipment, or at or above the OSHA PEL &mdash; regardless of how brief your time in the area</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Only during the first two hours of a shift, when cumulative noise dose is accumulating most rapidly</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-015.html" class="nav-btn prev">&larr; Module 15</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-017.html" class="nav-btn next">Module 17 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-016 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  /* ── Accordion ─────────────────────────────────────────────── */
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  /* ── Progress ──────────────────────────────────────────────── */
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  /* ── Quiz ──────────────────────────────────────────────────── */
+  const ANSWERS = {
+    q1:'b', q2:'b', q3:'c', q4:'b', q5:'c',
+    q6:'b', q7:'c', q8:'b', q9:'c', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'Hearing loss caused by noise is permanent. The hair cells inside the cochlea that convert sound into nerve signals cannot regenerate. Hearing aids amplify sound but do not restore the original neural pathway. This is why prevention is the only effective strategy.',
+    q2:  'The OSHA Action Level is 85 dBA as an 8-hour TWA. At this level, employers must enroll affected workers in the Hearing Conservation Program, conduct noise monitoring, and provide audiometric testing. Mandatory hearing protection use does not begin until the PEL of 90 dBA.',
+    q3:  'OSHA\'s 5 dB exchange rate: starting from 90 dBA = 8 hours, each 5 dB increase halves the time. 95 dBA = 4 hours maximum unprotected exposure. Without hearing protection, any worker using a 95-dBA grinder for more than 4 hours has exceeded their daily dose.',
+    q4:  'Metal tank interiors act like reverberant chambers, reflecting sound off every surface and causing buildup. The same tool can measure 5–10 dB louder inside a tank compared to open air. This is why tank interior work almost always requires hearing protection regardless of the tool\'s labeled noise rating.',
+    q5:  'The OSHA derating formula is (NRR − 7) ÷ 2. For NRR 29: (29 − 7) ÷ 2 = 11 dB. This means foam earplugs with a 29 NRR provide approximately 11 dB of real-world noise reduction — not 29 dB. Correct insertion technique is essential to get even this level of protection.',
+    q6:  'Deep insertion after pulling the ear up and back to straighten the canal, combined with holding the plug in place for 20–30 seconds during expansion, is the most critical and most commonly skipped sequence. Half-inserted earplugs may provide only 5–8 dB of attenuation — far below their NRR rating.',
+    q7:  'An STS is defined as an average shift of 10 dB or more at 2,000, 3,000, and 4,000 Hz in either ear compared to the baseline audiogram. It is a regulatory trigger that requires written notification, HPD re-evaluation, and possible referral for audiological evaluation.',
+    q8:  'Post-shift ringing (tinnitus) is a warning sign of a temporary threshold shift — your hearing has been temporarily reduced by noise overexposure. Reporting it immediately allows supervisors to evaluate HPD fit and technique before cumulative damage causes a permanent shift. Never ignore it.',
+    q9:  'The hierarchy of controls requires engineering controls first: reducing noise at the source (quieter equipment, mufflers, maintenance) or at the path (barriers, distance, enclosures). Administrative controls come second, and hearing protection is the last resort — important but least effective long-term.',
+    q10: 'Hearing protection is required any time you are in a posted zone or within the specified distance of designated equipment, regardless of duration. Brief exposures to very high noise levels can contribute significantly to your daily dose. The "I\'m only here for a minute" approach is a leading cause of cumulative hearing damage.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'016', title:'Hearing Conservation Program', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 016 complete! Your record has been saved. Proceed to Module 017.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

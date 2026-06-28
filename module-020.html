@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 020 &ndash; Control of Hazardous Energy / Lockout &amp; Tagout | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* ENERGY TYPE CARDS */
+    .energy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 14px 0; }
+    .energy-card { border-radius: 8px; padding: 14px 15px; border-top: 4px solid; }
+    .energy-card h4 { font-size: .88rem; font-weight: 700; margin-bottom: 6px; }
+    .energy-card ul { padding-left: 15px; font-size: .8rem; }
+    .energy-card li { margin-bottom: 4px; }
+    .ec-elec  { background: #FFF8E1; border-color: #F9A825; }
+    .ec-elec h4 { color: #F57F17; }
+    .ec-pneu  { background: #E3F2FD; border-color: #1565C0; }
+    .ec-pneu h4 { color: #1565C0; }
+    .ec-hydr  { background: #E8F5E9; border-color: #2E7D32; }
+    .ec-hydr h4 { color: #2E7D32; }
+    .ec-mech  { background: #FCE4EC; border-color: #C62828; }
+    .ec-mech h4 { color: #C62828; }
+    .ec-therm { background: #FBE9E7; border-color: #BF360C; }
+    .ec-therm h4 { color: #BF360C; }
+    .ec-chem  { background: #F3E5F5; border-color: #6A1B9A; }
+    .ec-chem h4 { color: #6A1B9A; }
+
+    /* LOTO PROCEDURE FLOW */
+    .loto-flow { margin: 16px 0; }
+    .loto-step { display: flex; gap: 14px; margin-bottom: 6px; align-items: flex-start; position: relative; }
+    .loto-step:not(:last-child)::after { content: ''; position: absolute; left: 16px; top: 36px; bottom: -6px; width: 2px; background: var(--border); }
+    .loto-badge { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .85rem; color: #fff; z-index: 1; }
+    .lb-prep    { background: #5A7184; }
+    .lb-action  { background: var(--orange); }
+    .lb-verify  { background: var(--green); }
+    .lb-restore { background: var(--navy2); }
+    .loto-content { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px; flex: 1; margin-bottom: 0; }
+    .loto-content strong { display: block; color: var(--navy); font-size: .9rem; margin-bottom: 3px; }
+    .loto-content p { font-size: .85rem; color: #444; margin: 0; }
+
+    /* LOCK vs TAG comparison */
+    .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); margin: 14px 0; }
+    @media(max-width:520px){ .compare-wrap { grid-template-columns: 1fr; } }
+    .compare-col { padding: 18px 20px; }
+    .compare-col h4 { font-size: .9rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .compare-col ul { padding-left: 18px; font-size: .86rem; }
+    .compare-col li { margin-bottom: 6px; }
+    .cc-lock { background: #EDFAF2; }
+    .cc-lock h4 { color: var(--green); }
+    .cc-tag  { background: #FFFBEA; }
+    .cc-tag  h4 { color: #9a7000; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-019.html">&larr; Mod 19</a>
+    <a href="module-020.html" class="active">Mod 20</a>
+    <a href="module-021.html">Mod 21 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 20 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 020 &middot; SHP-BBB-020</div>
+  <h1>Control of Hazardous Energy</h1>
+  <h1 style="font-size:clamp(1rem,2.5vw,1.4rem); font-weight:600; opacity:.85; margin-top:6px;">Lockout &amp; Tagout Program</h1>
+  <p class="subtitle">Protecting BBB Tank Services workers from the unexpected release of hazardous energy during maintenance, repair, and servicing of equipment and tank systems.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 40 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Define hazardous energy and explain why LOTO is required</li>
+      <li>Identify all six types of hazardous energy found in tank services work</li>
+      <li>Distinguish between Authorized, Affected, and Other employees</li>
+      <li>Explain the difference between lockout and tagout and when each applies</li>
+      <li>Execute the complete 8-step LOTO application procedure in correct sequence</li>
+      <li>Perform the Verification of Zero Energy State before beginning work</li>
+      <li>Follow proper procedures for group lockout, shift changes, and removing locks</li>
+      <li>Identify LOTO exceptions and when the standard does not apply</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Why Lockout / Tagout Exists</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Every year, the unexpected release of <strong>hazardous energy</strong> kills and injures thousands of workers across the United States. OSHA estimates that proper LOTO procedures prevent approximately <strong>120 fatalities and 50,000 injuries</strong> annually. Workers are crushed by machinery that unexpectedly starts, electrocuted by equipment that was thought to be de-energized, or caught in pressurized systems that release without warning.</p>
+
+      <div class="box box-danger">
+        <strong>&#9888; The Defining Risk:</strong> Hazardous energy incidents occur because someone assumed a machine was safe &mdash; and it was not. A pump that was shut off can restart if a control circuit is still energized. A valve that was closed can be opened by a coworker who doesn&rsquo;t know anyone is working downstream. A compressed air line that was disconnected at the tool can still have pressure at the fitting. LOTO eliminates assumptions. It creates a physical guarantee that energy cannot be released.
+      </div>
+
+      <h3>OSHA Standard</h3>
+      <p>The Control of Hazardous Energy standard is found at <strong>29 CFR 1910.147</strong> (General Industry) and referenced at <strong>29 CFR 1926.417</strong> (Construction). The standard applies whenever workers perform servicing or maintenance on machines or equipment where the unexpected energization, start-up, or release of stored energy could cause injury.</p>
+
+      <h3>Scope &mdash; When Does LOTO Apply at BBB Tank Services?</h3>
+      <p>LOTO applies any time a BBB Tank Services employee performs maintenance, repair, or service on equipment where unexpected energization or stored energy release is a hazard. This includes:</p>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Pump &amp; Motor Maintenance</h4>
+          <ul>
+            <li>Replacing pump seals or impellers</li>
+            <li>Motor replacement or inspection</li>
+            <li>Coupling alignment work</li>
+            <li>Clearing jammed pump suction</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Valve &amp; Piping Work</h4>
+          <ul>
+            <li>Replacing valves or valve packing</li>
+            <li>Breaking flange connections</li>
+            <li>Cleaning strainers under pressure</li>
+            <li>Installing blind flanges or blinds</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Tank Equipment Service</h4>
+          <ul>
+            <li>Servicing roof drives or mixers</li>
+            <li>Level gauge and instrument maintenance</li>
+            <li>Vacuum truck and transfer equipment service</li>
+            <li>Any work inside tank manway openings tied to active systems</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>When LOTO Does NOT Apply</h3>
+      <ul>
+        <li><strong>Normal production operations</strong> &mdash; LOTO is for servicing and maintenance, not for normal operating tasks</li>
+        <li><strong>Cord-and-plug equipment</strong> &mdash; if a tool is powered solely by a cord and plug, unplugging it and keeping the plug under your exclusive control provides equivalent protection (no additional lockout required)</li>
+        <li><strong>Minor tool changes with adequate protection</strong> &mdash; routine adjustments if guarding is maintained and the activity is part of normal production (rare exception, specific criteria apply)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Types of Hazardous Energy</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Hazardous energy is any energy that, if released unexpectedly, could cause injury. There are six types. At BBB Tank Services job sites, workers encounter all six. Identifying and controlling every applicable energy type for each piece of equipment is the foundation of an effective LOTO procedure.</p>
+
+      <div class="energy-grid">
+        <div class="energy-card ec-elec">
+          <h4>&#9889; Electrical</h4>
+          <ul>
+            <li>Motors and control circuits</li>
+            <li>Solenoid valves</li>
+            <li>Instrument panels and PLCs</li>
+            <li>Lighting circuits in confined spaces</li>
+            <li><em>Control: Disconnect switch, circuit breaker</em></li>
+          </ul>
+        </div>
+        <div class="energy-card ec-pneu">
+          <h4>&#128168; Pneumatic</h4>
+          <ul>
+            <li>Air-operated valves and actuators</li>
+            <li>Pneumatic tools and lines</li>
+            <li>Instrument air systems</li>
+            <li>Air-powered pumps</li>
+            <li><em>Control: Isolation valve + bleed residual pressure</em></li>
+          </ul>
+        </div>
+        <div class="energy-card ec-hydr">
+          <h4>&#128167; Hydraulic</h4>
+          <ul>
+            <li>Hydraulic actuators and cylinders</li>
+            <li>Hydraulic torque wrenches</li>
+            <li>Hydraulic-driven equipment</li>
+            <li><em>Control: Isolation valve + bleed &amp; block system pressure</em></li>
+          </ul>
+        </div>
+        <div class="energy-card ec-mech">
+          <h4>&#9881; Mechanical</h4>
+          <ul>
+            <li>Springs under compression or tension</li>
+            <li>Counterweights</li>
+            <li>Gravity &mdash; unsupported elevated components</li>
+            <li>Rotating equipment with stored inertia</li>
+            <li><em>Control: Block, pin, or restrain the component</em></li>
+          </ul>
+        </div>
+        <div class="energy-card ec-therm">
+          <h4>&#128293; Thermal</h4>
+          <ul>
+            <li>High-temperature process fluid in lines and vessels</li>
+            <li>Steam systems</li>
+            <li>Heat tracing on piping</li>
+            <li>Hot tank surfaces</li>
+            <li><em>Control: Isolation + cool-down confirmation</em></li>
+          </ul>
+        </div>
+        <div class="energy-card ec-chem">
+          <h4>&#9879;&#65039; Chemical</h4>
+          <ul>
+            <li>Pressurized chemical lines</li>
+            <li>Stored chemical energy in process fluids</li>
+            <li>Reactive chemicals under pressure</li>
+            <li><em>Control: Double-block-and-bleed or blind/bleed</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Stored vs. Active Energy</h3>
+      <p>One of the most frequently overlooked aspects of LOTO is <strong>stored (residual) energy</strong> &mdash; energy that remains in the equipment even after the primary energy source has been isolated:</p>
+      <ul>
+        <li><strong>Capacitors</strong> in electrical systems retain charge after power is disconnected &mdash; must be discharged</li>
+        <li><strong>Compressed air or hydraulic pressure</strong> trapped downstream of a closed valve &mdash; must be bled</li>
+        <li><strong>Springs</strong> in valves, dampers, and actuators that are pre-loaded &mdash; must be released or blocked</li>
+        <li><strong>Gravity</strong> &mdash; elevated components (tank lids, press rams, suspended loads) that could fall &mdash; must be blocked or lowered</li>
+        <li><strong>Thermal energy</strong> in hot pipes and vessels that continue to be dangerous after isolation &mdash; must cool sufficiently</li>
+        <li><strong>Process fluid trapped in pipe sections</strong> between two closed valves &mdash; must be drained and vented</li>
+      </ul>
+
+      <div class="box box-warning">
+        <strong>&#9888; Residual Energy Is the Hidden Killer.</strong> More LOTO-related injuries occur from stored or residual energy than from failure to isolate the primary energy source. Isolating the main electrical disconnect is not enough if a capacitor bank is still charged. Closing the main isolation valve is not enough if trapped pressure remains between the valve and the work point. Always identify and release all residual energy before starting work.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Key Roles &amp; Lockout vs. Tagout</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Employee Roles Under OSHA 1910.147</h3>
+      <table class="std-table">
+        <thead><tr><th>Role</th><th>Definition</th><th>Responsibilities</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Authorized Employee</strong></td>
+            <td>The person who applies the lockout/tagout device(s) to control hazardous energy. This is the worker performing the maintenance or service.</td>
+            <td>Performs LOTO procedure; applies their personal lock; verifies zero energy state; removes their lock when work is complete. <em>Only this person may remove their own lock.</em></td>
+          </tr>
+          <tr>
+            <td><strong>Affected Employee</strong></td>
+            <td>A worker who operates or uses the equipment being locked out, or who works in an area where LOTO is being performed.</td>
+            <td>Must be notified before LOTO is applied and before it is removed. Must not attempt to operate equipment that is locked or tagged out. Must not remove any LOTO device.</td>
+          </tr>
+          <tr>
+            <td><strong>Other Employee</strong></td>
+            <td>Any worker whose work operations are in an area where LOTO procedures are being performed.</td>
+            <td>Must not attempt to restart or re-energize locked-out equipment. Must report any tampered or missing LOTO device to their supervisor immediately.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Lockout vs. Tagout &mdash; What&rsquo;s the Difference?</h3>
+      <div class="compare-wrap">
+        <div class="compare-col cc-lock">
+          <h4>&#128274; Lockout (Preferred)</h4>
+          <ul>
+            <li>A physical padlock is applied to the energy isolation point, preventing it from being operated or moved</li>
+            <li>Only the worker who applied the lock can remove it (with their personal key)</li>
+            <li>Cannot be removed without cutting the lock or using a management override procedure</li>
+            <li>Provides the highest level of protection &mdash; a physical barrier that cannot be accidentally defeated</li>
+            <li><strong>Use lockout whenever the isolation device can accept a lock.</strong></li>
+          </ul>
+        </div>
+        <div class="compare-col cc-tag">
+          <h4>&#127991;&#65039; Tagout (Secondary)</h4>
+          <ul>
+            <li>A warning tag is attached to the energy isolation point when a lock cannot be applied (the device does not have a lock hasp)</li>
+            <li>A tagout device is a WARNING &mdash; it does not physically prevent operation of the device</li>
+            <li>Provides less protection than lockout and additional protective measures are required</li>
+            <li>Only acceptable when it can be demonstrated that tagout provides equivalent protection to lockout</li>
+            <li><strong>Lockout is always preferred; tagout is a last resort when lockout is not possible.</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-info">
+        <strong>BBB Tank Services Policy:</strong> Lockout is always the required method when the energy isolating device can accept a padlock. If a device cannot accept a lock, a hasp adapter must be installed before tagout is used. Tagout alone is never preferred and must be approved by a supervisor with documentation of why lockout was not feasible.
+      </div>
+
+      <h3>LOTO Hardware</h3>
+      <p>Each authorized employee at BBB Tank Services is issued a personal LOTO kit containing:</p>
+      <ul>
+        <li><strong>Personal padlock</strong> &mdash; unique key; worker keeps the only copy; name/ID engraved or labeled on the lock body</li>
+        <li><strong>Lockout hasp</strong> &mdash; multi-lock device that allows multiple workers to apply their own lock to a single isolation point for group lockout</li>
+        <li><strong>Warning tags</strong> &mdash; bright red/orange &ldquo;DANGER &mdash; Do Not Operate&rdquo; tags with the worker&rsquo;s name, date, and reason</li>
+        <li><strong>Valve lockout devices</strong> &mdash; adjustable ball valve lockouts, gate valve lockouts, and plug lockouts</li>
+        <li><strong>Electrical lockout devices</strong> &mdash; circuit breaker lockouts, disconnect lockouts, plug lockouts</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> The LOTO Procedure &mdash; Step by Step</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>BBB Tank Services follows an <strong>8-step LOTO application procedure</strong> based on OSHA 1910.147 requirements. Every step must be completed in sequence. Skipping steps &mdash; even one &mdash; eliminates the protection the procedure is designed to provide.</p>
+
+      <div class="loto-flow">
+
+        <div class="loto-step">
+          <div class="loto-badge lb-prep">1</div>
+          <div class="loto-content">
+            <strong>Prepare &mdash; Identify All Energy Sources</strong>
+            <p>Review the equipment-specific LOTO procedure (written procedure required for complex equipment). Identify every energy source: electrical disconnects, pneumatic shutoffs, hydraulic isolation points, stored energy locations, and process fluid isolation valves. Know the equipment before touching it.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-prep">2</div>
+          <div class="loto-content">
+            <strong>Notify Affected Employees</strong>
+            <p>Inform all affected employees that the equipment is being locked out for maintenance. Tell them the reason and the estimated duration. They must not attempt to operate the equipment until they are notified that LOTO has been removed.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-action">3</div>
+          <div class="loto-content">
+            <strong>Shut Down the Equipment</strong>
+            <p>Turn off, stop, or shut down the machine or equipment using the normal stopping procedure (control panel, stop button, etc.). Do not use the energy isolation device as the primary shutoff &mdash; shut down normally first, then isolate.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-action">4</div>
+          <div class="loto-content">
+            <strong>Isolate All Energy Sources</strong>
+            <p>Operate every energy isolation device (disconnect switches, circuit breakers, valves) to the safe (de-energized, closed, or blocked) position. Isolate <em>all</em> energy sources &mdash; not just the obvious primary one. Complex equipment may have multiple electrical feeds, multiple valve isolation points, and stored energy sources that all require isolation.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-action">5</div>
+          <div class="loto-content">
+            <strong>Apply Lockout / Tagout Devices</strong>
+            <p>Apply your personal padlock (or tag if lockout is not feasible) to each isolated energy point. If using a hasp for multiple locks, apply your lock to the hasp. Write your name, date, and reason on the tag attached to every device. The lock and tag remain until YOU personally remove them.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-action">6</div>
+          <div class="loto-content">
+            <strong>Release or Restrain All Stored Energy</strong>
+            <p>Bleed residual air or hydraulic pressure from isolated sections. Discharge electrical capacitors. Release or block spring-loaded components. Lower suspended loads or place blocking devices to prevent movement under gravity. Allow hot systems to cool to a safe temperature. Do not proceed until all stored energy is eliminated or controlled.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-verify">7</div>
+          <div class="loto-content">
+            <strong>Verify Zero Energy State &mdash; Test Before Touch</strong>
+            <p>Before anyone puts their body in the danger zone, verify that the equipment is truly de-energized: attempt to start the machine using its normal operating controls (push the start button &mdash; it should not start). Use a meter to verify zero voltage on electrical equipment. Check a pressure gauge downstream of isolated valves to confirm zero pressure. This is the most critical step &mdash; do not skip it.</p>
+          </div>
+        </div>
+
+        <div class="loto-step">
+          <div class="loto-badge lb-verify">8</div>
+          <div class="loto-content">
+            <strong>Begin Work</strong>
+            <p>Only after all seven steps above are complete may work begin. The equipment is now under your personal control. As long as your lock is on the isolation point, the equipment cannot be energized without your knowledge.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Test Before You Touch.</strong> Step 7 is where LOTO failures are most often discovered &mdash; the machine starts when you push the button, revealing that an energy source was missed. This discovery must happen <em>before</em> any body part is in the danger zone, not after. Always press the start button to verify zero energy before reaching into equipment.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Restoring Energy, Group Lockout &amp; Shift Changes</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Restoring Energy &mdash; Lockout Release Procedure</h3>
+      <p>Restoring energy is as disciplined as applying lockout. Cutting corners during release is a major cause of injury to workers who are still in the equipment when it restarts.</p>
+
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Verify work is complete.</strong> Inspect the equipment to confirm all work has been finished, all tools and materials have been removed from inside or around the equipment, and all guards and covers have been reinstalled.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Verify all workers are clear.</strong> Physically confirm that all personnel are out of the danger zone and positioned a safe distance from the equipment. Do a headcount. Do not assume &mdash; verify.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Remove all LOTO devices.</strong> Each authorized employee removes their own personal lock. The last lock removed must be removed by the authorized employee who applied it. LOTO devices are removed in reverse order of application.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Notify affected employees.</strong> Inform all affected workers that LOTO has been removed and the equipment is being returned to service.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Restore energy.</strong> Re-energize the equipment using the normal startup sequence.</div></li>
+      </ol>
+
+      <h3>Group Lockout</h3>
+      <p>When multiple authorized employees work on the same equipment, each person applies their own personal lock to a <strong>group lockout hasp</strong> at the primary energy isolation point. This ensures that the equipment cannot be re-energized until every worker has removed their lock &mdash; confirming that every worker has cleared the equipment.</p>
+      <ul>
+        <li>A group lockout hasp can accept multiple padlocks simultaneously &mdash; each worker puts on their own</li>
+        <li>One worker is typically designated as the <strong>Group Lockout Coordinator</strong> who maintains a log of who has locks applied and ensures accountability</li>
+        <li>Complex multi-energy systems may require a <strong>lockout box</strong>: all isolation point keys are placed in a lockable box, and each worker applies their personal lock to the box</li>
+        <li>No worker removes their lock until they have personally confirmed their work is complete and they are clear</li>
+      </ul>
+
+      <h3>Shift Changes</h3>
+      <p>When a LOTO job spans a shift change, the lock transfer must be done in a continuous, overlap manner:</p>
+      <ol>
+        <li>The incoming worker applies their lock to the LOTO point <strong>before</strong> the outgoing worker removes theirs</li>
+        <li>Both locks are on simultaneously during the transfer &mdash; there is never a moment without protection</li>
+        <li>The outgoing worker briefs the incoming worker on the status of the job, all energy isolation points, and any stored energy controls in place</li>
+        <li>Only then does the outgoing worker remove their lock</li>
+      </ol>
+
+      <div class="box box-warning">
+        <strong>&#9888; Never Remove Another Worker&rsquo;s Lock.</strong> This is one of the most fundamental rules in LOTO. Only the authorized employee who applied a lock may remove it. If a worker leaves the job site, becomes ill, or is unavailable, removal of their lock requires a documented management override procedure: confirmation that the worker is not in the danger zone, supervisor authorization, and notification to the affected worker. This is a deliberate process &mdash; not something done casually.
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; The Forgotten Lock</div>
+        <h4>Shift Change Goes Wrong</h4>
+        <p>A pump is locked out for seal replacement. The day shift worker gets called away at the end of the shift before the job is complete and leaves the lock on without briefing the night shift. The night shift supervisor assumes the job is done and asks a new operator to try to start the pump. The operator pushes the start button but it won&rsquo;t run &mdash; the lock is still on. He reports this to the supervisor, who asks whether to just cut the lock since &ldquo;the job must be done.&rdquo;</p>
+        <p><strong>Correct response:</strong> Never cut a lock without following the management override procedure. Call the original authorized employee. Confirm his location and that he is not inside the equipment. Get supervisor sign-off. Document the override. Only then, under supervision, remove the lock and verify the equipment is safe to restart. The few minutes this takes is nothing compared to the consequence of restarting a pump that still has someone working on it.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Written Procedures, Training &amp; Auditing</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Written LOTO Procedures</h3>
+      <p>OSHA requires a written energy control procedure for each type of equipment where employees perform service or maintenance and where there is unexpected energization or stored energy risk. BBB Tank Services maintains written LOTO procedures for all major equipment types. Each procedure must include:</p>
+      <ul>
+        <li>Specific steps for shutting down the equipment</li>
+        <li>Location and type of every energy isolation device (with photos where helpful)</li>
+        <li>Type and magnitude of hazardous energy in the equipment</li>
+        <li>Method for verifying de-energization and zero stored energy</li>
+        <li>Special requirements (multiple workers, complex systems, permits required)</li>
+      </ul>
+
+      <div class="box box-info">
+        <strong>Where to Find Written LOTO Procedures at BBB Tank Services:</strong> Equipment-specific LOTO procedures are maintained in the job site safety binder and are accessible digitally on company tablets. Before performing LOTO on any unfamiliar equipment, request the written procedure from your supervisor. If a written procedure does not exist for the equipment you are working on, stop and contact your supervisor before beginning work.
+      </div>
+
+      <h3>Training Requirements</h3>
+      <table class="std-table">
+        <thead><tr><th>Employee Type</th><th>Training Required</th><th>Frequency</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Authorized Employee</strong></td><td>Recognition of hazardous energy; methods and means of energy isolation; LOTO application, release, and verification procedures; equipment-specific procedures</td><td>Before initial assignment; retraining when procedure changes or deficiency is observed</td></tr>
+          <tr><td><strong>Affected Employee</strong></td><td>Purpose and use of LOTO procedures; prohibition against attempting to restart or re-energize locked-out equipment</td><td>Before initial assignment; annually</td></tr>
+          <tr><td><strong>Other Employee</strong></td><td>Prohibition against removing or tampering with LOTO devices; what to do if they encounter locked-out equipment</td><td>Before initial assignment; annually</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Annual Program Audit</h3>
+      <p>OSHA requires at least an annual inspection of each energy control procedure and an annual certification review confirming each authorized employee can apply the procedure correctly. BBB Tank Services conducts these audits by:</p>
+      <ul>
+        <li>Reviewing each written LOTO procedure against current equipment configuration</li>
+        <li>Observing each authorized employee perform LOTO on the equipment they service</li>
+        <li>Documenting deficiencies and retraining any employee who cannot correctly execute the procedure</li>
+        <li>Certifying completion of the annual review with equipment identification, date, and employees covered</li>
+      </ul>
+
+      <h3>Immediate Reporting Requirements</h3>
+      <p>Report immediately to your supervisor any of the following LOTO situations:</p>
+      <ul>
+        <li>A lock or tag that has been removed without authorization</li>
+        <li>Equipment that restarted or energized while a lock was applied</li>
+        <li>A near-miss where unexpected energy release almost caused injury</li>
+        <li>Missing, damaged, or insufficient LOTO hardware (missing hasp, damaged locks)</li>
+        <li>Any situation where a written procedure was inadequate for the actual equipment encountered</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is the primary purpose of the Lockout / Tagout standard?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> To ensure that equipment is properly labeled with its energy rating before any work begins</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> To protect workers from the unexpected energization, start-up, or release of stored energy during servicing and maintenance</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> To provide a permit system for all maintenance work performed on electrical equipment</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> To prevent equipment from being operated without proper training and certification</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. A pneumatic valve actuator has been shut off at the control panel. Why is LOTO not yet complete for working on this actuator?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> LOTO is not required for pneumatic systems &mdash; only electrical equipment requires lockout</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> The control panel shutoff does not physically isolate the air supply; residual pressure likely remains in the line, and a physical isolation valve with a lock must be applied and the line bled before work begins</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> LOTO is complete &mdash; shutting off at the panel is equivalent to locking out the energy source</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> Pneumatic systems only require tagout, not lockout, because air pressure is not as dangerous as electricity</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. Which employee role is the ONLY person authorized to apply and remove a lockout device?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Affected Employee &mdash; the operator who normally runs the equipment</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Site Supervisor &mdash; supervisors have authority over all LOTO devices on their job sites</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Authorized Employee &mdash; the worker performing the maintenance who personally applied the device</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Safety Officer &mdash; only a certified safety professional may apply and remove LOTO devices</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. After shutting down a pump and locking out the electrical disconnect, you push the start button to verify zero energy. The pump starts. What does this mean?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> The test was successful &mdash; the pump starting confirms the electrical circuit is still active and the lock is properly sensing it</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> An energy source was missed &mdash; there is a second electrical feed, bypass circuit, or other energy source that was not isolated. Do not work on the equipment until all energy sources are identified and locked out.</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> The lockout device was not installed correctly and must be repositioned on the disconnect</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> This sometimes happens during the first test &mdash; push the start button again to verify the lock has taken effect</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. What is the critical difference between a lockout device and a tagout device?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Lockout devices are red and tagout devices are yellow; both provide equivalent protection</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> A lockout device physically prevents operation of the energy isolation point; a tagout device is only a warning and does not physically prevent the device from being operated</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Tagout is preferred for complex equipment because it can be applied faster than a lock</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Lockout applies only to electrical systems; tagout is used for all other energy types</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. You are working alone on a locked-out pump. Your supervisor asks you to lend your lock key to a coworker who needs to borrow your lock style for a different job. What should you tell him?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> That is acceptable since your supervisor requested it and you can share keys temporarily</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> That is not acceptable &mdash; you cannot lend your key while your lock is protecting you on a live LOTO. Your key is the only thing preventing someone from re-energizing equipment while you are working on it.</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> You can lend the key as long as you come out of the equipment first</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Keys are interchangeable between workers on the same crew &mdash; this is permitted under group lockout rules</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. Three workers are servicing the same pump under group lockout. Worker #2 finishes his portion of the work and wants to remove his lock and go to another job. What must happen before he removes his lock?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> He can remove his lock at any time &mdash; each worker is responsible only for their own portion of the work</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> He must confirm his portion of work is complete, that he is clear of the equipment, and remove only his own lock from the hasp. Workers #1 and #3 remain protected by their locks still on the hasp.</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> All three workers must finish simultaneously before any locks can be removed</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> The group lockout coordinator removes all locks when any worker is finished</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. During a shift change on a multi-day LOTO job, what is the correct lock transfer procedure?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> The outgoing worker removes their lock and hands it to the incoming worker, who uses the same lock for the next shift</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> The outgoing worker removes their lock at the end of shift and the incoming worker applies a new lock at the start of their shift &mdash; there is a brief gap between shifts with no lock applied</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> The incoming worker applies their own lock to the LOTO point first, then the outgoing worker removes theirs &mdash; both locks are on simultaneously during the transfer, with no gap in protection</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> The site supervisor holds the lock during shift change and re-applies it when the new worker arrives</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. A valve in a hydraulic system has been closed and locked. Before starting work downstream, what additional step is required to address residual hydraulic energy?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> No additional step is needed &mdash; closing and locking the valve eliminates all hydraulic energy</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Bleed the hydraulic pressure trapped between the closed valve and the work point to confirm zero pressure before beginning work</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Apply a second lock on the downstream side of the system</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Wait 15 minutes after closing the valve for the pressure to naturally dissipate</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. You arrive at a locked-out pump and notice that the padlock on the disconnect has been cut off. The tag is still there but has no lock. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Assume the authorized worker removed it and the job is done &mdash; re-energize the equipment</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Apply your own lock to the disconnect immediately and continue working since the tagout is still in place</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Do not touch the equipment or re-energize it; report the tampered LOTO device to your supervisor immediately so the situation can be investigated before any action is taken</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Contact the original authorized worker directly to ask if it is safe to remove the tag and restart the equipment</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-019.html" class="nav-btn prev">&larr; Module 19</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-021.html" class="nav-btn next">Module 21 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-020 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'b', q3:'c', q4:'b', q5:'b',
+    q6:'b', q7:'b', q8:'c', q9:'b', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'LOTO\'s purpose is to protect workers from unexpected energization, start-up, or release of stored energy during service and maintenance. It creates a physical guarantee — not just a policy — that equipment cannot be energized while someone is working on it.',
+    q2:  'Shutting off at a control panel stops the equipment but does not physically isolate the energy source. Air pressure remains in the supply line, and the control circuit can still command the actuator to open. A physical isolation valve must be closed, locked, and the downstream line bled to zero before work begins.',
+    q3:  'Only the Authorized Employee — the worker who physically applied the lock — may remove it. This one-person-one-lock rule is the cornerstone of LOTO. No supervisor, safety officer, or coworker may remove another worker\'s lock except through a documented management override procedure.',
+    q4:  'If the machine starts during the verification test, it means a second energy source was not identified and isolated. This is exactly why Step 7 (Test Before Touch) exists — to catch missed energy sources before anyone is in danger. Stop immediately, identify all energy sources, and complete LOTO on every one before proceeding.',
+    q5:  'A lockout device physically prevents the isolation point from moving to the energized position. A tagout device is a warning sign — it communicates a prohibition but cannot physically stop someone from operating the device. This is why lockout is always preferred: it provides physical certainty that tagout cannot.',
+    q6:  'Your key is your personal protection. While your lock is on a LOTO point, that key is the only way to remove your lock — which is the only way to re-energize the equipment. Lending your key while your lock is still protecting you means someone else could remove your lock without your knowledge, exposing you to unexpected energization.',
+    q7:  'In group lockout, each worker\'s personal lock protects that worker independently. Worker #2 can remove his lock when his work is complete and he is clear — without affecting the protection of Workers #1 and #3, whose locks remain on the hasp. The equipment cannot be re-energized until the last lock is removed.',
+    q8:  'The incoming worker applies their lock before the outgoing worker removes theirs. This creates a continuous, unbroken state of LOTO with no gap — both locks are on simultaneously during the actual transfer. A gap without a lock, even for seconds, eliminates the LOTO protection for that period.',
+    q9:  'Closing and locking a hydraulic isolation valve stops additional pressure from entering the system but does not remove pressure already trapped between the valve and the work point. That trapped pressure must be bled to zero through a bleed/vent port before any connections are broken or work begins downstream of the valve.',
+    q10: 'A removed or cut lock is a LOTO tampering incident — a serious violation. The equipment may still be in a dangerous state (the authorized worker may still be working on it), or it may have been sabotaged. Never assume it is safe. Report it immediately to your supervisor so the authorized worker can be located and the situation assessed before any action is taken on the equipment.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'020', title:'Control of Hazardous Energy / Lockout & Tagout', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 020 complete! Your record has been saved. Proceed to Module 021.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

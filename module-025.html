@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 025 &ndash; Scaffold Safety Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* SCAFFOLD TYPE CARDS */
+    .scaffold-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+    .scaffold-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; border-top: 4px solid var(--orange); }
+    .scaffold-card h4 { font-size: .88rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .scaffold-card .cap { font-size: .75rem; font-weight: 700; color: var(--orange2); margin-bottom: 8px; display: block; }
+    .scaffold-card ul { padding-left: 16px; font-size: .81rem; }
+    .scaffold-card li { margin-bottom: 4px; }
+
+    /* GUARDRAIL DIAGRAM */
+    .guardrail-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 14px 0; }
+    .guardrail-card h4 { color: var(--navy); font-size: .93rem; font-weight: 700; margin-bottom: 14px; }
+    .guardrail-spec { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+    .gs-item { background: var(--bg); border-radius: 6px; padding: 12px; border-left: 4px solid; }
+    .gs-item .gs-val { font-size: 1.2rem; font-weight: 800; }
+    .gs-item .gs-label { font-size: .78rem; color: var(--muted); }
+    .gs-top  { border-color: var(--navy);  } .gs-top .gs-val  { color: var(--navy); }
+    .gs-mid  { border-color: var(--orange);} .gs-mid .gs-val  { color: var(--orange2); }
+    .gs-toe  { border-color: var(--green); } .gs-toe .gs-val  { color: var(--green); }
+    .gs-load { border-color: #7D3C98;      } .gs-load .gs-val { color: #7D3C98; }
+
+    /* TAG SYSTEM */
+    .tag-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 14px 0; }
+    @media(max-width:540px){ .tag-grid { grid-template-columns: 1fr; } }
+    .tag-card { border-radius: 8px; padding: 16px; text-align: center; }
+    .tag-card .tag-color { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+    .tag-card h4 { font-size: .88rem; font-weight: 700; margin-bottom: 5px; }
+    .tag-card p  { font-size: .78rem; margin: 0; }
+    .tag-green  { background: #EDFAF2; border: 2px solid #1D8348; color: #0a3a1e; }
+    .tag-green h4 { color: #1D8348; }
+    .tag-yellow { background: #FFFBEA; border: 2px solid #D4AC0D; color: #5a4000; }
+    .tag-yellow h4 { color: #9a7000; }
+    .tag-red    { background: #FEF0EE; border: 2px solid #C0392B; color: #5a0000; }
+    .tag-red h4 { color: #C0392B; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-024.html">&larr; Mod 24</a>
+    <a href="module-025.html" class="active">Mod 25</a>
+    <a href="module-026.html">Mod 26 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 25 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 025 &middot; SHP-BBB-025</div>
+  <h1>Scaffold Safety Program</h1>
+  <p class="subtitle">Safe erection, use, inspection, and dismantling of scaffolds used for BBB Tank Services tank maintenance, painting, and external inspection operations.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 35 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Identify the leading causes of scaffold-related fatalities</li>
+      <li>Distinguish between a Qualified Person and a Competent Person for scaffolding</li>
+      <li>Identify the load capacity requirements for light-, medium-, and heavy-duty scaffolds</li>
+      <li>State the platform width, planking, and gap requirements</li>
+      <li>Identify guardrail dimensions and toeboard requirements</li>
+      <li>Describe fall protection requirements for scaffold workers</li>
+      <li>Perform a pre-shift scaffold inspection as an authorized user</li>
+      <li>Explain the scaffold tag system and when a scaffold is out of service</li>
+      <li>Identify the unique scaffold hazards at petroleum tank job sites</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Scaffold Hazards, Statistics &amp; OSHA Requirements</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Scaffolding is involved in approximately <strong>4,500 injuries and 60 fatalities</strong> every year in the United States. OSHA consistently ranks scaffolding as one of the top ten most frequently cited construction standards. At BBB Tank Services, scaffolding is erected on and around storage tanks for painting, inspection, nozzle maintenance, and insulation work &mdash; often on uneven dike surfaces, near flammable vapors, and in high-wind conditions typical of Texas Gulf Coast sites.</p>
+
+      <h3>Leading Causes of Scaffold Incidents</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Worker Falls (43% of fatalities)</h4>
+          <ul>
+            <li>Missing or inadequate guardrails</li>
+            <li>Improperly planked or cross-braced platforms</li>
+            <li>Accessing scaffold from the wrong point</li>
+            <li>Overreaching beyond the guardrail</li>
+            <li>Slippery platforms (wet, icy, oil-contaminated)</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Scaffold Collapse &amp; Falling Objects</h4>
+          <ul>
+            <li>Overloaded scaffold (exceeding capacity)</li>
+            <li>Unstable base or inadequate mudsills</li>
+            <li>Improperly connected or missing bracing</li>
+            <li>Dropped tools and materials striking workers below</li>
+            <li>Scaffold struck by vehicles or equipment</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Applicable OSHA Standards</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td><strong>29 CFR 1926.451</strong></td><td>General scaffold requirements &mdash; capacity, platform construction, access, fall protection, falling object protection</td></tr>
+          <tr><td><strong>29 CFR 1926.452</strong></td><td>Additional requirements for specific scaffold types (tube and coupler, frame, system, suspended)</td></tr>
+          <tr><td><strong>29 CFR 1926.453</strong></td><td>Aerial lifts (scissor lifts, boom lifts, boom trucks used as work platforms)</td></tr>
+          <tr><td><strong>29 CFR 1926.454</strong></td><td>Training requirements for scaffold erectors, users, and inspectors</td></tr>
+          <tr><td><strong>ANSI/SSFI A10.8</strong></td><td>Scaffolding &mdash; safety requirements (industry standard referenced by OSHA)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Qualified Person vs. Competent Person</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Qualified Person</h4>
+          <ul>
+            <li>Has recognized degree, certificate, or professional standing in scaffold design</li>
+            <li>Extensive knowledge and experience in scaffold engineering</li>
+            <li>Must design any scaffold that requires engineering calculations</li>
+            <li>Required for scaffolds &gt;125 feet high, suspended scaffolds, and non-standard configurations</li>
+            <li>Signs and seals scaffold drawings where required</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Competent Person</h4>
+          <ul>
+            <li>Capable of identifying existing and predictable scaffold hazards</li>
+            <li>Has authority to take prompt corrective action</li>
+            <li>Must supervise erection, alteration, and dismantling</li>
+            <li>Must inspect scaffolding before each work shift and after any event that could affect structural integrity (high wind, overload, impact)</li>
+            <li>BBB Tank Services designates competent persons on each job requiring scaffold use</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Scaffold Types &amp; Load Capacities</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Scaffold Types Used at BBB Tank Services</h3>
+      <div class="scaffold-grid">
+        <div class="scaffold-card">
+          <h4>Frame / Sectional Scaffold</h4>
+          <span class="cap">Light to Heavy Duty</span>
+          <ul>
+            <li>Pre-fabricated welded steel frames; most common type</li>
+            <li>Quick to erect and dismantle</li>
+            <li>Used for tank shell access, painting, inspection</li>
+            <li>Must be cross-braced in both directions</li>
+            <li>Legs must be on mudsills on soft or uneven ground</li>
+          </ul>
+        </div>
+        <div class="scaffold-card">
+          <h4>Tube &amp; Coupler Scaffold</h4>
+          <span class="cap">Most Flexible</span>
+          <ul>
+            <li>Individual steel tubes connected with swivel or fixed couplers</li>
+            <li>Can be built around curved tank shells and irregular geometries</li>
+            <li>Preferred for complex tank profiles</li>
+            <li>Requires more skilled erection</li>
+            <li>Each coupler must be inspected for correct engagement</li>
+          </ul>
+        </div>
+        <div class="scaffold-card">
+          <h4>System Scaffold (Modular)</h4>
+          <span class="cap">Standard &amp; Custom</span>
+          <ul>
+            <li>Proprietary components (Saflock, Layher, Kwik-Stage)</li>
+            <li>Pre-engineered connection points &mdash; faster than tube &amp; coupler</li>
+            <li>Common on large refineries and petrochemical sites</li>
+            <li>Components must be matched &mdash; no mixing of incompatible systems</li>
+          </ul>
+        </div>
+        <div class="scaffold-card">
+          <h4>Rolling / Mobile Scaffold</h4>
+          <span class="cap">Light Duty</span>
+          <ul>
+            <li>Frame scaffold on castors; moveable without dismantling</li>
+            <li>Height-to-base ratio must not exceed 4:1 (indoors) or 3:1 (outdoors)</li>
+            <li>All casters must be locked before anyone ascends</li>
+            <li>No workers on rolling scaffold while it is being moved</li>
+            <li>Not appropriate for use on tank dike surfaces with drainage slopes</li>
+          </ul>
+        </div>
+        <div class="scaffold-card">
+          <h4>Suspended Scaffold</h4>
+          <span class="cap">Special Requirements</span>
+          <ul>
+            <li>Platform suspended from overhead by wire ropes or chains</li>
+            <li>Used for tank dome interiors or structures too high for supported scaffold</li>
+            <li>Requires Qualified Person design</li>
+            <li>Suspension system inspected before each use</li>
+            <li>Personal fall arrest required for all workers</li>
+          </ul>
+        </div>
+        <div class="scaffold-card">
+          <h4>Aerial Work Platforms (AWP)</h4>
+          <span class="cap">Scissor &amp; Boom Lifts</span>
+          <ul>
+            <li>Self-propelled; classified as aerial lifts under 1926.453</li>
+            <li>Workers must be in harness attached to the basket anchor</li>
+            <li>Do not use as crane or extend reach beyond the basket</li>
+            <li>Operator must be trained per manufacturer requirements</li>
+            <li>Check ground bearing capacity before positioning</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Scaffold Duty Ratings &amp; Load Limits</h3>
+      <p>Every scaffold is classified by the load it is designed to carry. <strong>The total load includes workers, tools, and materials simultaneously on the platform.</strong> The scaffold must support <strong>4 times the maximum intended load</strong> without failure.</p>
+
+      <table class="std-table">
+        <thead><tr><th>Duty Rating</th><th>Capacity per Platform Level</th><th>Typical Use</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Light Duty</strong></td><td>25 lbs per sq ft (max ~375 lbs on a standard bay)</td><td>Inspection, painting with hand tools, touch-up work &mdash; no heavy equipment or stockpiled materials</td></tr>
+          <tr><td><strong>Medium Duty</strong></td><td>50 lbs per sq ft</td><td>General tank maintenance, coating application, light power tool use</td></tr>
+          <tr><td><strong>Heavy Duty</strong></td><td>75 lbs per sq ft</td><td>Concrete, masonry, or heavy material handling &mdash; rare in tank services work</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-danger">
+        <strong>&#9888; Never Overload a Scaffold.</strong> A scaffold rated for light duty cannot become medium duty by &ldquo;being careful.&rdquo; The duty rating is an engineering determination. Placing a 5-gallon bucket of coating on a light-duty scaffold that already has two workers on it may exceed the rated capacity. Before placing any significant load on a scaffold, confirm the duty rating with the competent person.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Platform Requirements &amp; Guardrails</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Platform Construction Requirements</h3>
+      <p>The scaffold platform is where workers stand and work. OSHA has specific dimensional requirements for scaffold platforms that must be met before any worker accesses the scaffold:</p>
+
+      <table class="std-table">
+        <thead><tr><th>Requirement</th><th>OSHA Specification</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Minimum Width</strong></td><td>18 inches for most scaffolds; 14 inches for two-point (swing stage) scaffolds; 36 inches where used as a passageway</td><td>BBB Tank Services standard: 18 inches minimum for all work platforms</td></tr>
+          <tr><td><strong>Platform Planks</strong></td><td>Must be laid with no gaps greater than 1 inch between planks (except at the scaffold frame, where up to 9.5 inches is permitted for system scaffolds)</td><td>Gaps allow tools and material to fall through, striking workers below</td></tr>
+          <tr><td><strong>Plank Overhang</strong></td><td>Minimum 6 inches beyond supports; maximum 12 inches for planks &le;10 ft; maximum 18 inches for planks &gt;10 ft</td><td>Under-overhang creates trip hazard; over-overhang creates cantilever tip-up</td></tr>
+          <tr><td><strong>End Plank Gap</strong></td><td>No more than 14 inches between the end of the platform and the wall or structure being worked on</td><td>Larger gaps allow workers to fall between the platform and the wall</td></tr>
+          <tr><td><strong>Platform Condition</strong></td><td>Free of mud, ice, grease, oil, debris, or any material that creates a slip or trip hazard</td><td>On tank sites, petroleum product contamination is a serious slip hazard</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Guardrail &amp; Toeboard Specifications</h3>
+      <div class="guardrail-card">
+        <h4>OSHA-Required Guardrail Dimensions &mdash; Supported Scaffolds</h4>
+        <div class="guardrail-spec">
+          <div class="gs-item gs-top">
+            <div class="gs-val">38&ndash;45 in</div>
+            <div class="gs-label">Top Rail Height above platform</div>
+          </div>
+          <div class="gs-item gs-mid">
+            <div class="gs-val">Approx. midpoint</div>
+            <div class="gs-label">Midrail &mdash; must be positioned at the midpoint between the top rail and platform</div>
+          </div>
+          <div class="gs-item gs-toe">
+            <div class="gs-val">3.5 in min</div>
+            <div class="gs-label">Toeboard height to prevent objects from rolling off the platform edge</div>
+          </div>
+          <div class="gs-item gs-load">
+            <div class="gs-val">200 lbs</div>
+            <div class="gs-label">Top rail must withstand 200 lbs of force in any direction without failure</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>When Guardrails Are Required</h3>
+      <p>Guardrails must be installed on all open sides and ends of scaffold platforms that are <strong>10 feet or more</strong> above a lower level. This includes:</p>
+      <ul>
+        <li>All open sides of the platform (not against a structure)</li>
+        <li>Both ends of the platform unless the end is against a solid wall</li>
+        <li>The entrance to the scaffold if it is on a side rather than at the end</li>
+      </ul>
+
+      <div class="box box-warning">
+        <strong>&#9888; Guardrail Removal for Work Tasks.</strong> Sometimes a guardrail section must be temporarily removed to land material or perform a specific task. When a guardrail is removed, the worker in that area must use personal fall arrest equipment (full body harness and lanyard) attached to an independent anchor point &mdash; not the scaffold itself &mdash; for the entire time the guardrail is absent. The guardrail must be replaced immediately after the task is complete. Never leave a platform open-sided without either a guardrail or personal fall arrest in place.
+      </div>
+
+      <h3>Toeboards &amp; Falling Object Protection</h3>
+      <ul>
+        <li>Toeboards (minimum 3.5 inches high) are required on all edges of scaffold platforms where workers below could be struck by falling tools or materials</li>
+        <li>If the scaffold is adjacent to a passageway, a barricade or debris net below the scaffold level may be required in addition to toeboards</li>
+        <li>All workers below a scaffold where work is being performed must wear hard hats</li>
+        <li>Establish a barricaded exclusion zone below the scaffold to keep unauthorized workers out of the fall zone</li>
+        <li>Never drop tools, materials, or debris from scaffold platforms &mdash; use hand lines or material hoists</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Access, Fall Protection &amp; Base Requirements</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Scaffold Access</h3>
+      <p>Workers must have safe access to and from every scaffold platform level. Acceptable access methods include:</p>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Scaffold Stairway</h4>
+          <ul>
+            <li>Preferred access for regularly-used scaffold &gt;24 feet</li>
+            <li>Handrails required on both sides</li>
+            <li>Uniform rise and run</li>
+            <li>Self-closing gate at top landing</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Ladder</h4>
+          <ul>
+            <li>Must extend at least 3 ft above the platform</li>
+            <li>Secured at top and bottom</li>
+            <li>Positioned so workers do not have to step over guardrails to access the platform</li>
+            <li>Through-hole access preferred over climbing over guardrail</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Frame Rungs (Climb-Through)</h4>
+          <ul>
+            <li>Frame scaffold cross-braces may be used as ladders only if specifically designed for climbing</li>
+            <li>Maximum 18-inch rung spacing</li>
+            <li>Minimum 4.5-inch clearance between rung and cross-brace</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Never Climb Scaffold Cross-Braces Unless Designed for Climbing.</strong> Standard X-braces are structural members &mdash; not ladders. Climbing on cross-braces that are not specifically rated for climbing can cause them to buckle or disengage, leading to scaffold collapse. If a designated access point is not available, stop work and notify the competent person to arrange proper access.
+      </div>
+
+      <h3>Fall Protection on Scaffolds</h3>
+      <p>OSHA provides two options for fall protection on scaffolds at or above 10 feet:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Option 1: Guardrail System</h4>
+          <ul>
+            <li>Top rail, midrail, and toeboard installed per specifications</li>
+            <li>No personal fall arrest equipment required while the guardrail is intact</li>
+            <li>Most common method for supported scaffolding</li>
+            <li>Guardrail must be in place <em>before</em> workers access the platform</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Option 2: Personal Fall Arrest System (PFAS)</h4>
+          <ul>
+            <li>Full body harness + shock-absorbing lanyard attached to an independent anchor</li>
+            <li>Required when guardrails are removed, for suspended scaffolds, and for aerial lifts</li>
+            <li>Anchor must be capable of supporting 5,000 lbs per attached worker</li>
+            <li>The scaffold frame or guardrail is <em>not</em> an acceptable anchor point for PFAS</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Base &amp; Foundation Requirements</h3>
+      <p>Scaffold stability begins at the ground. The base of any scaffold must be stable, level, and capable of supporting the full intended load without settlement or movement.</p>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Mudsills on all soft or uneven ground.</strong> Place lumber mudsills (minimum 2&times;10, spanning at least two base plates) under all scaffold base plates when the ground is soft, sloped, or could settle. Dike areas at petroleum tank sites frequently have compacted but uneven surfaces &mdash; mudsills are standard practice.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Adjustable base plates.</strong> Use adjustable screw-type base plates to level the scaffold on sloped surfaces. Do not raise a base plate more than 12 inches from its lowest position without additional engineering review.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Tying and bracing at height.</strong> Scaffold sections must be tied to the structure being worked on at specified intervals to prevent overturning. Consult the manufacturer&rsquo;s guidelines or a Qualified Person for tie-in requirements for specific scaffold heights.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Outriggers or extended base.</strong> If the scaffold cannot be tied to the structure (e.g., free-standing scaffold on a tank dike), outriggers or an extended base frame may be required to achieve the necessary stability. A Qualified Person must determine the configuration.</div></li>
+      </ol>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Base Failure</div>
+        <h4>The Settling Dike</h4>
+        <p>A crew erects a frame scaffold against a tank shell on a compacted clay dike. They place base plates directly on the clay without mudsills. On day 2 of a painting job, after overnight rain, the clay softens and one leg settles 2 inches. The scaffold tilts noticeably toward the tank shell. Workers on the third level feel the platform shift.</p>
+        <p><strong>Correct response:</strong> Evacuate the scaffold immediately. Do not attempt to re-level it while workers are on it. Once clear, lower the scaffold level by level after installing mudsills and re-establishing a level base. The competent person must re-inspect the entire scaffold before work resumes. Rain-softened soil at dike areas is an extremely common cause of scaffold instability at tank sites &mdash; always use mudsills, especially when rain is expected.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Inspection, Tag System &amp; Out-of-Service Procedures</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Competent Person Inspection Requirements</h3>
+      <p>OSHA requires the competent person to inspect scaffolding <strong>before each work shift</strong> and after any occurrence that could affect structural integrity. This includes:</p>
+      <ul>
+        <li>High winds (gusts above 25 mph typically require evacuation and post-wind inspection)</li>
+        <li>Any impact by a vehicle, equipment, or falling load</li>
+        <li>Any component failure, settlement, or unexpected movement</li>
+        <li>Following overnight rain or ice events</li>
+        <li>After any alteration (adding, removing, or repositioning components)</li>
+      </ul>
+
+      <h3>Pre-Shift Inspection Checklist (Authorized Users)</h3>
+      <p>Workers using a scaffold should also perform a basic visual inspection before ascending each shift, even when the competent person has already completed a formal inspection. Look for:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Platform &amp; Structure</h4>
+          <ul>
+            <li>Planks in place, overlapping properly, no excessive gaps</li>
+            <li>No loose, missing, or displaced planks</li>
+            <li>Platform surface free of debris, spills, and slip hazards</li>
+            <li>All guardrails present, in position, and secure</li>
+            <li>Toeboards in place on all open edges</li>
+            <li>Frame, bracing, and couplers visually secure and undisturbed</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Base &amp; Stability</h4>
+          <ul>
+            <li>Mudsills undisturbed and still bearing evenly</li>
+            <li>Base plates seated on mudsills; no uplift visible</li>
+            <li>Scaffold plumb (vertical) &mdash; no noticeable lean</li>
+            <li>Tie-ins to structure still in place and secure</li>
+            <li>No unauthorized changes or missing components since last inspection</li>
+            <li>Scaffold tag present and current (see tag system below)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Scaffold Tag System</h3>
+      <p>BBB Tank Services uses a three-color scaffold tagging system to communicate the status of each scaffold to all workers on site at a glance. Tags are posted at every point of access to the scaffold.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card tag-green">
+          <span class="tag-color">&#128994;</span>
+          <h4>GREEN &mdash; Safe to Use</h4>
+          <p>Scaffold has been inspected by the competent person this shift. All components are in place. All required fall protection and guardrails are installed. Authorized users may access.</p>
+        </div>
+        <div class="tag-card tag-yellow">
+          <span class="tag-color">&#128993;</span>
+          <h4>YELLOW &mdash; Caution / Restricted</h4>
+          <p>Scaffold may be used only with specific restrictions noted on the tag (e.g., maximum number of workers, personal fall arrest required, certain levels restricted). Read the tag before ascending.</p>
+        </div>
+        <div class="tag-card tag-red">
+          <span class="tag-color">&#128308;</span>
+          <h4>RED &mdash; Do Not Use</h4>
+          <p>Scaffold is out of service. Missing components, structural deficiency, failed inspection, or pending alterations. No one may access this scaffold for any reason until the tag is changed by the competent person after all deficiencies are corrected.</p>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Never Remove or Ignore a Red Tag.</strong> A red-tagged scaffold has been taken out of service by the competent person because a hazard was identified. Removing the red tag, bypassing the tag, or accessing the scaffold &ldquo;just for a moment&rdquo; while red-tagged is prohibited under any circumstances. The deficiency that caused the red tag may be invisible to an untrained observer &mdash; trust the system.
+      </div>
+
+      <h3>Scaffold Alterations &amp; Dismantling</h3>
+      <ul>
+        <li>Any modification to an erected scaffold &mdash; adding height, removing braces, relocating planks &mdash; must be done under the direct supervision of the competent person</li>
+        <li>The scaffold must be re-inspected and re-tagged by the competent person after any alteration before workers re-access it</li>
+        <li>Dismantling is performed under the competent person&rsquo;s supervision, working from the top down &mdash; never dismantle lower levels while upper levels still carry material or workers</li>
+        <li>Scaffold components must be controlled during dismantling and not dropped or thrown to the ground</li>
+        <li>Inspect all components after dismantling; damaged or deformed components must be tagged and segregated from serviceable components before being returned to storage</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Scaffold Safety at Petroleum Tank Sites</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Petroleum tank sites present scaffold hazards beyond those found on typical construction sites. Every BBB Tank Services supervisor and worker must account for these site-specific factors when planning and using scaffold systems at customer tank facilities.</p>
+
+      <h3>Flammable Vapor Hazards Near Scaffolding</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Ignition Source Control</h4>
+          <ul>
+            <li>Scaffold erection and dismantling generates metal-on-metal sparks. On in-service tanks with flammable vapor potential, atmospheric monitoring is required before and during scaffold erection near tank openings and in the dike area</li>
+            <li>Use non-sparking tools (brass hammers, bronze mallets) for scaffold assembly in classified areas</li>
+            <li>Grounding the scaffold to the tank or to a dedicated ground rod is required to prevent static buildup from wind on large scaffold structures adjacent to tanks</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Vapor Accumulation on Platforms</h4>
+          <ul>
+            <li>Petroleum vapors are heavier than air and can accumulate on scaffold platforms, especially at lower levels inside dike walls</li>
+            <li>Workers on scaffold platforms near in-service tanks must wear personal 4-gas monitors</li>
+            <li>Ensure adequate natural ventilation on platforms; avoid working in enclosed scaffold areas near tank vents during product transfer operations</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Environmental Conditions Specific to Tank Sites</h3>
+      <ul>
+        <li><strong>Wind:</strong> Tank dike areas are often exposed with no windbreak. Wind speeds above 25 mph can make scaffold work unsafe and may require work stoppage. Taller scaffolds are more susceptible. Monitor wind conditions throughout the shift, not just at setup.</li>
+        <li><strong>Heat:</strong> In Texas summers, metal scaffold components can reach temperatures exceeding 150&deg;F in direct sunlight. Workers can suffer burns from bare-hand contact with scaffold tubes. Wear gloves when working on sun-exposed scaffold. Use shade and hydration breaks per the BBB Heat Illness Prevention Program (Module 031).</li>
+        <li><strong>Dike Surface Conditions:</strong> Dike berms are often sloped, may have contaminated soil from minor spills, and can become extremely soft after rain. Inspect base conditions before and after any significant rainfall. Mudsills are mandatory in all dike areas at BBB Tank Services.</li>
+        <li><strong>Chemical Contamination:</strong> Scaffold planks and platforms exposed to petroleum product spray or spills become immediately slip-hazardous. Clean contaminated platforms before allowing workers to access them. Remove and replace planks that cannot be adequately decontaminated.</li>
+      </ul>
+
+      <h3>Aerial Work Platforms at Tank Sites</h3>
+      <p>Scissor lifts and boom lifts are commonly used at tank facilities for inspection and maintenance tasks. Additional tank-site specific rules apply:</p>
+      <ul>
+        <li><strong>Ground bearing capacity:</strong> AWPs are heavy &mdash; verify the dike surface can support the outrigger loads before positioning. Do not assume a compacted dike can support a fully loaded boom lift at maximum reach</li>
+        <li><strong>Classified areas:</strong> Use only explosion-proof or intrinsically safe AWPs in areas classified for flammable vapors. Verify the equipment rating against the area classification before operating</li>
+        <li><strong>Harness and anchor:</strong> All workers in AWP baskets must wear a full body harness anchored to the manufacturer-designated anchor point in the basket. Do not use a self-retracting lifeline (SRL) to an external structure from inside an AWP</li>
+        <li><strong>No climbing on rails:</strong> Workers must never stand on the mid- or top rail of an AWP basket to reach higher. This shifts the center of gravity and can tip the lift</li>
+        <li><strong>Overhead hazards:</strong> Tank sites have process lines, electrical conduit, and instrumentation at various elevations. Survey the work area for overhead obstructions before operating the lift</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. Who must inspect scaffolding before each work shift and after any event that could affect structural integrity?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> Any worker who will use the scaffold that day</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> The Competent Person designated by BBB Tank Services</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> A Qualified Person with an engineering degree in scaffold design</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> The host facility safety officer at the customer site</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. What is the required height range for the top guardrail on a supported scaffold platform?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> 30 to 36 inches above the platform surface</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> 38 to 45 inches above the platform surface</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> 48 to 60 inches above the platform surface</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> 42 inches exactly &mdash; no range is permitted</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. At what height above a lower level does OSHA require fall protection (guardrails or personal fall arrest) for scaffold workers?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> 4 feet &mdash; the general industry fall protection trigger</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> 6 feet &mdash; the standard construction fall protection trigger</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> 10 feet &mdash; the specific scaffold fall protection trigger under 1926.451</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> 15 feet &mdash; applies only to scaffolds over two platform levels</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. A rolling scaffold is needed to move along a tank shell for an inspection. All casters are locked and the scaffold is within the 3:1 height-to-base ratio. The crew decides to ride on the scaffold as a coworker pushes it to the next position. Is this acceptable?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Yes &mdash; as long as the casters are locked and the scaffold height-to-base ratio is within limits</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Yes &mdash; if the workers hold the guardrails and the scaffold is moved slowly</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> No &mdash; no workers may be on a rolling scaffold while it is being moved</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Yes &mdash; as long as none of the workers are holding tools at the time</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. You arrive at a scaffold to begin work and notice the scaffold tag is RED. Your supervisor is unavailable and the job is behind schedule. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Inspect the scaffold yourself and proceed if you cannot find any obvious problem</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Work only on the lower levels of the scaffold where the risk is lower</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Do not access the scaffold &mdash; a red tag means out of service for all workers; wait for the Competent Person to clear the deficiency and re-tag the scaffold</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Remove the tag and proceed &mdash; tags are informational and do not legally prevent access</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. A frame scaffold is being erected on the compacted clay surface of a petroleum tank dike. There has been significant rainfall in the past 24 hours. What is required before placing base plates?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Nothing additional &mdash; compacted clay is considered a stable base for scaffold erection</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Mudsills must be placed under all scaffold base plates to distribute load and prevent settlement into the rain-softened clay</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> The scaffold erection must be delayed 48 hours after rainfall to allow the clay to dry</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> One mudsill per scaffold end is sufficient if the scaffold is lightweight</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A section of guardrail must be temporarily removed to lower material to the platform. What must happen during the time the guardrail is absent?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> The worker near the open edge must hold onto a rope tied to the scaffold frame</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> All workers must descend the scaffold until the guardrail is replaced</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> The worker near the open edge must use a personal fall arrest system anchored to an independent anchor point for the entire time the guardrail is absent</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Warning cones on the platform are sufficient protection while the guardrail is removed</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. What is the maximum allowable gap between scaffold planks on a platform?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> 3 inches &mdash; sufficient to prevent foot entrapment</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> 1 inch &mdash; except at scaffold frames where up to 9.5 inches may be permitted for some system scaffolds</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> 6 inches &mdash; any gap smaller than a human foot is acceptable</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> No gaps are permitted &mdash; all planks must fit flush with no space between them</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. Why must scaffold structures at petroleum tank sites be electrically grounded?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> To prevent the scaffold from conducting electricity from overhead power lines to workers on the platform</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> To prevent static charge buildup from wind on large metal scaffold structures that could discharge near flammable vapors and cause ignition</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Scaffold grounding is required only when arc welding is performed from the scaffold platform</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> OSHA requires all metal structures near petroleum tanks to be bonded to prevent corrosion</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. A light-duty scaffold platform is rated for 25 lbs per square foot. Two workers (each 200 lbs with PPE and tools) are on a 6 ft &times; 5 ft platform section with two 5-gallon buckets of paint (approximately 50 lbs each). Is this within the scaffold&rsquo;s capacity?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Yes &mdash; light duty is sufficient for two workers and painting materials</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> No &mdash; the total load is 500 lbs on a 30 sq ft platform (16.7 lbs/sq ft), which is under the 25 lbs/sq ft limit</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> No &mdash; the total load is 500 lbs on a 30 sq ft platform (16.7 lbs/sq ft), which is within limits, but additional paint buckets or a third worker would exceed it and must not be added</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Yes, but only if the workers do not move simultaneously &mdash; staggered movement distributes the load safely</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-024.html" class="nav-btn prev">&larr; Module 24</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-026.html" class="nav-btn next">Module 26 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-025 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'b', q3:'c', q4:'c', q5:'c',
+    q6:'b', q7:'c', q8:'b', q9:'b', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'The Competent Person — someone with the training, knowledge, and authority to identify scaffold hazards and take corrective action — must inspect scaffolding before each work shift and after any event that could affect structural integrity. This is a non-delegable OSHA requirement under 29 CFR 1926.451(f)(3).',
+    q2:  'OSHA 29 CFR 1926.451(g)(4) specifies that the top guardrail must be between 38 and 45 inches above the platform surface. This range accommodates different worker heights while maintaining effective fall prevention. The top rail must also withstand 200 lbs of downward or outward force without failure.',
+    q3:  'Scaffold fall protection is required at 10 feet under OSHA 1926.451 — a different threshold than the 4-foot general industry or 6-foot construction standard for other elevated work. Scaffolding has its own specific requirements because the fall dynamics and practical guardrail installation differ from general fall protection scenarios.',
+    q4:  'Workers may never be on a rolling scaffold while it is being moved. The scaffold can tip, a caster can fail, or the worker can be thrown off by sudden stops. Descend, move the scaffold, lock all casters, inspect that it is plumb and stable, then re-ascend. This rule applies regardless of speed, height, or who is doing the pushing.',
+    q5:  'A red tag means the scaffold is out of service — period. No worker may access it for any reason until the Competent Person corrects the deficiency and changes the tag. The deficiency that triggered the red tag may be a structural failure or missing component that is not obvious to an untrained observer. Schedule delays do not override scaffold safety.',
+    q6:  'Mudsills are required when scaffold base plates are placed on soft, uneven, or potentially unstable ground — including rain-softened clay in a tank dike. Mudsills distribute the concentrated leg loads over a larger area, preventing individual legs from sinking and the scaffold from tilting or collapsing. This is a mandatory practice at all dike-area scaffold erections at BBB Tank Services.',
+    q7:  'When a guardrail section is removed for any reason, the worker working near or at the open edge must use a personal fall arrest system (full body harness and shock-absorbing lanyard) anchored to an independent structure rated for 5,000 lbs. Cones, ropes, or verbal warnings are not acceptable substitutes for physical fall protection.',
+    q8:  'OSHA 1926.451(b)(1) limits plank gaps to 1 inch for most scaffolds. The exception allows up to 9.5 inches at scaffold frames where the frame cross-section physically prevents a smaller gap, and only for system scaffolds specifically designed to accommodate this. Larger gaps allow tools and materials to fall through and strike workers below.',
+    q9:  'Large metal scaffold structures in windy conditions can accumulate static charge through triboelectric effects — wind moving across metal surfaces. Near flammable petroleum vapors, this static charge can discharge as a spark with sufficient energy to ignite the vapor. Grounding the scaffold to earth dissipates the buildup before it can reach ignition potential.',
+    q10: 'The total load is 2 workers × 200 lbs = 400 lbs + 2 buckets × 50 lbs = 100 lbs = 500 lbs total. The platform area is 6 × 5 = 30 sq ft. Load per sq ft = 500 ÷ 30 = 16.7 lbs/sq ft. This is under the 25 lbs/sq ft light-duty rating, so the current load is within limits. However, the scaffold is approaching capacity — any additional workers, materials, or paint would likely exceed it and must not be added without upgrading to a medium-duty scaffold.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'025', title:'Scaffold Safety Program', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 025 complete! Your record has been saved. Proceed to Module 026.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

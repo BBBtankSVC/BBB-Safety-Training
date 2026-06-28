@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 030 &ndash; General Housekeeping | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* HAZARD CONSEQUENCE CARDS */
+    .hazard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 14px 0; }
+    .haz-card { border-radius: 8px; padding: 14px; text-align: center; border-top: 4px solid; }
+    .haz-card .haz-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .haz-card h4 { font-size: .85rem; font-weight: 700; margin-bottom: 5px; }
+    .haz-card p  { font-size: .78rem; color: #444; margin: 0; }
+    .hc-slip  { background: #FEF0EE; border-color: #C0392B; } .hc-slip h4  { color: #C0392B; }
+    .hc-fire  { background: #FEF9EE; border-color: #e67e22; } .hc-fire h4  { color: #9a5000; }
+    .hc-drop  { background: #FFFBEA; border-color: #D4AC0D; } .hc-drop h4  { color: #7a5000; }
+    .hc-chem  { background: #EEF4FF; border-color: var(--navy2); } .hc-chem h4 { color: var(--navy2); }
+    .hc-block { background: #F3E5F5; border-color: #6A1B9A; } .hc-block h4 { color: #5b2c6f; }
+    .hc-pest  { background: #EDFAF2; border-color: var(--green); } .hc-pest h4  { color: var(--green); }
+
+    /* OILY RAG WARNING */
+    .rag-card { background: #FEF0EE; border: 2px solid var(--red); border-radius: var(--radius); padding: 18px 22px; margin: 14px 0; }
+    .rag-card h4 { color: var(--red); font-size: .97rem; font-weight: 700; margin-bottom: 10px; }
+    .rag-card p, .rag-card li { font-size: .9rem; color: #5a0000; }
+    .rag-card ul { padding-left: 18px; margin-top: 8px; }
+
+    /* STORAGE REQUIREMENTS */
+    .storage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+    .storage-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+    .storage-card h4 { font-size: .88rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+    .storage-card ul { padding-left: 16px; font-size: .82rem; }
+    .storage-card li { margin-bottom: 4px; }
+
+    /* CHECKLIST */
+    .checklist { margin: 14px 0; }
+    .checklist-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; border-radius: 7px; margin-bottom: 6px; background: var(--bg); border: 1px solid var(--border); font-size: .88rem; }
+    .check-box { flex-shrink: 0; width: 20px; height: 20px; border: 2px solid var(--orange); border-radius: 4px; margin-top: 1px; display: flex; align-items: center; justify-content: center; color: var(--orange); font-weight: 700; font-size: .8rem; }
+    .checklist-item strong { display: block; color: var(--navy); margin-bottom: 1px; }
+    .checklist-item span { font-size: .82rem; color: var(--muted); }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-029.html">&larr; Mod 29</a>
+    <a href="module-030.html" class="active">Mod 30</a>
+    <a href="module-031.html">Mod 31 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 30 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 030 &middot; SHP-BBB-030</div>
+  <h1>General Housekeeping</h1>
+  <p class="subtitle">Orderly, clean worksites are not just professional &mdash; they are the foundation of safety. Poor housekeeping causes more injuries at petroleum tank sites than most workers realize.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 30 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Explain why housekeeping is a safety function, not just an aesthetic concern</li>
+      <li>Identify the OSHA standards that govern workplace housekeeping</li>
+      <li>State the six primary hazard categories caused by poor housekeeping</li>
+      <li>Describe the requirements for walking surfaces, aisles, and access routes</li>
+      <li>Explain the spontaneous combustion hazard of oily rags and proper disposal</li>
+      <li>Identify safe material storage requirements to prevent tip-over and dropped object hazards</li>
+      <li>List the housekeeping requirements specific to petroleum tank sites</li>
+      <li>Perform a pre-shift housekeeping inspection using the BBB checklist</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Why Housekeeping Is a Safety Function</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Housekeeping is the most consistently underrated safety practice in industrial work. It is often treated as a janitorial function &mdash; something done at the end of the day to make the site look presentable. This view is wrong. <strong>Poor housekeeping is a direct cause of workplace injuries and fatalities.</strong> Slips and trips from cluttered floors, fires from accumulated combustibles, chemical exposures from uncontained spills, and dropped objects from unsecured materials are all housekeeping failures with serious consequences.</p>
+
+      <p>OSHA data consistently shows that slips, trips, and falls account for approximately <strong>15&ndash;20% of all occupational fatalities</strong> and a far larger share of disabling injuries. The overwhelming majority are preventable through basic housekeeping. At BBB Tank Services, good housekeeping is a non-negotiable daily responsibility for every worker on every job site &mdash; not just the newest member of the crew.</p>
+
+      <h3>What Housekeeping Prevents</h3>
+      <div class="hazard-grid">
+        <div class="haz-card hc-slip">
+          <span class="haz-icon">&#129318;</span>
+          <h4>Slips, Trips &amp; Falls</h4>
+          <p>Debris, spilled liquids, electrical cords, and cluttered walkways are the primary causes of slip, trip, and fall injuries on tank sites.</p>
+        </div>
+        <div class="haz-card hc-fire">
+          <span class="haz-icon">&#128293;</span>
+          <h4>Fire &amp; Explosion</h4>
+          <p>Accumulated combustibles near ignition sources, oily rags left in piles, and petroleum-soaked debris dramatically increase fire risk at tank facilities.</p>
+        </div>
+        <div class="haz-card hc-drop">
+          <span class="haz-icon">&#128296;</span>
+          <h4>Dropped Objects</h4>
+          <p>Unsecured tools, loose materials on elevated platforms, and improperly stored equipment become projectiles when disturbed or when work vibration causes them to shift.</p>
+        </div>
+        <div class="haz-card hc-chem">
+          <span class="haz-icon">&#9879;&#65039;</span>
+          <h4>Chemical Exposure</h4>
+          <p>Uncontained spills, improperly stored chemicals, and unwashed surfaces expose workers to skin contact and inhalation hazards long after the initial spill event.</p>
+        </div>
+        <div class="haz-card hc-block">
+          <span class="haz-icon">&#128680;</span>
+          <h4>Blocked Egress</h4>
+          <p>Materials stored in aisles or near exits prevent rapid evacuation during emergencies and block access to fire extinguishers, eyewash stations, and emergency equipment.</p>
+        </div>
+        <div class="haz-card hc-pest">
+          <span class="haz-icon">&#128027;</span>
+          <h4>Pest &amp; Disease Vectors</h4>
+          <p>Food waste, standing water, and accumulated debris attract pests. In outdoor tank farm environments, this includes venomous snakes and spiders as well as rodents.</p>
+        </div>
+      </div>
+
+      <h3>OSHA Housekeeping Standards</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Key Requirement</th></tr></thead>
+        <tbody>
+          <tr><td><strong>29 CFR 1910.22</strong></td><td>General Industry Walking-Working Surfaces: floors must be clean, dry, and free from debris; aisles and passageways must be kept clear; covers must be provided for floor openings</td></tr>
+          <tr><td><strong>29 CFR 1926.25</strong></td><td>Construction Housekeeping: construction areas, access areas, and storage areas must be kept free of unnecessary accumulations of materials; form and scrap lumber with protruding nails must be maintained free of such hazards</td></tr>
+          <tr><td><strong>29 CFR 1910.141</strong></td><td>Sanitation: adequate toilet facilities, potable water, and waste disposal required; food and drink prohibited in areas where toxic materials are used</td></tr>
+          <tr><td><strong>NFPA 30</strong></td><td>Flammable and Combustible Liquids Code: requirements for spill containment, waste disposal, and preventing accumulation of flammable materials at petroleum facilities</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Walking Surfaces, Aisles &amp; Access Routes</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>OSHA Walking Surface Requirements</h3>
+      <p>Under <strong>29 CFR 1910.22</strong>, OSHA requires that all places of employment be kept clean, orderly, and in a sanitary condition. Specifically for walking and working surfaces:</p>
+      <ul>
+        <li>The floor of every workroom must be maintained in a <strong>clean and dry</strong> condition as far as reasonably practicable. Where wet processes are used, drainage must be maintained and false floors, platforms, mats, or other dry standing places must be provided where necessary.</li>
+        <li>Every floor, working place, and passageway must be kept free from protruding nails, splinters, loose boards, and unnecessary holes and openings</li>
+        <li>Aisles and passageways must be kept sufficiently clear &mdash; at least <strong>28 inches wide</strong> for pedestrian access, wider where equipment operates</li>
+        <li>Permanent aisles and passageways must be appropriately marked</li>
+      </ul>
+
+      <h3>Specific Surface Hazards at BBB Tank Services Sites</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Petroleum Spills on Metal Surfaces</h4>
+          <ul>
+            <li>Metal tank tops, catwalks, stair treads, and grating become extremely slippery when contaminated with oil, grease, or petroleum product</li>
+            <li>Oil contamination on metal grating is essentially invisible until a worker slips</li>
+            <li>Clean spills immediately with absorbent material; never leave petroleum contamination on any walking surface</li>
+            <li>Apply non-slip coatings or mats to high-traffic metal surfaces where spills are likely</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Uneven Dike Terrain</h4>
+          <ul>
+            <li>Dike berms are sloped, often irregular, and may have soft spots after rain</li>
+            <li>Pipes, valve stems, and conduit at ground level create trip hazards in dike areas</li>
+            <li>Mark low-clearance obstacles and ground-level hazards with high-visibility paint or flags</li>
+            <li>Maintain clear walking paths through dike areas; do not store materials in the path of emergency egress routes</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Cord and Hose Management</h3>
+      <p>Extension cords, air hoses, water hoses, and welding cables laid across walkways are a leading cause of trip injuries on tank job sites. Requirements:</p>
+      <ul>
+        <li>Route cords and hoses <strong>out of walkways</strong> wherever possible &mdash; run along walls, under grating, or overhead using cord hangers</li>
+        <li>Where cords or hoses must cross a walkway, secure them with a cord bridge or bright-yellow trip hazard cover visible from multiple angles</li>
+        <li>Never leave cords or hoses coiled on walking surfaces &mdash; a coiled cord is a guaranteed trip hazard</li>
+        <li>Tag damaged or frayed cords and remove them from service immediately; do not cover electrical damage with tape and continue using the cord</li>
+        <li>Retract and store hoses when not in active use; do not leave air hoses pressurized and unattended across walkways</li>
+      </ul>
+
+      <h3>Floor Openings, Grating &amp; Covers</h3>
+      <ul>
+        <li>All floor openings (sumps, manholes, drains, inspection ports) must be covered or barricaded when not actively in use</li>
+        <li>Grating covers removed for maintenance must be immediately replaced when work in that area is complete; if the opening must remain open during work, barrier it with a guardrail system and post a warning</li>
+        <li>Never stand a removed grating cover against a wall or lean it against equipment &mdash; it can fall and strike a worker or create a secondary trip hazard</li>
+        <li>Covers for floor openings must be capable of supporting twice the maximum intended load</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Waste Management &amp; Combustible Hazards</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>General Waste Disposal</h3>
+      <p>Waste accumulation is one of the most common housekeeping failures on construction and maintenance job sites. OSHA 1926.25 requires that construction areas be kept free of unnecessary accumulation of material and that waste be disposed of at regular intervals. At BBB Tank Services, &ldquo;at the end of the day&rdquo; is the minimum; at active job sites, continuous waste management throughout the shift is required.</p>
+      <ul>
+        <li>Use clearly marked and appropriately sized waste containers for general debris; never allow containers to overflow</li>
+        <li>Segregate waste by type: general debris, scrap metal, petroleum-contaminated materials, and hazardous waste each go in separate designated containers</li>
+        <li>Scrap lumber and form lumber must have protruding nails removed or bent flat before being placed in waste piles</li>
+        <li>Never burn trash or debris at a petroleum tank facility &mdash; open burning is prohibited</li>
+        <li>Dispose of petroleum-contaminated materials per the facility&rsquo;s waste management procedures &mdash; oil-soaked rags, absorbent pads, and soil must be treated as petroleum waste, not general trash</li>
+      </ul>
+
+      <div class="rag-card">
+        <h4>&#128293; Spontaneous Combustion of Oily Rags &mdash; A Real and Recurring Hazard</h4>
+        <p>Rags, wipes, and absorbent materials soaked in petroleum products, paints, wood stains, or drying oils (linseed oil, tung oil) can undergo <strong>spontaneous combustion</strong> &mdash; they can ignite and catch fire without any external ignition source. This occurs when the oxidation of the oil in the rag generates heat faster than the heat can dissipate. A pile of oily rags left in a closed container or a bin in the corner can reach ignition temperature within hours.</p>
+        <ul>
+          <li><strong>Never pile oily rags in a corner, on a shelf, or in a closed trash bag</strong> &mdash; the confined space traps heat and dramatically increases combustion risk</li>
+          <li>Store oily rags in a <strong>metal container with a self-closing lid</strong> specifically designed for oily waste; the lid restricts oxygen when the container is closed and the metal body does not contribute fuel</li>
+          <li>Never mix oily rags with other combustible trash &mdash; they must be in their own dedicated metal container</li>
+          <li>Dispose of oily waste containers daily or before they are more than half full; do not accumulate oily rags over multiple days</li>
+          <li>At petroleum tank sites, all rags, wipes, and absorbent pads used to clean product spills must be treated as petroleum-contaminated waste</li>
+        </ul>
+      </div>
+
+      <h3>Spill Response &amp; Cleanup</h3>
+      <p>Spills of petroleum products, chemicals, or other hazardous materials must be cleaned up immediately. A spill left unaddressed is both a slip hazard and, at tank sites, a fire and environmental hazard.</p>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Stop the source.</strong> Before cleaning up, confirm the source of the spill is stopped. Cleaning up an ongoing spill is futile and exposes workers to continuous contamination.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Eliminate ignition sources</strong> in the vicinity of any flammable spill. A petroleum spill is a fire hazard until it is fully contained and removed.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Contain the spill</strong> using absorbent booms, drain covers, or berming to prevent it from spreading, reaching floor drains, or flowing into the dike perimeter drainage.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Apply absorbent material</strong> (granular absorbent, absorbent pads) and allow it to fully absorb the product before sweeping up. Do not hose down petroleum spills to the drain.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Bag and label the contaminated material</strong> and dispose of per the facility&rsquo;s petroleum waste procedures. Report the spill per the BBB Tank Services environmental incident reporting protocol.</div></li>
+      </ol>
+
+      <div class="box box-warning">
+        <strong>&#9888; Never Hose Down Petroleum Spills to Floor Drains.</strong> Storm drains and process drains at tank facilities discharge to treatment systems, water bodies, or secondary containment. Washing petroleum product to a drain is an environmental violation under the Clean Water Act, triggers regulatory reporting, and can result in fines. Always contain and absorb petroleum spills; never dilute them with water and wash them away.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Material Storage Safety</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Improperly stored materials are a source of multiple hazard types simultaneously: tip-over injuries when stacked material falls on workers, dropped-object injuries when materials on elevated surfaces are dislodged, and fire hazards when combustible materials are stored near ignition sources. Correct storage is a housekeeping requirement, not just an organizational preference.</p>
+
+      <h3>General Storage Principles</h3>
+      <div class="storage-grid">
+        <div class="storage-card">
+          <h4>&#128218; Stacking Height</h4>
+          <ul>
+            <li>Stack materials no higher than they can be safely reached or removed without climbing on the stack</li>
+            <li>Limit stacking height for bags, drums, and irregular materials to prevent tip-over: bagged materials maximum 10 ft; drums on their sides maximum 2 tiers; drums upright with chocks</li>
+            <li>Never store heavy materials on elevated platforms without positive retention (chains, straps, or guardrails)</li>
+          </ul>
+        </div>
+        <div class="storage-card">
+          <h4>&#128196; Aisle Clearance</h4>
+          <ul>
+            <li>Maintain a minimum 28-inch clearance in all pedestrian aisles and 36 inches in frequently used aisles</li>
+            <li>Aisles to emergency equipment (fire extinguishers, eyewash, emergency shutoffs) must remain completely clear at all times</li>
+            <li>No material storage within 3 feet of electrical panels, fire suppression system heads, or emergency exits</li>
+          </ul>
+        </div>
+        <div class="storage-card">
+          <h4>&#9881; Chemical Storage</h4>
+          <ul>
+            <li>Store chemicals per their SDS requirements: acids separated from bases, flammables in approved flammable storage cabinets, oxidizers separated from combustibles</li>
+            <li>No chemical storage directly on the floor where product leakage cannot be detected; use secondary containment trays</li>
+            <li>Label every container; never store chemicals in unlabeled or improperly labeled containers</li>
+          </ul>
+        </div>
+        <div class="storage-card">
+          <h4>&#128296; Tool Storage</h4>
+          <ul>
+            <li>Return tools to designated storage areas at the end of each shift; do not leave tools on tank tops, scaffold platforms, or elevated work areas overnight</li>
+            <li>Store hand tools with cutting edges protected; never leave sharp tools exposed in tool bags or on work surfaces where workers could reach in without seeing the blade</li>
+            <li>Tag and segregate damaged tools from serviceable ones to prevent inadvertent use</li>
+          </ul>
+        </div>
+        <div class="storage-card">
+          <h4>&#128167; Flammables &amp; Compressed Gas</h4>
+          <ul>
+            <li>Flammable liquids in quantities greater than one gallon must be stored in approved safety cans with self-closing lids and flame arrestors</li>
+            <li>Compressed gas cylinders must be secured upright at all times &mdash; see Module 027 (Welding Safety)</li>
+            <li>No flammable liquid storage within 20 feet of a petroleum tank unless in an approved flammable storage cabinet</li>
+          </ul>
+        </div>
+        <div class="storage-card">
+          <h4>&#128115; Material Elevation Risk</h4>
+          <ul>
+            <li>Any material stored on an elevated surface (scaffold platform, tank top, building roof) must be secured to prevent falling</li>
+            <li>Use toeboards, netting, or tool lanyards to retain small items on elevated platforms</li>
+            <li>Never leave loose materials on elevated surfaces during breaks; remove or positively secure everything before stepping away</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Storage Failure</div>
+        <h4>The Drum That Didn&rsquo;t Roll</h4>
+        <p>A crew has staged six drums of cleaning solvent on a concrete pad adjacent to a tank. The drums are standing upright in two rows but are not chocked or secured. A passing forklift clips the edge of the pad, creating vibration that causes the outer row of three drums to tip. One drum strikes a worker on the lower leg, causing a fracture. When the drum impacts the ground and the lid is breached, solvent releases near welding activity 40 feet away.</p>
+        <p><strong>What went wrong:</strong> Three housekeeping failures converged: drums not chocked or secured (storage failure), workers in the fall zone of a precarious stack (layout failure), and the staging location was too close to hot work activity (separation failure). All three are correctable with basic housekeeping planning. Drums must be chocked on both sides or secured with racking. Heavy materials must not be staged in areas where workers routinely pass. Flammable chemicals must be separated from ignition sources.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Petroleum Tank Site-Specific Housekeeping</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Tank sites present housekeeping challenges beyond those of general construction. The combination of flammable vapors, metal surfaces, confined dike areas, and the regulatory environment of active petroleum facilities requires a higher standard of housekeeping discipline than most other industrial settings.</p>
+
+      <h3>Dike Area Housekeeping</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Keep Dike Areas Clear</h4>
+          <ul>
+            <li>Dike interiors must have clear emergency egress routes at all times &mdash; no material staged across emergency walkways</li>
+            <li>No accumulation of debris, scrap material, or waste inside tank dikes &mdash; dike secondary containment must be functional and free of obstructions that could prevent it from holding a spill</li>
+            <li>Vegetation control: tall grass, weeds, and brush inside dikes are fire hazards and snake habitats; report overgrowth to the facility for control</li>
+            <li>Maintain clear access to dike drain valves, emergency shutoffs, and any firefighting infrastructure within the dike</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Dike Surface Conditions</h4>
+          <ul>
+            <li>Petroleum-contaminated soil inside dikes must be reported to the facility environmental representative &mdash; it may be a reportable spill</li>
+            <li>Do not fill dike interior depressions with gravel or fill material without facility authorization &mdash; this can affect stormwater drainage and spill containment calculations</li>
+            <li>Water accumulation in dike areas after rain must be pumped to appropriate treatment; never pump contaminated dike water to storm drains without testing and authorization</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Tank Tops &amp; Roof Surfaces</h3>
+      <ul>
+        <li><strong>Maintain a clean tank top.</strong> Petroleum product contamination on tank roofs creates extreme slip hazards. Clean any spills immediately with absorbent material. Do not leave product standing on a tank roof at the end of a shift.</li>
+        <li><strong>No loose tools or materials left on tank tops overnight</strong> &mdash; wind, equipment vibration, and expansion/contraction of the tank roof can dislodge anything not positively secured. All tools must be retrieved before leaving the tank.</li>
+        <li><strong>Tool accounting on tank tops.</strong> Before descending from a tank top, account for every tool taken up. Use a tool inventory list for elevated work; a dropped tool from a tank top is a serious struck-by hazard for workers below.</li>
+        <li><strong>No food, drink, or tobacco</strong> on tank tops or inside tank structures &mdash; petroleum vapor contamination is present, and this is both a health issue and a potential ignition source.</li>
+      </ul>
+
+      <h3>Housekeeping at the End of Each Shift</h3>
+      <p>BBB Tank Services requires the following end-of-shift housekeeping to be completed before the crew leaves any job site:</p>
+      <div class="checklist">
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>All tools accounted for and stored</strong><span>No tools left on tank tops, scaffold platforms, or elevated work areas</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>Work area swept or blown out</strong><span>Scrap metal, cut ends, and debris cleared from work area and disposed of properly</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>Oily rags in self-closing metal container</strong><span>Container not overfull; located away from combustibles and ignition sources</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>Spills cleaned and documented</strong><span>No petroleum product left on walking surfaces, tank tops, or inside dike areas</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>All open floor openings covered or barricaded</strong><span>Grating covers replaced; any open manholes or sumps secured for overnight</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>Aisles and egress routes clear</strong><span>No materials blocking emergency exits, fire extinguishers, or eyewash stations</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>Hoses and cords retracted and stored</strong><span>No pressurized hoses left overnight; extension cords unplugged and rolled up</span></div></div>
+        <div class="checklist-item"><div class="check-box">&#10003;</div><div><strong>Chemical containers sealed and in secondary containment</strong><span>No open containers; all containers labeled; storage area locked if applicable</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> BBB Tank Services Housekeeping Program</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Housekeeping Is Everyone&rsquo;s Responsibility</h3>
+      <p>A common and dangerous misconception is that housekeeping is the responsibility of a designated worker &mdash; the apprentice, the newest crew member, or whoever the supervisor assigns. At BBB Tank Services, <strong>every worker is responsible for the condition of their immediate work area at all times.</strong> This means:</p>
+      <ul>
+        <li>You clean up as you go, not just at the end of the shift</li>
+        <li>You do not walk past a hazard created by poor housekeeping without addressing it or reporting it</li>
+        <li>You do not leave a spill for the next shift to deal with</li>
+        <li>You return every tool you use to its designated location before moving to the next task</li>
+        <li>You do not create housekeeping hazards and assume someone else will address them</li>
+      </ul>
+
+      <h3>Supervisor Responsibilities</h3>
+      <ul>
+        <li>Conduct a pre-shift housekeeping inspection of the entire work area and correct deficiencies before allowing crew to begin work</li>
+        <li>Ensure adequate waste containers of the correct type (including metal oily rag containers) are available and positioned in the work area before work begins</li>
+        <li>Include housekeeping in the daily tailgate/toolbox talk &mdash; identify specific housekeeping hazards from the previous shift or expected for the current shift</li>
+        <li>Enforce the end-of-shift housekeeping checklist daily without exception</li>
+        <li>Report repeated housekeeping violations to BBB Tank Services management for follow-up</li>
+      </ul>
+
+      <h3>Housekeeping as Part of the Safety Inspection</h3>
+      <p>BBB Tank Services supervisors include housekeeping as a scored item in weekly safety inspections. Items evaluated include:</p>
+      <table class="std-table">
+        <thead><tr><th>Inspection Item</th><th>Standard</th></tr></thead>
+        <tbody>
+          <tr><td>Walking surfaces free of petroleum contamination, water, and debris</td><td>No contamination on any walking surface</td></tr>
+          <tr><td>Aisles and egress routes clear</td><td>Minimum 28-inch clearance; emergency equipment accessible</td></tr>
+          <tr><td>Oily rag/combustible waste container</td><td>Metal self-closing container, less than half full, no loose rags elsewhere</td></tr>
+          <tr><td>Waste disposal</td><td>Adequate containers, not overflowing, properly segregated</td></tr>
+          <tr><td>Material storage</td><td>Stable stacking, chocked drums, no material in egress paths</td></tr>
+          <tr><td>Tool storage and accounting</td><td>No tools on elevated surfaces; tagged damaged tools segregated</td></tr>
+          <tr><td>Chemical storage</td><td>All containers labeled, sealed, in secondary containment</td></tr>
+          <tr><td>Floor openings</td><td>All openings covered or barricaded; no improvised covers</td></tr>
+          <tr><td>Cord and hose management</td><td>No cords or hoses across walkways without cord bridges or covers</td></tr>
+          <tr><td>Dike area</td><td>Clear egress, no debris, petroleum-contaminated soil reported</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-success">
+        <strong>&#10003; The Housekeeping Standard:</strong> If a customer site safety officer, a BBB supervisor, or an OSHA inspector walked through your work area right now, would the housekeeping pass inspection? If not, stop and fix it before continuing work. A clean, orderly worksite is a direct reflection of the crew&rsquo;s safety culture &mdash; and it is the foundation that all other safety practices are built on.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What percentage of all occupational fatalities are attributed to slips, trips, and falls &mdash; most of which are preventable through housekeeping?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> 2&ndash;3% &mdash; slips and trips are common but rarely fatal</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> 15&ndash;20% &mdash; making it one of the leading causes of occupational fatality</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> 5% &mdash; only a minor contributor to overall workplace fatalities</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> 50% &mdash; slips and trips are the single largest cause of all workplace deaths</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. Rags soaked in linseed oil were left in a pile in a corner of a storage room overnight. What hazard does this create?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> Slipping hazard only &mdash; the rags could cause a worker to trip if they fall off the pile</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Spontaneous combustion &mdash; oily rags can oxidize and generate enough heat to ignite without any external ignition source, especially when piled in a confined space</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Chemical exposure hazard only &mdash; workers could contact residual linseed oil on the rags</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> No significant hazard &mdash; linseed oil is not flammable so spontaneous combustion cannot occur</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. What is the correct container for oily waste rags at a BBB Tank Services job site?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> A plastic trash bag knotted shut to limit oxygen exposure</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> A cardboard box, since rags are solid waste and not subject to special disposal requirements</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> A metal container with a self-closing lid specifically designed for oily waste</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Any available container as long as it is emptied at the end of each week</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. A petroleum spill occurs on a concrete pad inside a tank dike. What is the correct response?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Hose the spill to the dike drain to dilute it and prevent slip hazard to workers</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Stop the source, eliminate nearby ignition sources, contain the spill, apply absorbent material, bag the contaminated waste as petroleum waste, and report the spill</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Leave the spill for the next shift since petroleum product on concrete inside a dike is contained and not an immediate hazard</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Spread dry sand over the spill and allow the product to evaporate naturally</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. What is the minimum clear width required for pedestrian aisles at BBB Tank Services job sites per OSHA standards?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> 18 inches &mdash; the minimum for single-person access</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> 28 inches &mdash; the OSHA minimum for pedestrian aisles and passageways</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> 36 inches &mdash; required to accommodate personal protective equipment</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> 48 inches &mdash; required wherever equipment may also use the aisle</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. At the end of a shift, a worker realizes he cannot find one of his tools but is running late. He decides to report it to the next shift supervisor in the morning. What is wrong with this approach?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Nothing &mdash; tools are sometimes misplaced and the next shift can look for it</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> A missing tool on a tank top or elevated platform is a dropped-object hazard to workers below; the tool must be located before leaving and before the next shift accesses the area</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> It is acceptable as long as the missing tool is not powered &mdash; hand tools left on elevated surfaces are not a significant hazard</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Only a problem if the tool is found by a non-BBB worker</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. Who is responsible for housekeeping at a BBB Tank Services work area?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> The supervisor only &mdash; they are accountable for site conditions</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> The newest or most junior crew member, as part of their on-the-job training</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> Every worker is responsible for the condition of their immediate work area at all times &mdash; housekeeping is not assigned to one person</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> The customer site facilities team &mdash; contractors are not responsible for facility cleanliness</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. An extension cord must cross a walkway to reach a power tool. What is the correct approach?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Tape the cord to the floor with duct tape to keep it from moving</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Coil the excess cord at the edge of the walkway so it is visible</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Cover the cord with a bright-yellow cord bridge or trip hazard cover visible from multiple angles</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Post a worker at the cord to warn passersby to step over it</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. What clearance must be maintained around fire extinguishers, emergency exits, and eyewash stations at all times?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> No specific clearance is required as long as the equipment is visible</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> 18 inches &mdash; enough for a single person to reach past stored material</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Complete clearance &mdash; no material storage within 3 feet of emergency equipment; the path to all emergency equipment must be unobstructed at all times</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> 6 feet &mdash; matching the fall protection triggering height for general industry</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. A petroleum spill occurs inside a tank dike. A worker proposes hosing it down to the dike drain to clean it up quickly. Why is this the wrong approach?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Hosing a petroleum spill to a drain is acceptable inside a secondary containment dike since the dike prevents environmental release</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Washing petroleum product to a drain is a Clean Water Act violation, triggers regulatory reporting, and can result in fines &mdash; spills must be contained and absorbed, not diluted and discharged</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Only a problem if the drain discharges directly to a river or waterway &mdash; treatment plant discharges are permitted</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Hosing is acceptable for small spills but not for large ones</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-029.html" class="nav-btn prev">&larr; Module 29</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-031.html" class="nav-btn next">Module 31 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-030 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'b', q3:'c', q4:'b', q5:'b',
+    q6:'b', q7:'c', q8:'c', q9:'c', q10:'b'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'Slips, trips, and falls account for approximately 15–20% of all occupational fatalities — making them one of the leading causes of workplace death, not a minor hazard. The vast majority are preventable through basic housekeeping: keeping surfaces clean and dry, managing cords and hoses, and maintaining clear walkways.',
+    q2:  'Oily rags undergo spontaneous combustion when the oxidation of oil in the rag generates heat faster than the heat can dissipate. A pile of oily rags in a confined space like a corner, bag, or box can reach ignition temperature within hours without any external spark or flame. This is one of the leading causes of industrial fires and has burned down buildings and facilities.',
+    q3:  'Oily waste rags must be stored in a metal container with a self-closing lid designed for this purpose. The metal body does not contribute fuel, and the self-closing lid restricts oxygen when the container is closed, limiting the conditions for spontaneous combustion. Plastic bags, cardboard boxes, and open containers are all unacceptable for oily waste.',
+    q4:  'The correct spill response sequence is: stop the source, eliminate ignition sources, contain the spill, apply absorbent material, collect and dispose of waste as petroleum waste, and report the spill. Never hose petroleum spills to floor drains — this is a Clean Water Act violation regardless of whether a secondary containment system is present downstream.',
+    q5:  'OSHA 29 CFR 1910.22 requires a minimum of 28 inches of clear width for pedestrian aisles and passageways. Where equipment also uses the aisle, more clearance is required. Aisles to emergency equipment must remain unobstructed regardless of traffic patterns — 28 inches is the minimum, not the target.',
+    q6:  'A missing tool on a tank top or elevated platform is an active dropped-object hazard. Wind, equipment vibration, and temperature changes can dislodge a tool from an elevated surface at any time. The tool must be located before the shift ends and before any workers access the area below. Tool accountability on elevated surfaces is a non-negotiable BBB Tank Services requirement.',
+    q7:  'Every worker is responsible for housekeeping in their immediate work area at all times. This is not a supervision or junior-worker function — it is a shared responsibility where each worker cleans up as they work, does not create hazards and leave them for others to find, and corrects or reports hazards they observe even if they did not create them.',
+    q8:  'Cords crossing walkways must be covered with a bright-yellow cord bridge or trip hazard cover that is visible from multiple angles and prevents the cord from being a trip hazard while also protecting the cord from vehicle and foot traffic. Duct tape is not adequate — it does not provide a ramp over the cord and wears off. A coiled cord at the edge of a walkway is itself a trip hazard.',
+    q9:  'No material may be stored within 3 feet of fire extinguishers, emergency exits, eyewash stations, emergency shutoffs, or any other emergency equipment. The path to emergency equipment must be completely unobstructed at all times — in an emergency, workers cannot be searching for a fire extinguisher behind a stack of materials.',
+    q10: 'Discharging petroleum product to a floor drain is prohibited regardless of downstream treatment, because drain systems may not be designed or permitted to receive untreated petroleum product, the capacity of treatment systems may be overwhelmed, and an unpermitted discharge is a Clean Water Act violation. All petroleum spills must be contained in place, absorbed, and disposed of as hazardous waste through proper channels.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'030', title:'General Housekeeping', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 030 complete! Your record has been saved. Proceed to Module 031.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

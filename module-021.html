@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 021 &ndash; Mobile Cranes, Hoists &amp; Rigging Safety | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* SLING ANGLE VISUAL */
+    .sling-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .sling-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: center; }
+    .sling-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); text-align: center; }
+    .sling-table tr:nth-child(even) td { background: #F6F8FC; }
+    .cap-100 { color: #27ae60; font-weight: 700; }
+    .cap-87  { color: #7dba39; font-weight: 700; }
+    .cap-71  { color: #e6a000; font-weight: 700; }
+    .cap-50  { color: #e67e22; font-weight: 700; }
+    .cap-25  { color: #c0392b; font-weight: 700; }
+
+    /* SIGNAL CARDS */
+    .signal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 14px 0; }
+    .signal-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+    .signal-card .sig-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+    .signal-card h4 { font-size: .82rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .signal-card p { font-size: .75rem; color: var(--muted); margin: 0; }
+
+    /* INSPECTION ITEMS */
+    .inspect-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 14px 0; }
+    .inspect-item { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 11px 13px; }
+    .inspect-item strong { display: block; color: var(--navy); font-size: .87rem; margin-bottom: 3px; }
+    .inspect-item span { font-size: .78rem; color: var(--muted); }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-020.html">&larr; Mod 20</a>
+    <a href="module-021.html" class="active">Mod 21</a>
+    <a href="module-022.html">Mod 22 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 21 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 021 &middot; SHP-BBB-021</div>
+  <h1>Mobile Cranes, Hoists &amp; Rigging Safety</h1>
+  <p class="subtitle">Safe rigging practices, load calculation, lifting equipment inspection, and crane operations for BBB Tank Services field work &mdash; covering everything from chain falls to mobile crane lifts.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 40 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Identify the leading causes of crane and rigging fatalities</li>
+      <li>State the required qualifications for riggers and signal persons</li>
+      <li>Identify sling types and their Working Load Limits</li>
+      <li>Calculate the effect of sling angle on rated capacity</li>
+      <li>Inspect wire rope, chain, and synthetic slings before use</li>
+      <li>Apply safe rigging hardware selection and inspection rules</li>
+      <li>Describe pre-lift planning and critical lift requirements</li>
+      <li>Use standard hand signals to communicate during lifting operations</li>
+      <li>Identify exclusion zone requirements and never-stand-under-a-load rules</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Hazards, Regulations &amp; Qualified Persons</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Crane and rigging operations are among the most hazardous activities in industrial work. A suspended load that falls, swings, or drops can kill instantly &mdash; and the consequences extend beyond the rigging crew to anyone in the surrounding area. At BBB Tank Services, lifting operations occur frequently: setting pump housings, moving manway covers, positioning heavy equipment for tank work, and coordinating crane lifts for tank components.</p>
+
+      <h3>Leading Causes of Crane &amp; Rigging Fatalities</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Load-Related Causes</h4>
+          <ul>
+            <li>Overloading &mdash; exceeding the crane or rigging WLL</li>
+            <li>Load shifting or slipping from improperly rigged slings</li>
+            <li>Two-blocking (hook meets drum &mdash; line snaps)</li>
+            <li>Boom collapse from side loading or overloading</li>
+            <li>Load swing striking workers or structures</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Operational Causes</h4>
+          <ul>
+            <li>Contact with overhead power lines (electrocution)</li>
+            <li>Workers in the load path or under suspended load</li>
+            <li>Crane upset / tip-over from soft ground or improper outrigger setup</li>
+            <li>Defective rigging hardware (worn slings, cracked shackles)</li>
+            <li>Communication failure between rigger and operator</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Applicable Standards</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td><strong>29 CFR 1926.1400&ndash;1442</strong></td><td>OSHA Cranes &amp; Derricks in Construction &mdash; comprehensive standard covering mobile cranes, boom trucks, hoists</td></tr>
+          <tr><td><strong>29 CFR 1910.179</strong></td><td>Overhead and gantry cranes (general industry)</td></tr>
+          <tr><td><strong>29 CFR 1910.184</strong></td><td>Slings &mdash; wire rope, chain, metal mesh, and synthetic fiber slings</td></tr>
+          <tr><td><strong>ASME B30.9</strong></td><td>Slings &mdash; industry standard for inspection, use, and removal criteria</td></tr>
+          <tr><td><strong>ASME B30.26</strong></td><td>Rigging hardware (shackles, hooks, links, swivels, eye bolts)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Qualified Rigger &amp; Signal Person Requirements</h3>
+      <p>OSHA 1926.1401 defines specific qualification requirements for personnel involved in crane operations:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Qualified Rigger</h4>
+          <ul>
+            <li>Must be a qualified person based on training, knowledge, and experience in rigging equipment and operations</li>
+            <li>Understands sling types, hardware, load angles, and rigging configurations</li>
+            <li>Can identify unsafe conditions and knows the load limits of all rigging used</li>
+            <li>Required when making or releasing rigging attachments for crane lifts</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Signal Person</h4>
+          <ul>
+            <li>Qualification required when the operator cannot see the load, landing area, or rigging crew</li>
+            <li>Must know and use standard hand signals or agreed-upon signals</li>
+            <li>Only one designated signal person directs the operator at any time</li>
+            <li>Signal persons must be evaluated by a third-party qualified evaluator or by the employer&rsquo;s own qualified evaluator</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Power Line Contact &mdash; The Leading Crane Fatality Cause.</strong> Contact with energized overhead power lines accounts for more crane-related deaths than any other cause. Before any crane or boom truck operates on a BBB Tank Services job site, overhead electrical lines must be identified. If the crane or its load could contact a line, the utility must de-energize it, or minimum safe clearance distances must be established and enforced. The minimum clearance for lines up to 50 kV is <strong>10 feet</strong>. More clearance is always better.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Slings &mdash; Types, Inspection &amp; Removal Criteria</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Slings are the primary connection between the crane hook and the load. Selecting the correct sling type, verifying its Working Load Limit (WLL), inspecting it before every use, and removing it from service when damaged are the most critical rigging skills a BBB Tank Services worker can have.</p>
+
+      <h3>Sling Types Used at BBB Tank Services</h3>
+      <table class="std-table">
+        <thead><tr><th>Type</th><th>Construction</th><th>Strengths</th><th>Limitations</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Wire Rope Sling</strong></td>
+            <td>Multiple strands of steel wire twisted together; available with eyes, hooks, or shackle ends</td>
+            <td>High strength-to-weight ratio; resistant to abrasion and heat; durable in harsh industrial environments</td>
+            <td>Heavy; can damage soft or finished surfaces; stiffness limits conformation to irregular loads; must be inspected carefully for broken wires</td>
+          </tr>
+          <tr>
+            <td><strong>Chain Sling</strong></td>
+            <td>Alloy steel chain links with master link and hooks; available in grades 80 and 100</td>
+            <td>Excellent for high-temperature lifts; adjustable length; highly resistant to abrasion and cutting; durable for rough service</td>
+            <td>Heaviest sling type; can damage soft surfaces; must be Grade 80 or Grade 100 alloy only &mdash; never use hardware store or transport chain for lifting</td>
+          </tr>
+          <tr>
+            <td><strong>Synthetic Web Sling</strong></td>
+            <td>Woven nylon or polyester webbing with sewn eyes; flat or tubular</td>
+            <td>Lightweight; does not damage finished surfaces; flexible and easy to rig around irregular shapes; absorbs shock loads</td>
+            <td>Susceptible to cuts, abrasion, chemical damage, and UV degradation; lower working temperature limit (&lt;180&deg;F); inspect for cuts in the webbing surface</td>
+          </tr>
+          <tr>
+            <td><strong>Round Sling (Endless)</strong></td>
+            <td>Continuous nylon or polyester core wrapped in a woven cover; color-coded by capacity</td>
+            <td>Extremely flexible; distributes load over a wider bearing surface; gentle on delicate loads; lightweight and easy to handle</td>
+            <td>Core damage may not be visible through the cover &mdash; use a round sling cover inspection light; sensitive to abrasion and cuts; lower temperature limits</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Wire Rope Sling &mdash; Removal from Service Criteria</h3>
+      <p>Inspect wire rope slings before every use. Remove from service immediately if any of the following are found:</p>
+      <ul>
+        <li><strong>10 randomly distributed broken wires in one rope lay</strong>, or <strong>5 broken wires in one strand</strong> within one lay</li>
+        <li>Kinking, crushing, bird-caging, or any other distortion of the rope structure</li>
+        <li>Heat damage &mdash; discoloration, loss of lubrication, or fused wires</li>
+        <li>Corrosion of the wire rope or end fittings</li>
+        <li>Cracked, deformed, or worn end fittings (hooks, thimbles, swaged sleeves)</li>
+        <li>Any reduction in rope diameter of more than 1/3 of the original diameter</li>
+        <li>Missing or illegible tag (capacity tag must be attached and readable)</li>
+      </ul>
+
+      <h3>Synthetic Sling &mdash; Removal from Service Criteria</h3>
+      <ul>
+        <li>Acid or caustic burns; heat damage or melting</li>
+        <li>Holes, tears, cuts, or snags exposing core yarns</li>
+        <li>Broken or worn stitching in the sling body</li>
+        <li>Distortion of the metal fittings (eyes, hooks)</li>
+        <li>Missing or illegible identification tag</li>
+        <li>Evidence of UV degradation (chalky, brittle surface texture)</li>
+      </ul>
+
+      <div class="box box-warning">
+        <strong>&#9888; Never Use a Sling Without a Legible Tag.</strong> The identification tag on a sling contains its rated capacity, size, and material. A sling without a readable tag is an unknown capacity &mdash; remove it from service. Tags that are worn to illegibility cannot be replaced by writing capacity information with a marker on the sling body. Replace the sling.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Sling Angles &amp; Load Calculations</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>One of the most critical &mdash; and most misunderstood &mdash; aspects of rigging is the effect of <strong>sling angle</strong> on the actual load each sling leg carries. When two sling legs are used in a bridle configuration, the angle between each sling and the horizontal has a dramatic effect on the tension each leg experiences. As the angle decreases (slings become more horizontal), the tension in each leg increases far beyond the weight of the load alone.</p>
+
+      <h3>Sling Angle Effect on Rated Capacity</h3>
+      <p>The table below shows the percentage of rated vertical capacity that remains usable as the sling angle changes. <strong>The angle is always measured from the horizontal</strong>, not from the vertical.</p>
+
+      <table class="sling-table">
+        <thead>
+          <tr>
+            <th>Sling Angle from Horizontal</th>
+            <th>% of Vertical Rated Capacity Usable</th>
+            <th>Tension in Each Leg (for 1,000 lb load)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>90&deg; (vertical)</td><td class="cap-100">100%</td><td>500 lbs each</td></tr>
+          <tr><td>60&deg;</td><td class="cap-87">87%</td><td>577 lbs each</td></tr>
+          <tr><td>45&deg;</td><td class="cap-71">71%</td><td>707 lbs each</td></tr>
+          <tr><td>30&deg;</td><td class="cap-50">50%</td><td>1,000 lbs each</td></tr>
+          <tr><td>15&deg;</td><td class="cap-25">25%</td><td>1,932 lbs each</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-danger">
+        <strong>&#9888; The 30&deg; Danger Zone.</strong> At a 30&deg; sling angle, each sling leg carries a tension equal to the full weight of the load &mdash; double what a vertical sling would carry. At 15&deg;, each leg carries nearly twice the weight of the load. Slings that appear more than adequate for the load can fail catastrophically when rigged at a low angle. <strong>BBB Tank Services requires a minimum sling angle of 45&deg; from horizontal for all standard lifts.</strong> Angles less than 45&deg; require a Qualified Rigger review and may require a Critical Lift designation.
+      </div>
+
+      <h3>Determining the WLL for a Lift</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Determine load weight.</strong> Obtain the actual weight from engineering drawings, equipment nameplates, or manufacturer data. Never estimate weight for crane lifts &mdash; a reasonable-looking object may weigh far more than it appears. Tank components (flanged heads, internals, pump housings) are frequently heavier than they look.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Identify the rigging configuration.</strong> Determine how many sling legs will be used and at what angle. Measure or calculate the sling angle from the horizontal.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Calculate the tension per leg.</strong> Use the sling angle factor from the table above. Multiply load weight by the sling angle factor to get the actual tension on each leg.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Verify each sling&rsquo;s WLL exceeds the calculated tension.</strong> Each sling leg must be rated at or above the tension it will experience in the rigged configuration &mdash; not just the load weight.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Verify the crane or hoist capacity.</strong> The total load (load weight plus rigging weight) must not exceed the crane or hoist capacity at the operating radius and configuration. Use the crane&rsquo;s load chart &mdash; never rely on a verbal capacity number.</div></li>
+      </ol>
+
+      <h3>Common Rigging Configurations</h3>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Straight (Vertical) Hitch</h4>
+          <ul>
+            <li>Single sling, vertical from hook to load</li>
+            <li>Full WLL of sling applies</li>
+            <li>Load can rotate unless tag line is used</li>
+            <li>Use when load has a single lift point directly above COG</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Choker Hitch</h4>
+          <ul>
+            <li>Sling loops around load and through its own eye</li>
+            <li>Reduces capacity to approximately 75% of rated vertical WLL</li>
+            <li>Tightens as load is lifted &mdash; secures the load better than vertical</li>
+            <li>Do not use choker hitch on loads with sharp edges without corner protectors</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Basket Hitch</h4>
+          <ul>
+            <li>Sling runs under load with both eyes on the hook</li>
+            <li>Doubles capacity when load is balanced and angle is 90&deg;</li>
+            <li>Load may shift or roll &mdash; use only on stable, balanced loads</li>
+            <li>Never use basket hitch without securing both legs so load cannot roll out</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Rigging Hardware Inspection</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Rigging hardware &mdash; shackles, hooks, rings, and eye bolts &mdash; is only as reliable as its condition at the time of use. Hardware that has been overloaded, corroded, improperly modified, or not rated for the application can fail without warning. Inspect all hardware before every lift.</p>
+
+      <h3>Shackles</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Inspection Points</h4>
+          <ul>
+            <li>Verify WLL is stamped or embossed on the body &mdash; not just written in marker</li>
+            <li>Check for cracks, gouges, or deformation in the bow and pin</li>
+            <li>Verify the pin is the correct pin for that shackle body (not a bolt or rod substitute)</li>
+            <li>Pin must be fully seated and secured (cotter pin or wire moused through the pin hole)</li>
+            <li>Check for corrosion that could have reduced cross-section</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Common Errors</h4>
+          <ul>
+            <li>Using a bolt instead of the rated shackle pin</li>
+            <li>Side-loading the shackle (load applied to the pin rather than the bow)</li>
+            <li>Using a shackle without mousing the pin &mdash; pin can unscrew under load rotation</li>
+            <li>Using the wrong shackle type (screw pin shackle in a rotating load application)</li>
+            <li>Exceeding the shackle WLL because &ldquo;it&rsquo;s only a little over&rdquo;</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Hooks</h3>
+      <ul>
+        <li><strong>Safety latch must be present and functional</strong> &mdash; a hook without a functional safety latch must be removed from service</li>
+        <li>Inspect the throat opening &mdash; if it has opened more than 15% of its normal throat width, the hook is overloaded and must be removed from service</li>
+        <li>Inspect the hook tip for twisting &mdash; a twist of more than 10&deg; from the plane of the hook indicates overloading</li>
+        <li>Never repair a cracked or bent hook by welding or heat application</li>
+        <li>Load must sit in the bowl (saddle) of the hook &mdash; never on the tip or the latch</li>
+      </ul>
+
+      <h3>Eye Bolts &amp; Hoist Rings</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Eye Bolts</h4>
+          <ul>
+            <li>Shouldered eye bolts must be fully seated against the work surface with zero gap</li>
+            <li>Plain (un-shouldered) eye bolts are rated for vertical lift only &mdash; any angular loading dramatically reduces WLL</li>
+            <li>Shouldered eye bolts: angular loading at 45&deg; reduces WLL by 30%; at 90&deg; (horizontal) reduces WLL by 75%</li>
+            <li>Inspect threads for stripping or cross-threading before installing</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Swivel Hoist Rings</h4>
+          <ul>
+            <li>Preferred over eye bolts for angular rigging applications</li>
+            <li>Swivel and pivot to maintain rated WLL at any load angle</li>
+            <li>Inspect swivel action &mdash; must rotate freely; binding swivels indicate damage</li>
+            <li>Verify mounting bolt is fully torqued per manufacturer specification</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="inspect-grid">
+        <div class="inspect-item"><strong>Remove Sling If:</strong><span>Any visible defect, missing tag, or WLL not clearly identifiable</span></div>
+        <div class="inspect-item"><strong>Remove Hook If:</strong><span>Safety latch missing; throat opened &gt;15%; twisted &gt;10°; any cracks</span></div>
+        <div class="inspect-item"><strong>Remove Shackle If:</strong><span>Deformed bow/pin; pin not original; no WLL marking; corrosion</span></div>
+        <div class="inspect-item"><strong>Remove Chain If:</strong><span>Link elongated; twisted links; cracks; not Grade 80 or 100 alloy</span></div>
+        <div class="inspect-item"><strong>Never Use:</strong><span>Hardware store chain, galvanized chain, or unmarked rigging hardware for lifting</span></div>
+        <div class="inspect-item"><strong>Always Verify:</strong><span>Total rigging weight included in load calculation; never exceed any single component&rsquo;s WLL</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Pre-Lift Planning &amp; Critical Lifts</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Every lift at BBB Tank Services &mdash; regardless of how &ldquo;routine&rdquo; it appears &mdash; requires planning before the hook is attached. Rushing into a lift without proper preparation is one of the most common causes of rigging incidents. For larger or more complex lifts, a formal Pre-Lift Plan or Critical Lift Plan is required.</p>
+
+      <h3>Pre-Lift Checklist &mdash; Every Lift</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Know the load weight.</strong> Verify actual weight from documentation. If unknown, weigh the load or contact engineering. Never guess.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Identify the center of gravity (COG).</strong> Determine where the load will balance. An off-center COG causes the load to tilt when lifted. Adjust rigging attachment points to center the load over the COG before lifting.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Select and inspect all rigging.</strong> Choose slings, shackles, and hardware rated for the load at the planned rigging configuration (including sling angle). Inspect every component before use.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Verify crane/hoist capacity at the operating radius.</strong> Use the load chart for the actual boom length and operating radius. Crane capacity decreases significantly at longer radii.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Check the lift path.</strong> Walk the entire path the load will travel. Look for overhead obstructions, power lines, weak floor areas, and other equipment or personnel that need to be cleared.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Establish the exclusion zone.</strong> Mark and barricade the area beneath and around the lift path. Post a spotter. No unauthorized personnel in the exclusion zone during the lift.</div></li>
+        <li><div class="step-num">7</div><div class="step-text"><strong>Assign and brief all roles.</strong> Designate the Qualified Rigger, Signal Person, and any tag line tenders. Brief all crew on the lift plan, signals to be used, and emergency stop procedure.</div></li>
+      </ol>
+
+      <h3>What Makes a Lift &ldquo;Critical&rdquo;?</h3>
+      <p>A Critical Lift requires a formal written plan, engineering review, and additional supervision. BBB Tank Services designates a lift as critical when any of the following apply:</p>
+      <ul>
+        <li>The load exceeds <strong>75% of the crane&rsquo;s rated capacity</strong> at the operating radius</li>
+        <li>The lift involves <strong>two cranes</strong> sharing the load (tandem lift)</li>
+        <li>The load is being lifted over or adjacent to <strong>energized equipment, process lines, or occupied structures</strong></li>
+        <li>The load is <strong>personnel</strong> (man-basket lift)</li>
+        <li>The load is extremely <strong>difficult to rig</strong> due to size, shape, fragility, or unidentifiable COG</li>
+        <li>Environmental conditions are unusual (high wind, extreme heat, night operation)</li>
+      </ul>
+
+      <div class="box box-info">
+        <strong>When in Doubt, Designate as Critical.</strong> There is no downside to treating a lift as critical when you are uncertain. The extra planning and review add time but eliminate the conditions where catastrophic failures occur. If any crew member is uncertain about a lift, that is sufficient reason to pause and re-evaluate.
+      </div>
+
+      <h3>Tag Lines &amp; Load Control</h3>
+      <p>Tag lines are ropes or lines attached to the load to control swing and rotation during the lift. They are not optional for BBB Tank Services lifts:</p>
+      <ul>
+        <li>Attach tag lines to the load <em>before</em> the lift begins &mdash; not once the load is in the air and swinging</li>
+        <li>Tag line tenders must stand <strong>clear of the load path</strong> and use the tag line to guide, not to hold the load against crane movement</li>
+        <li>Never wrap a tag line around your hand, wrist, or body &mdash; a load swing can pull a person off their feet or drag them under the load</li>
+        <li>Tag lines must be long enough that tenders remain outside the exclusion zone while controlling the load</li>
+        <li>In areas where tag lines could contact electrical lines, use non-conductive (synthetic) tag line material</li>
+      </ul>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Pre-Lift Failure</div>
+        <h4>The Unmarked Tank Component</h4>
+        <p>A crew needs to lift a large flanged nozzle assembly off a flatbed and position it near a tank opening. The rigging crew estimates the piece at &ldquo;probably 800 lbs&rdquo; based on its size and rigs a 1-ton chain fall with a 3/4-inch wire rope sling in a choker configuration. As they lift, the wire rope sling snaps and the piece drops, narrowly missing two workers.</p>
+        <p><strong>Investigation reveals:</strong> The nozzle assembly was a solid forged steel component weighing 2,400 lbs &mdash; three times the estimated weight. The 3/4-inch wire rope sling in choker configuration (75% of rated capacity) had a WLL of approximately 1,400 lbs &mdash; far less than the actual load. The chain fall was also overloaded. <strong>The failure was entirely caused by not verifying load weight before rigging.</strong> Manufacturer documentation for the component was on the flatbed driver&rsquo;s paperwork the entire time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Hand Signals, Exclusion Zones &amp; Never-Do Rules</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Standard Hand Signals</h3>
+      <p>OSHA requires the use of standard hand signals unless alternative signals are agreed upon before the lift begins. All crew members involved in the lift must know and understand the signals being used. Only one designated signal person communicates with the operator at any time.</p>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <span class="sig-icon">&#128077;</span>
+          <h4>Hoist / Raise Load</h4>
+          <p>Forearm vertical, forefinger pointing up, move hand in small horizontal circles</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#128078;</span>
+          <h4>Lower Load</h4>
+          <p>Arm extended downward, forefinger pointing down, move hand in small horizontal circles</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#9994;</span>
+          <h4>Stop</h4>
+          <p>Arm extended palm down, move arm back and forth horizontally</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#9995;</span>
+          <h4>Emergency Stop</h4>
+          <p>Both arms extended palm down, move arms back and forth horizontally (urgent)</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#128072;</span>
+          <h4>Swing / Travel</h4>
+          <p>Point finger in direction of travel for boom or crane travel movement</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#128075;</span>
+          <h4>Dog Everything</h4>
+          <p>Clasp hands in front of body &mdash; stop all crane movement; hold position</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#128400;</span>
+          <h4>Raise Boom</h4>
+          <p>Arm extended, fingers closed, thumb pointing upward</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#128400;</span>
+          <h4>Lower Boom</h4>
+          <p>Arm extended, fingers closed, thumb pointing downward</p>
+        </div>
+        <div class="signal-card">
+          <span class="sig-icon">&#128076;</span>
+          <h4>Creep / Slowly</h4>
+          <p>Give any signal with the other hand held motionless in front of signal hand; all movements slow</p>
+        </div>
+      </div>
+
+      <h3>Exclusion Zone Requirements</h3>
+      <p>An <strong>exclusion zone</strong> is the area beneath and around the load path where no unauthorized personnel are permitted during a lift. BBB Tank Services requires:</p>
+      <ul>
+        <li>The exclusion zone encompasses the area beneath the entire load travel path, plus a radius equal to the load height from each side</li>
+        <li>The zone is established and barricaded or flagged <strong>before</strong> the lift begins &mdash; not after the load is in the air</li>
+        <li>A spotter is posted to maintain the zone and alert the signal person if anyone approaches</li>
+        <li>In areas where barricading is impractical, a safety watch must clear and hold the area before and during all lifts</li>
+        <li>Customer site exclusion zone requirements may be more stringent than BBB minimums &mdash; always follow the more protective requirement</li>
+      </ul>
+
+      <h3>Absolute Never-Do Rules for Rigging &amp; Crane Work</h3>
+      <div class="box box-danger">
+        <strong>These rules have no exceptions at BBB Tank Services:</strong>
+        <ul style="margin-top:10px;">
+          <li><strong>Never stand, walk, or work under a suspended load</strong> &mdash; if the rigging fails, nothing will protect you. Not a hard hat. Not a safety harness.</li>
+          <li><strong>Never exceed any component&rsquo;s WLL</strong> &mdash; there is no &ldquo;just a little over&rdquo;. Every WLL is set with factors of safety that account for dynamic loading, wear, and service conditions.</li>
+          <li><strong>Never use unmarked or unrated rigging hardware</strong> &mdash; includes hardware store chain, eye hooks from the electrical section, or any hardware whose WLL cannot be confirmed by the marking on the device.</li>
+          <li><strong>Never leave a load suspended unattended</strong> &mdash; if work stops, the load must be landed on a stable surface before the rigging crew leaves the area.</li>
+          <li><strong>Never allow tag line tenders to wrap lines around their hands or bodies</strong> &mdash; loop the line in the hands; do not wrap.</li>
+          <li><strong>Never operate a crane near overhead power lines without established clearance</strong> &mdash; minimum 10 feet from lines up to 50 kV.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is the minimum safe clearance distance between a crane (or its load) and an energized overhead power line rated up to 50 kV?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> 3 feet &mdash; the standard distance for hand tools near energized lines</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> 6 feet &mdash; OSHA&rsquo;s standard fall protection height trigger</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> 10 feet &mdash; the minimum clearance required by OSHA for cranes near lines up to 50 kV</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> 25 feet &mdash; cranes must never operate within a quarter-span of any power line</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. Two slings are used in a bridle configuration at a 30&deg; angle from horizontal to lift a 2,000 lb load. Approximately how much tension does each sling leg experience?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> 1,000 lbs &mdash; the load is split evenly between two legs</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> 577 lbs &mdash; sling legs always carry less than half the load in a bridle</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> 2,000 lbs &mdash; at 30&deg; sling angle, each leg carries tension equal to the total load weight</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> 250 lbs &mdash; two legs at any angle always reduce individual leg load to a quarter of total</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. You are about to rig a wire rope sling and notice the identification tag is missing. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Estimate the capacity based on the wire rope diameter and proceed with the lift</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Write the estimated capacity on the sling with a permanent marker and continue</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Remove the sling from service immediately &mdash; a sling without a legible rated capacity tag cannot be used</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Use the sling only for light lifts under 500 lbs since it is clearly a small-capacity sling</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. What is the effect on a synthetic web sling&rsquo;s rated capacity when used in a choker hitch configuration?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Capacity increases by 25% due to the clamping effect on the load</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Capacity is reduced to approximately 75% of the rated vertical WLL</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Capacity is unchanged &mdash; hitch type does not affect rated capacity</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Capacity is reduced to 50% because the sling cannot be rated in this configuration</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. During a pre-lift inspection, you notice a crane hook&rsquo;s throat opening appears to be wider than normal and the safety latch does not fully close. What is the correct action?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Proceed with the lift carefully &mdash; the latch is secondary protection and the hook will hold</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Remove the hook from service immediately &mdash; a widened throat indicates overloading and a non-functional safety latch makes the hook unfit for use</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Tape the latch closed with electrical tape so the load cannot fall from the hook</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Use the hook for this lift but report it for inspection after the job is complete</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. Which of the following makes a lift qualify as a &ldquo;Critical Lift&rdquo; requiring a formal written plan?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Any lift involving a load heavier than 500 lbs</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> The load exceeds 75% of the crane&rsquo;s rated capacity at the operating radius, or the lift involves two cranes, personnel, or work over energized equipment</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Any lift where the rigging crew has less than 5 years of experience</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Any lift that takes more than 30 minutes to complete</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A shackle is found in the rigging bin with &ldquo;3 TON&rdquo; written in black marker on the bow. The embossed rating is not visible. Is this shackle acceptable for use?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Yes &mdash; a permanent marker marking is equivalent to an embossed rating for field use</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Yes, if two riggers agree on the capacity and the lift is under 3 tons</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> No &mdash; rigging hardware must have a legible manufacturer-stamped or embossed WLL. A marker notation has no validity and the shackle must be removed from service.</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Yes, as long as the pin is the original manufacturer&rsquo;s pin and is properly moused</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. What is the standard hand signal for &ldquo;Stop all crane movement immediately&rdquo;?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> One arm raised straight up with fist closed</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Both arms extended horizontally with palms facing down, moving arms back and forth</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Both hands clasped together in front of the body</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Thumb pointing downward with arm fully extended</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. A worker needs to guide a suspended load into position and wraps the tag line around his wrist to get a better grip. Why is this dangerous?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> It is acceptable &mdash; wrapping the line gives better control and reduces the chance of dropping it</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> If the load swings unexpectedly, the tag line will pull the worker with it &mdash; potentially dragging them into the load path, off their feet, or under the load</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> It is a minor violation only if the load exceeds 1,000 lbs</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> It reduces blood circulation but is acceptable for short lifts</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. Work stops mid-lift and the load must remain on the hook while the crew takes a 30-minute break. What must happen before anyone leaves the area?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Post a warning cone under the load and the crew may take their break</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> The load must be landed on a stable surface before the rigging crew leaves &mdash; loads must never be left suspended unattended</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> One crew member must stay near the crane controls in case the load shifts</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> The crane operator may leave if they engage the crane&rsquo;s load brake</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-020.html" class="nav-btn prev">&larr; Module 20</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-022.html" class="nav-btn next">Module 22 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-021 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'c', q2:'c', q3:'c', q4:'b', q5:'b',
+    q6:'b', q7:'c', q8:'b', q9:'b', q10:'b'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'OSHA 29 CFR 1926.1408 requires a minimum 10-foot clearance between a crane (or its load, boom, or lines) and any energized overhead power line rated up to 50 kV. For higher voltages, the required clearance increases. Power line contact is the leading cause of crane fatalities.',
+    q2:  'At a 30° sling angle, the sling angle factor is 0.5, meaning each sling leg carries tension equal to the full load weight. For a 2,000 lb load with two legs: each leg experiences 2,000 lbs ÷ 2 legs × (1/sin 30°) = 2,000 lbs. Each leg must be rated for the full 2,000 lbs, not 1,000 lbs.',
+    q3:  'A sling without a legible manufacturer-provided capacity tag must be removed from service immediately. The WLL cannot be reliably determined from wire rope diameter alone without knowing the construction, grade, and fittings. Writing on the sling with marker has no engineering validity.',
+    q4:  'A choker hitch reduces the usable capacity of a sling to approximately 75% of the straight (vertical) WLL. The choker tightens around the load, creating a bending load on the sling body that reduces its rated capacity.',
+    q5:  'A throat opening wider than normal indicates the hook has been overloaded and the metal has yielded. A non-functional safety latch allows the load to slip from the hook. Both are mandatory remove-from-service criteria. Never use damaged hooks — no repair by welding or reshaping is acceptable.',
+    q6:  'A Critical Lift is required when: the load exceeds 75% of crane capacity at operating radius; two cranes share the load; the load involves personnel (man-basket); the lift is over energized equipment or occupied structures; or other high-risk conditions exist. These lifts require formal written plans and engineering review.',
+    q7:  'Rigging hardware WLL must be permanently marked by the manufacturer — stamped, embossed, or cast into the hardware body. Marker notations can be added by anyone, do not reflect actual testing, and can be altered or transferred to a different shackle. Unmarked or marker-only rated hardware must be removed from service.',
+    q8:  'The Emergency Stop signal is both arms extended horizontally with palms facing down, moving both arms back and forth simultaneously — communicating urgency. The standard Stop signal uses one arm. "Dog Everything" (clasp hands) means hold position, not emergency stop.',
+    q9:  'A load swing is sudden and powerful. If a tag line is wrapped around a worker\'s wrist or body and the load swings, the worker is pulled with the load — potentially dragged under it, off an elevated surface, or into other hazards. Always loop the tag line loosely in the hands, never wrap it.',
+    q10: 'Suspended loads must never be left unattended. A crane brake can fail, a rigging component can creep under load, or ground conditions can shift. The load must be landed on a stable, prepared surface before the crew leaves, regardless of the break duration.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'021', title:'Mobile Cranes, Hoists & Rigging Safety', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 021 complete! Your record has been saved. Proceed to Module 022.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

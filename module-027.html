@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 027 &ndash; Welding Safety &amp; Hot Work Program | BBB Tank Services</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    :root{--navy:#0D1B2A;--navy2:#1A2E4A;--orange:#E8611A;--orange2:#C9510E;--bg:#F0F4F8;--card:#FFFFFF;--text:#1C2B3A;--muted:#6B7E8E;--border:#D3DCE6;--green:#1D8348;--red:#C0392B;--radius:10px}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;min-height:100vh}
+    .top-bar{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.4);border-bottom:3px solid var(--orange)}
+    .top-bar .logo{font-size:1rem;font-weight:800;color:#fff;text-decoration:none}.top-bar .logo span{color:var(--orange)}
+    .top-bar nav{display:flex;gap:6px}.top-bar nav a{color:#8FAEC8;text-decoration:none;font-size:.82rem;padding:6px 12px;border-radius:6px;transition:background .15s,color .15s}
+    .top-bar nav a:hover{background:rgba(255,255,255,.08);color:#fff}.top-bar nav a.active{background:var(--orange);color:#fff;font-weight:700}
+    .progress-container{background:var(--card);border-bottom:1px solid var(--border);padding:9px 24px;display:flex;align-items:center;gap:14px;font-size:.78rem;color:var(--muted)}
+    .prog-bar-bg{flex:1;background:var(--border);border-radius:6px;height:7px;overflow:hidden}
+    .prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--orange2),var(--orange));border-radius:6px;width:0%;transition:width .4s ease}
+    .hero{background:linear-gradient(135deg,var(--navy2) 0%,var(--navy) 100%);color:#fff;padding:44px 28px 36px;text-align:center}
+    .module-tag{display:inline-block;background:var(--orange);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px}
+    .hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;line-height:1.2;margin-bottom:10px}
+    .hero .subtitle{font-size:.97rem;color:#8FAEC8;max-width:640px;margin:0 auto 22px}
+    .hero-meta{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-size:.8rem;color:#8FAEC8}
+    .page-wrap{max-width:960px;margin:0 auto;padding:30px 16px 60px}
+    .objectives-card{background:var(--card);border-left:5px solid var(--orange);border-radius:var(--radius);padding:22px 26px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .objectives-card h2{font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--orange2);margin-bottom:14px}
+    .objectives-card ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:9px 20px}
+    .objectives-card li{padding-left:22px;position:relative;font-size:.91rem}
+    .objectives-card li::before{content:'\2713';position:absolute;left:0;color:var(--green);font-weight:700}
+    .section-card{background:var(--card);border-radius:var(--radius);box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px;overflow:hidden;border:1px solid var(--border)}
+    .sec-header{background:var(--navy);color:#fff;padding:16px 22px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;transition:background .2s}
+    .sec-header:hover{background:var(--navy2)}.sec-header h2{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:12px}
+    .sec-num{background:var(--orange);color:#fff;font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:12px;letter-spacing:.5px}
+    .chevron{font-size:1rem;transition:transform .3s}.sec-header.open .chevron{transform:rotate(180deg)}
+    .sec-body{display:none;padding:24px 26px 28px}.sec-body.open{display:block;animation:fadeSlide .22s ease}
+    @keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .sec-body h3{color:var(--navy);font-size:.97rem;font-weight:700;margin:20px 0 9px}.sec-body h3:first-child{margin-top:0}
+    .sec-body p{margin-bottom:12px;font-size:.93rem;color:#333}.sec-body ul,.sec-body ol{padding-left:20px;margin-bottom:12px}
+    .sec-body li{margin-bottom:6px;font-size:.91rem;color:#333}.sec-body strong{color:var(--navy)}
+    .box{border-radius:8px;padding:14px 18px;margin:16px 0;font-size:.91rem}
+    .box-danger{background:#FEF0EE;border-left:5px solid #C0392B;color:#5a0000}.box-danger strong{color:#C0392B}
+    .box-warning{background:#FFFBEA;border-left:5px solid #D4AC0D;color:#5a4000}.box-warning strong{color:#9a7000}
+    .box-info{background:#EEF4FF;border-left:5px solid var(--navy2);color:#0a1e40}.box-info strong{color:var(--navy2)}
+    .box-success{background:#EDFAF2;border-left:5px solid var(--green);color:#0a3a1e}.box-success strong{color:var(--green)}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+    @media(max-width:580px){.two-col{grid-template-columns:1fr}}
+    .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0}
+    @media(max-width:640px){.three-col{grid-template-columns:1fr}}
+    .mini-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:15px 17px}
+    .mini-card h4{color:var(--navy2);font-size:.9rem;margin-bottom:8px}
+    .mini-card ul{padding-left:17px;font-size:.87rem}.mini-card li{margin-bottom:5px}
+    .std-table{width:100%;border-collapse:collapse;font-size:.87rem;margin:14px 0}
+    .std-table th{background:var(--navy);color:#fff;padding:10px 13px;text-align:left;font-weight:600}
+    .std-table td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+    .std-table tr:nth-child(even) td{background:#F6F8FC}
+    .permit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:14px 0}
+    .permit-item{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:12px 13px}
+    .permit-item .pi-num{font-size:.7rem;font-weight:800;color:var(--orange);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+    .permit-item strong{display:block;font-size:.85rem;color:var(--navy);margin-bottom:2px}
+    .permit-item span{font-size:.78rem;color:var(--muted)}
+    .cyl-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+    @media(max-width:520px){.cyl-wrap{grid-template-columns:1fr}}
+    .cyl-card{border-radius:8px;padding:18px;border-top:5px solid}
+    .cyl-card h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+    .cyl-card ul{padding-left:17px;font-size:.86rem}.cyl-card li{margin-bottom:5px}
+    .cyl-o2{background:#EEF4FF;border-color:#1565C0}.cyl-o2 h4{color:#1565C0}
+    .cyl-ac{background:#FFFBEA;border-color:#e67e22}.cyl-ac h4{color:#9a5000}
+    .ppe-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:14px 0}
+    .ppe-table th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+    .ppe-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+    .ppe-table tr:nth-child(even) td{background:#F6F8FC}
+    .fume-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:14px 0}
+    .fume-table th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:600}
+    .fume-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+    .fume-table tr:nth-child(even) td{background:#F6F8FC}
+    .risk-high{color:#C0392B;font-weight:700}.risk-med{color:#e67e22;font-weight:700}.risk-low{color:#27ae60;font-weight:700}
+    .steps{list-style:none;padding:0;margin:12px 0}
+    .steps li{display:flex;gap:13px;margin-bottom:13px;align-items:flex-start}
+    .step-num{flex-shrink:0;width:30px;height:30px;background:var(--orange);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem}
+    .step-text{padding-top:4px;font-size:.91rem}.step-text strong{display:block;color:var(--navy);margin-bottom:2px}
+    .scenario{background:linear-gradient(135deg,var(--navy2) 0%,var(--navy) 100%);color:#fff;border-radius:var(--radius);padding:20px 24px;margin:18px 0}
+    .scenario .scenario-label{font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#8FAEC8;margin-bottom:7px}
+    .scenario h4{font-size:.97rem;color:var(--orange);margin-bottom:9px}
+    .scenario p{font-size:.88rem;color:#d0dcea;margin-bottom:7px}.scenario p:last-child{margin-bottom:0}
+    .quiz-section{background:var(--navy);color:#fff;border-radius:12px;padding:30px 26px;margin-top:32px}
+    .quiz-section h2{font-size:1.2rem;color:var(--orange);margin-bottom:5px}
+    .quiz-intro{font-size:.88rem;color:#8FAEC8;margin-bottom:22px}
+    .q-block{margin-bottom:26px}.q-text{font-size:.95rem;font-weight:600;margin-bottom:11px;line-height:1.5}
+    .opt-label{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;border-radius:6px;cursor:pointer;margin-bottom:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);transition:background .15s;font-size:.88rem}
+    .opt-label:hover{background:rgba(255,255,255,.13)}.opt-label input{margin-top:2px;flex-shrink:0;accent-color:var(--orange)}
+    .opt-label.correct{background:rgba(29,131,72,.3);border-color:#27ae60}.opt-label.incorrect{background:rgba(192,57,43,.3);border-color:#e74c3c}
+    .feedback{display:none;margin-top:9px;padding:9px 13px;border-radius:6px;font-size:.85rem}.feedback.show{display:block}
+    .feedback.correct{background:rgba(29,131,72,.2);color:#a8f0c0}.feedback.incorrect{background:rgba(192,57,43,.2);color:#f5b0a8}
+    .quiz-submit{display:block;width:100%;padding:13px;background:var(--orange);color:#fff;font-size:.97rem;font-weight:700;border:none;border-radius:8px;cursor:pointer;margin-top:8px;transition:background .2s,transform .1s}
+    .quiz-submit:hover{background:var(--orange2)}.quiz-submit:active{transform:scale(.98)}
+    .quiz-result{display:none;margin-top:20px;background:rgba(255,255,255,.08);border-radius:10px;padding:22px;text-align:center}.quiz-result.show{display:block}
+    .score-big{font-size:2.8rem;font-weight:800;color:var(--orange)}.score-label{font-size:.85rem;color:#8FAEC8;margin-bottom:8px}
+    .result-msg{font-size:.95rem;margin-bottom:16px}
+    .retake-btn{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:9px 22px;cursor:pointer;font-size:.87rem;transition:background .2s}
+    .retake-btn:hover{background:rgba(255,255,255,.2)}
+    .module-nav{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+    .nav-btn{flex:1;min-width:140px;padding:13px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.88rem;text-align:center;transition:opacity .2s,transform .1s;border:none;cursor:pointer}
+    .nav-btn:hover{opacity:.87;transform:translateY(-1px)}
+    .nav-btn.prev{background:#E8EDF4;color:var(--navy);border:2px solid var(--border)}.nav-btn.home{background:var(--orange);color:#fff}.nav-btn.next{background:var(--navy);color:#fff}
+    .page-footer{background:var(--navy);color:#4A6785;text-align:center;font-size:.74rem;padding:18px 16px;margin-top:20px}
+  </style>
+</head>
+<body>
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav><a href="index.html">Home</a><a href="module-026.html">&larr; Mod 26</a><a href="module-027.html" class="active">Mod 27</a><a href="module-028.html">Mod 28 &rarr;</a></nav>
+</div>
+<div class="progress-container">
+  <span>Module 27 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+<div class="hero">
+  <div class="module-tag">Module 027 &middot; SHP-BBB-027</div>
+  <h1>Welding Safety &amp; Hot Work Program</h1>
+  <p class="subtitle">Controlling ignition sources, fume hazards, and fire risk during welding, cutting, grinding, and all hot work operations at BBB Tank Services petroleum storage tank sites.</p>
+  <div class="hero-meta"><span>&#9201; Est. 40 min</span><span>&#128203; 6 Sections</span><span>&#9989; 10-Question Quiz</span><span>&#128197; Rev. Oct 2025</span></div>
+</div>
+<div class="page-wrap">
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Define hot work and identify all activities requiring a permit at tank sites</li>
+      <li>Explain why hot work at petroleum tank sites carries uniquely elevated risk</li>
+      <li>State the atmospheric thresholds required before hot work begins</li>
+      <li>Identify the required elements of a BBB Tank Services hot work permit</li>
+      <li>Describe fire watch requirements during and after hot work</li>
+      <li>Select correct PPE for arc welding, oxy-fuel cutting, and grinding operations</li>
+      <li>Identify welding fume hazards by base metal type</li>
+      <li>Demonstrate safe gas cylinder handling and storage</li>
+      <li>Explain the pyrophoric iron sulfide hazard unique to petroleum tank work</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)"><h2><span class="sec-num">01</span> Hot Work Defined &amp; Why Tank Sites Are Different</h2><span class="chevron">&#9660;</span></div>
+    <div class="sec-body open">
+      <h3>What Is Hot Work?</h3>
+      <p>Hot work is any operation that produces sparks, open flames, heat, or electrical arcs that could serve as an ignition source. At BBB Tank Services this includes:</p>
+      <div class="three-col">
+        <div class="mini-card"><h4>Welding &amp; Cutting</h4><ul><li>Arc welding (SMAW, GMAW, FCAW, GTAW)</li><li>Oxy-fuel gas welding and cutting</li><li>Plasma arc cutting</li><li>Brazing and soldering</li><li>Torch heating and preheating</li></ul></div>
+        <div class="mini-card"><h4>Spark-Generating Work</h4><ul><li>Angle grinding and disc cutting</li><li>Needle scaling &amp; wire brushing on steel</li><li>Abrasive blasting with steel shot</li><li>Chipping and chiseling on metal</li><li>Powder-actuated fastener tools</li></ul></div>
+        <div class="mini-card"><h4>Other Ignition Sources</h4><ul><li>Non-explosion-proof electrical equipment in classified areas</li><li>Gasoline-powered equipment within process unit boundaries</li><li>Open-flame heaters and heat guns</li><li>Pipe thawing equipment</li></ul></div>
+      </div>
+      <h3>Why Petroleum Tank Sites Carry Uniquely Elevated Risk</h3>
+      <div class="two-col">
+        <div class="mini-card"><h4>Low Ignition Energy</h4><ul><li>Petroleum vapors ignite at energies as low as 0.2 millijoules &mdash; far below a spark or welding arc</li><li>Flammable vapor can exist at low concentrations invisible to the eye</li><li>LEL for gasoline vapor is approximately 1.4% by volume</li></ul></div>
+        <div class="mini-card"><h4>Catastrophic Consequences</h4><ul><li>A single tank fire can rapidly escalate to neighboring tanks (boilover, BLEVE, UVCE)</li><li>Tank explosions have killed welders and bystanders hundreds of feet away</li><li>Criminal liability has followed unauthorized hot work tank incidents</li></ul></div>
+      </div>
+      <h3>Applicable Standards</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td><strong>OSHA 29 CFR 1910.252</strong></td><td>Welding, Cutting, and Brazing &mdash; General Industry</td></tr>
+          <tr><td><strong>OSHA 29 CFR 1926.350&ndash;354</strong></td><td>Gas welding, arc welding, and cutting in construction</td></tr>
+          <tr><td><strong>NFPA 51B</strong></td><td>Standard for Fire Prevention During Welding, Cutting, and Other Hot Work</td></tr>
+          <tr><td><strong>API Std 2015</strong></td><td>Requirements for Safe Entry and Cleaning of Petroleum Storage Tanks</td></tr>
+          <tr><td><strong>API RP 2207</strong></td><td>Preparing Tank Bottoms for Hot Work</td></tr>
+          <tr><td><strong>API RP 2009</strong></td><td>Safe Welding, Cutting, and Other Hot Work Practices in the Petroleum Industry</td></tr>
+        </tbody>
+      </table>
+      <div class="box box-danger"><strong>&#9888; Gas-Free Certification Required.</strong> No hot work may be performed on or immediately adjacent to any petroleum storage tank without a gas-free certificate issued following atmospheric testing that confirms flammable vapors, O&sub2;, and toxic gases are within acceptable limits. This is an absolute requirement with no exceptions.</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)"><h2><span class="sec-num">02</span> Hot Work Permits &amp; Atmospheric Requirements</h2><span class="chevron">&#9660;</span></div>
+    <div class="sec-body">
+      <h3>When a Hot Work Permit Is Required</h3>
+      <p>BBB Tank Services requires a hot work permit for all spark- or flame-producing work within <strong>35 feet of any petroleum storage tank</strong>, and for all hot work on or inside a tank structure. Permits are valid for <strong>one shift only (max 12 hours)</strong> and must be reissued each day work continues.</p>
+      <h3>Required Atmospheric Conditions Before Hot Work</h3>
+      <table class="std-table">
+        <thead><tr><th>Parameter</th><th>Required Level</th><th>Action if Exceeded</th></tr></thead>
+        <tbody>
+          <tr><td><strong>LEL (Flammable Vapor)</strong></td><td>&lt;10% LEL exterior work; &lt;1% LEL on/in tank</td><td>Stop all hot work; ventilate; re-test; do not restart until stable below threshold for 15 min</td></tr>
+          <tr><td><strong>Oxygen (O&sub2;)</strong></td><td>19.5% to 23.5%</td><td>Below 19.5%: SCBA required. Above 23.5%: all ignition sources prohibited immediately</td></tr>
+          <tr><td><strong>H&sub2;S</strong></td><td>&lt;1 ppm inside tanks; &lt;10 ppm exterior work</td><td>Stop work; evacuate; ventilate; respiratory protection before re-entry</td></tr>
+          <tr><td><strong>Carbon Monoxide (CO)</strong></td><td>&lt;35 ppm</td><td>Ventilate; identify CO source; ensure combustion equipment is upwind</td></tr>
+        </tbody>
+      </table>
+      <div class="box box-warning"><strong>&#9888; Continuous Monitoring Required During Hot Work.</strong> A single test before work is not sufficient. Petroleum vapors can migrate, wind can shift, adjacent tanks can begin transfer operations. Workers performing hot work on or near tanks must wear a calibrated multi-gas personal monitor during the entire operation.</div>
+      <h3>Hot Work Permit Required Elements</h3>
+      <div class="permit-grid">
+        <div class="permit-item"><div class="pi-num">01</div><strong>Location &amp; Description</strong><span>Specific tank number, nozzle, or structure; exact work scope</span></div>
+        <div class="permit-item"><div class="pi-num">02</div><strong>Atmospheric Readings</strong><span>Pre-work LEL, O&sub2;, H&sub2;S, CO; instrument ID and calibration date</span></div>
+        <div class="permit-item"><div class="pi-num">03</div><strong>Authorization</strong><span>Signed by qualified facility representative</span></div>
+        <div class="permit-item"><div class="pi-num">04</div><strong>Time Validity</strong><span>Start time; expiration (max 12 hrs); date</span></div>
+        <div class="permit-item"><div class="pi-num">05</div><strong>Fire Watch</strong><span>Name of designated fire watch; their location</span></div>
+        <div class="permit-item"><div class="pi-num">06</div><strong>Combustibles Cleared</strong><span>Confirmation combustibles within 35 ft removed or shielded</span></div>
+        <div class="permit-item"><div class="pi-num">07</div><strong>Fire Protection</strong><span>Type, size, and location of extinguishers; hose station availability</span></div>
+        <div class="permit-item"><div class="pi-num">08</div><strong>Special Conditions</strong><span>Restrictions, additional PPE, monitoring frequency</span></div>
+      </div>
+      <h3>Fire Watch Requirements</h3>
+      <p>A designated fire watch must be posted during all hot work near petroleum tanks and must remain for <strong>a minimum of 30 minutes after all hot work ceases</strong>. The fire watch must:</p>
+      <ul>
+        <li>Have no other assigned task during the watch period</li>
+        <li>Have a charged fire extinguisher within arm's reach</li>
+        <li>Maintain clear line of sight to all areas where sparks or slag could land</li>
+        <li>Have communication means to alert the site of fire</li>
+        <li>Know the facility emergency response procedure</li>
+        <li>Immediately stop work if atmospheric conditions change or fire is observed</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)"><h2><span class="sec-num">03</span> Pre-Work Fire Prevention &amp; The Pyrophoric Hazard</h2><span class="chevron">&#9660;</span></div>
+    <div class="sec-body">
+      <h3>Pre-Work Fire Prevention Checklist</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>35-foot clearance zone established.</strong> Remove all combustibles (rags, paper, wood, hoses, flammable liquids) from within 35 feet. Shield combustibles that cannot be removed with welding blankets.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Floor drains and openings covered.</strong> Sparks can travel into drains and ignite vapors in drainage systems. Cover all drains, sumps, and openings within the spark zone with non-combustible covers.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Surfaces wet down where applicable.</strong> Dampen combustible surfaces (wooden platforms, dried vegetation, petroleum-contaminated soil) in surrounding areas where sparks may land.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Connections to tanks blanked or closed.</strong> All piping connections between the hot work location and adjacent tanks must be confirmed closed, blanked, or physically isolated to prevent vapor migration.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Fire protection staged and confirmed ready.</strong> Minimum two fire extinguishers at the work location. Nearest hose station charged and accessible. Fire watch briefed and positioned.</div></li>
+      </ol>
+      <h3>Pyrophoric Iron Sulfide &mdash; The Hidden Tank Hazard</h3>
+      <div class="box box-danger"><strong>&#9888; Pyrophoric Iron Sulfide (FeS) Can Spontaneously Ignite Without Any External Spark.</strong> Pyrophoric iron sulfide forms on the interior surfaces of tanks that held sour crude oil or sulfur-containing products through the reaction of H&sub2;S with iron in the tank shell. When exposed to air during tank entry, cleaning, or inspection plate opening, it can spontaneously combust &mdash; causing fires or explosions in a tank that tests gas-free. This has killed workers during fully permitted, gas-free tank cleaning operations.</div>
+      <div class="two-col">
+        <div class="mini-card"><h4>Identifying Pyrophoric Risk</h4><ul><li>Black, brown, or dark-colored sludge or scale on tank interior surfaces</li><li>Tanks known to have contained sour crude or product with &gt;0.5% sulfur content</li><li>Any tank with a history of H&sub2;S readings during cleaning</li><li>Visible glowing or smoking from scale when tank is opened</li></ul></div>
+        <div class="mini-card"><h4>Minimum Controls</h4><ul><li>Tank must be emptied, gas-freed, and isolated per API 2015 before any work</li><li>Interior surfaces must be <em>kept wet</em> throughout the entire cleaning process</li><li>Pyrophoric scale must be wetted before disturbing &mdash; never allow it to dry</li><li>Removed scale kept wet and disposed in sealed, water-filled containers</li><li>No hot work until all surfaces cleaned, wetted, and tested</li></ul></div>
+      </div>
+      <h3>Minimum Conditions for Hot Work on Petroleum Tanks</h3>
+      <p>Per API RP 2009, all of the following must be confirmed before any hot work on or inside a petroleum storage tank:</p>
+      <ul>
+        <li>Tank completely emptied of all liquid product</li>
+        <li>Tank gas-freed &mdash; atmosphere confirmed &lt;1% LEL</li>
+        <li>All connections to the tank isolated (blanked, double-block-and-bleed, or spectacle blind)</li>
+        <li>Tank ventilated and maintained gas-free with continuous monitoring throughout the operation</li>
+        <li>All pyrophoric deposits identified, wetted, and controlled</li>
+        <li>Hot work permit issued and fire watch positioned</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)"><h2><span class="sec-num">04</span> Welding Fume Hazards &amp; PPE Selection</h2><span class="chevron">&#9660;</span></div>
+    <div class="sec-body">
+      <h3>Welding Fume Hazards by Base Metal</h3>
+      <table class="fume-table">
+        <thead><tr><th>Material</th><th>Primary Fume Hazard</th><th>Risk</th><th>Required Control</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Carbon / Mild Steel</strong></td><td>Iron oxide, manganese fumes</td><td class="risk-low">Moderate</td><td>Adequate ventilation; LEV in confined spaces; half-face APR with P100 where required</td></tr>
+          <tr><td><strong>Stainless Steel</strong></td><td>Hexavalent chromium (Cr VI) &mdash; known human carcinogen</td><td class="risk-high">HIGH</td><td>LEV 6&ndash;12 inches from arc; supplied-air or full-face APR with OV+P100; OSHA 1910.1026 compliance</td></tr>
+          <tr><td><strong>Galvanized Steel</strong></td><td>Zinc oxide fumes &mdash; causes metal fume fever</td><td class="risk-med">High</td><td>LEV; P100 filter; inform workers of metal fume fever symptoms; seek medical care if flu-like symptoms develop</td></tr>
+          <tr><td><strong>Lead-Painted Surfaces</strong></td><td>Lead fumes when torch-cutting or arc welding through coatings</td><td class="risk-high">HIGH</td><td>Full-face APR with OV+P100 or supplied air; OSHA Lead Standard (1926.62) compliance; see Module 019</td></tr>
+          <tr><td><strong>Tank Interior / Residue</strong></td><td>Benzene, H&sub2;S, VOCs from petroleum residue volatilized by welding heat</td><td class="risk-high">CRITICAL</td><td>Tank must be gas-free certified; continuous monitoring; supplied air for interior welding; H&sub2;S monitor worn by all personnel</td></tr>
+        </tbody>
+      </table>
+      <h3>Ventilation During Welding</h3>
+      <ul>
+        <li><strong>Open outdoor welding</strong>: adequate natural ventilation usually sufficient for mild steel if wind keeps fume plume from the welder's breathing zone</li>
+        <li><strong>Confined or semi-confined areas</strong>: LEV must capture fumes at the source; position capture hood 6&ndash;12 inches from the arc</li>
+        <li><strong>Tank interiors</strong>: mechanical ventilation must maintain a minimum 10 air changes per hour; LEV at the arc required for stainless, galvanized, or coated material</li>
+        <li><strong>Never weld downwind of yourself</strong>: keep your face out of the fume plume at all times</li>
+      </ul>
+      <h3>PPE by Hot Work Process</h3>
+      <table class="ppe-table">
+        <thead><tr><th>Process</th><th>Eye/Face</th><th>Body</th><th>Hands</th><th>Feet</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Arc Welding (SMAW/GMAW)</strong></td><td>Auto-darkening or fixed-shade (10&ndash;13) helmet; safety glasses under helmet</td><td>Leather welding jacket or FR sleeves over FRC; no synthetic fabrics</td><td>Heavy leather welding gloves</td><td>Leather safety boots; no exposed synthetic material</td></tr>
+          <tr><td><strong>Oxy-Fuel Cutting/Welding</strong></td><td>Welding goggles shade 5&ndash;6; face shield for slag splash</td><td>Leather jacket or sleeves; FRC minimum</td><td>Heavy leather welding gloves</td><td>Leather boots</td></tr>
+          <tr><td><strong>Plasma Arc Cutting</strong></td><td>Auto-darkening helmet shade 9&ndash;12; side shield protection</td><td>Leather jacket; FRC underneath</td><td>Heavy leather welding gloves</td><td>Leather boots; leg protection from slag</td></tr>
+          <tr><td><strong>Grinding (Angle Grinder)</strong></td><td>Safety glasses (mandatory) PLUS full face shield &mdash; face shield alone is insufficient</td><td>FRC; leather or cut-resistant sleeves</td><td>Leather work gloves</td><td>Safety boots</td></tr>
+        </tbody>
+      </table>
+      <div class="box box-danger"><strong>&#9888; Arc Eye (Photokeratitis).</strong> UV radiation from the welding arc can cause arc eye &mdash; a painful corneal burn &mdash; from even brief unprotected exposure at distances up to 50 feet. Never look at a welding arc without a proper filter lens. When another welder is working nearby, position yourself so you cannot directly see their arc.</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)"><h2><span class="sec-num">05</span> Gas Cylinder Safety</h2><span class="chevron">&#9660;</span></div>
+    <div class="sec-body">
+      <p>Compressed gas cylinders store enormous energy. An oxygen cylinder at full pressure contains gas at over 2,000 psi. Mishandled cylinders kill workers every year.</p>
+      <div class="cyl-wrap">
+        <div class="cyl-card cyl-o2">
+          <h4>&#128168; Oxygen (O&sub2;) Cylinders</h4>
+          <ul>
+            <li><strong>NEVER contact oil or grease</strong> &mdash; oxygen under pressure reacts explosively with hydrocarbons. Use only oxygen-rated fittings and regulators. Never use oil-based thread sealants.</li>
+            <li>Store and use in upright, secured position</li>
+            <li>Hose color: <strong>green</strong> (NFPA standard)</li>
+            <li>Store at least 20 ft from fuel gas cylinders or behind a 5-ft fire-resistant barrier (30-min rating)</li>
+            <li>Never use oxygen to blow off work or clothing</li>
+            <li>Cap all cylinders when not in use or being transported</li>
+          </ul>
+        </div>
+        <div class="cyl-card cyl-ac">
+          <h4>&#128293; Acetylene (C&sub2;H&sub2;) Cylinders</h4>
+          <ul>
+            <li><strong>Maximum use pressure: 15 PSI.</strong> Acetylene becomes unstable and can decompose explosively above this pressure. Never exceed 15 PSI at the regulator.</li>
+            <li>Store and use <strong>upright at all times.</strong> If on its side, stand upright for at least <strong>1 hour</strong> before using.</li>
+            <li>Hose color: <strong>red</strong> (NFPA standard)</li>
+            <li>Store at least 20 ft from oxygen cylinders</li>
+            <li>Flashback arrestors required at both regulator and torch body</li>
+            <li>Never allow acetylene to contact silver, copper, or copper alloys (forms explosive acetylides)</li>
+          </ul>
+        </div>
+      </div>
+      <h3>General Cylinder Handling Rules</h3>
+      <ul>
+        <li><strong>Secure all cylinders</strong> at all times &mdash; chained or strapped to a cart, wall, or structure. A falling full cylinder can shear the valve and become a lethal projectile.</li>
+        <li><strong>Cap all cylinders</strong> when the regulator is not attached</li>
+        <li><strong>Never roll cylinders on their side</strong> &mdash; use a hand truck designed for gas cylinders</li>
+        <li><strong>Inspect regulators</strong> before connecting: check for cracked gauges, damaged diaphragm, or oil contamination</li>
+        <li><strong>Open valves slowly</strong> to prevent pressure surge</li>
+        <li><strong>Check hose connections</strong> for leaks with soapy water before lighting the torch; never use an open flame to check for gas leaks</li>
+        <li><strong>Hoses must have flashback arrestors</strong> at both ends (regulator connection and torch connection)</li>
+        <li><strong>Store cylinders away from heat sources</strong>; never expose to temperatures above 125&deg;F (52&deg;C)</li>
+      </ul>
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Cylinder Incident</div>
+        <h4>The Tipped Cylinder</h4>
+        <p>A BBB crew finishes a torch-cutting job and sets the unsecured acetylene cylinder against the tank shell to move to the next location. The cylinder tips over, shearing the valve at the base. Acetylene discharges rapidly near hot metal and welding equipment.</p>
+        <p><strong>What should have happened:</strong> Cap all cylinders immediately when the regulator is removed. Transport only on proper hand carts, never leaning unsecured against surfaces. A cylinder with a sheared valve becomes a rocket &mdash; the force of gas discharge has driven cylinders through concrete block walls. On a petroleum tank site this scenario is potentially catastrophic.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)"><h2><span class="sec-num">06</span> Electrical Safety for Arc Welding &amp; Final Checklist</h2><span class="chevron">&#9660;</span></div>
+    <div class="sec-body">
+      <h3>Arc Welding Electrical Hazards</h3>
+      <div class="two-col">
+        <div class="mini-card"><h4>Primary Voltage Shock</h4><ul><li>Line voltage on the primary side of the welder (220&ndash;480V)</li><li>Contact with primary voltage is almost always fatal</li><li>Never open the welder cabinet without trained maintenance personnel</li><li>Inspect power supply cord and plug before each use</li></ul></div>
+        <div class="mini-card"><h4>Secondary Voltage Shock</h4><ul><li>Output voltage from the welder (20&ndash;80V DC/AC)</li><li>Fatal under wet conditions or if current crosses the chest</li><li>Never touch the electrode or electrode holder with bare or wet hands</li><li>Keep body insulated from the workpiece and electrode simultaneously</li></ul></div>
+      </div>
+      <h3>Electrical Safety Rules for Welding</h3>
+      <ul>
+        <li><strong>Keep dry.</strong> Never weld in wet conditions or while standing in water. Perspiration-soaked clothing significantly reduces body resistance. Replace wet gloves before continuing.</li>
+        <li><strong>Insulate yourself from the workpiece.</strong> In confined spaces, use dry insulating pads under your knees and body. Do not touch the workpiece with bare skin simultaneously.</li>
+        <li><strong>Connect the work lead close to the weld point.</strong> Keeps welding current from flowing through adjacent equipment, piping, or instrumentation, which can cause arc burns at unexpected locations and damage sensitive electronics.</li>
+        <li><strong>Inspect electrode holders and cables before each use.</strong> Frayed insulation or loose connections must be repaired before welding. Never tape over damaged insulation on welding leads.</li>
+        <li><strong>Turn off the welder when leaving the work or changing electrodes</strong> in damp or confined conditions.</li>
+        <li><strong>Dry gloves mandatory in confined spaces.</strong> Perspiration, metal contact, and limited movement make electrical shock risk significantly higher than open-air welding.</li>
+      </ul>
+      <h3>BBB Tank Services Hot Work Final Checklist</h3>
+      <table class="std-table">
+        <thead><tr><th>Before Starting</th><th>During Hot Work</th><th>After Hot Work Ceases</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><ul style="padding-left:16px;font-size:.85rem"><li>Permit issued and signed</li><li>Atmosphere tested within limits</li><li>35-ft zone cleared</li><li>Drains and openings covered</li><li>Fire extinguishers staged</li><li>Fire watch briefed and positioned</li><li>Cylinders secured, hoses inspected, flashback arrestors installed</li><li>Correct PPE worn and confirmed</li></ul></td>
+            <td><ul style="padding-left:16px;font-size:.85rem"><li>Continuous atmosphere monitoring</li><li>Fire watch maintains constant observation</li><li>Stop immediately if LEL exceeds threshold</li><li>Ventilation maintained</li><li>Weld lead connected close to weld point</li><li>Sparks and slag controlled away from combustibles</li></ul></td>
+            <td><ul style="padding-left:16px;font-size:.85rem"><li>Fire watch continues 30 min minimum</li><li>Inspect all areas where sparks may have landed</li><li>Turn off gas cylinders at valve; bleed hoses</li><li>Turn off welding machine</li><li>Remove and cap all cylinders</li><li>Document completion and fire watch end time on permit</li><li>Return permit to issuing authority</li></ul></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+    <div class="q-block"><p class="q-text">1. A hot work permit has been issued for grinding on a tank nozzle. The atmospheric monitor shows 8% LEL at the start of work. Mid-job, it reads 12% LEL. What must happen?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> Continue working &mdash; 12% LEL is still below the 25% LEL threshold commonly used in general industry</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> Stop all hot work immediately; move to safe area; ventilate; do not restart until levels drop below 10% LEL and are stable for at least 15 minutes</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> Notify the supervisor by radio and continue working while waiting for instructions</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> Continue as long as personal monitors do not alarm</label>
+      <div class="feedback" id="fb1"></div></div>
+    <div class="q-block"><p class="q-text">2. What is pyrophoric iron sulfide and why is it dangerous during petroleum tank cleaning?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> A toxic gas that forms when H&sub2;S reacts with air; causes respiratory illness when tank covers are opened</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> A scale that forms on tank interiors from sulfur-containing products; can spontaneously combust when exposed to air without any external ignition source</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> A reactive compound found only in LPG storage tanks; not present in crude oil or gasoline tanks</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> A chemical corrosion byproduct that weakens tank steel; structurally dangerous but not a fire hazard</label>
+      <div class="feedback" id="fb2"></div></div>
+    <div class="q-block"><p class="q-text">3. What is the maximum working pressure for acetylene at the regulator?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> 100 PSI &mdash; the standard intermediate working pressure for fuel gases</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> 30 PSI &mdash; the limit for oxy-fuel cutting operations</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> 15 PSI &mdash; acetylene becomes unstable and can decompose explosively above this pressure</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> 50 PSI &mdash; the standard operating pressure for all fuel gas cylinders</label>
+      <div class="feedback" id="fb3"></div></div>
+    <div class="q-block"><p class="q-text">4. You are about to weld on stainless steel tank piping. What specific fume hazard requires heightened controls beyond mild steel welding?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Iron oxide fume at higher concentration than mild steel</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Hexavalent chromium (Cr VI) &mdash; a known human carcinogen requiring LEV positioned 6&ndash;12 inches from the arc</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Nickel oxide requiring only additional ventilation but no additional respiratory protection</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Zinc oxide fume causing metal fume fever; same hazard as welding galvanized steel</label>
+      <div class="feedback" id="fb4"></div></div>
+    <div class="q-block"><p class="q-text">5. How long must a fire watch remain posted after all hot work ceases on a petroleum tank site?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> 5 minutes &mdash; sufficient time to confirm no immediate ignition occurred</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> 15 minutes &mdash; the standard post-work monitoring period</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> 30 minutes minimum &mdash; fires frequently start from smoldering materials after hot work stops</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Until the hot work area has been completely cooled with water</label>
+      <div class="feedback" id="fb5"></div></div>
+    <div class="q-block"><p class="q-text">6. Why should the welding work lead (ground clamp) be connected as close as possible to the actual weld point?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> It reduces arc length and improves weld quality by shortening the electrical path</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> It prevents welding current from flowing through adjacent equipment, piping, and instrumentation, which can cause arc burns and damage at unexpected locations</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> OSHA requires the ground clamp to be within 18 inches of the weld</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> A close ground reduces the risk of secondary voltage shock to the welder</label>
+      <div class="feedback" id="fb6"></div></div>
+    <div class="q-block"><p class="q-text">7. An acetylene cylinder was found on its side in the back of a work truck. The welder wants to stand it upright and immediately begin using it. What should happen first?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Proceed with the work &mdash; acetylene cylinders are safe to use immediately after being repositioned upright</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Stand it upright and wait at least 1 hour before using, to allow the acetone inside to redistribute</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> Shake the cylinder vigorously to redistribute the acetone, then use immediately</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Return the cylinder to the supplier; a cylinder found on its side cannot be used</label>
+      <div class="feedback" id="fb7"></div></div>
+    <div class="q-block"><p class="q-text">8. What PPE combination is required for angle grinding operations at BBB Tank Services?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> A face shield alone is adequate &mdash; it provides full face and eye coverage</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Safety glasses alone with FRC &mdash; grinding is not hot work requiring additional eye protection</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Safety glasses (mandatory) plus full face shield; FRC; leather or cut-resistant gloves; safety boots</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Welding helmet with grinding shade lens; FRC; leather welding gloves</label>
+      <div class="feedback" id="fb8"></div></div>
+    <div class="q-block"><p class="q-text">9. Why is it forbidden to use oxygen from an O&sub2; cylinder to blow off work clothing or ventilate a confined space?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Pure oxygen is heavier than air and would settle in low areas reducing ambient O&sub2; outside the enriched zone</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Oxygen-enriched clothing and surfaces ignite and burn with extreme intensity; even normally non-flammable materials can burn violently, and petroleum vapors ignite at dramatically lower energy levels in enriched oxygen</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> It is permitted as long as the oxygen content remains below 25%</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Using oxygen for ventilation consumes the cylinder supply needed for hot work operations</label>
+      <div class="feedback" id="fb9"></div></div>
+    <div class="q-block"><p class="q-text">10. A hot work permit was issued this morning at 7:00 AM. The same welding crew returns after lunch at 1:00 PM to continue the same weld. Do they need a new permit?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> No &mdash; permits are valid for the duration of the specific task regardless of time elapsed</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> No &mdash; permits are valid for one 24-hour period from time of issue</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Yes &mdash; atmospheric conditions must be re-tested before work resumes; if conditions have changed a new permit must be issued, as the permit covers conditions at time of issue only</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Only if the lunch break exceeded one hour</label>
+      <div class="feedback" id="fb10"></div></div>
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big" id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg" id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-026.html" class="nav-btn prev">&larr; Module 26</a>
+    <a href="index.html" class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-028.html" class="nav-btn next">Module 28 &rarr;</a>
+  </div>
+</div>
+
+<div class="page-footer">BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-027 &middot; Rev. Oct 2025 &middot; Controlled Document<br>162 Independence Pkwy N, Baytown, TX 77520</div>
+
+<script>
+  const openedSections=new Set([0]);
+  function toggleSection(h){const b=h.nextElementSibling,aH=document.querySelectorAll('.sec-header'),aB=document.querySelectorAll('.sec-body'),i=[...aH].indexOf(h),w=b.classList.contains('open');aH.forEach(x=>x.classList.remove('open'));aB.forEach(x=>x.classList.remove('open'));if(!w){h.classList.add('open');b.classList.add('open');openedSections.add(i);}updateProgress();}
+  function updateProgress(){setProgress(Math.round(Math.min(openedSections.size/6,1)*80));}
+  function setProgress(p){document.getElementById('progFill').style.width=p+'%';document.getElementById('progPct').textContent=p+'%';}
+  updateProgress();
+  const ANSWERS={q1:'b',q2:'b',q3:'c',q4:'b',q5:'c',q6:'b',q7:'b',q8:'c',q9:'b',q10:'c'};
+  const EXPLANATIONS={q1:'BBB Tank Services requires hot work to stop when LEL exceeds 10% for exterior tank work. At 12% LEL the site is approaching a potentially hazardous flammable concentration. Stop immediately, move to safety, ventilate, and do not resume until readings are stable below 10% LEL for at least 15 minutes.',q2:'Pyrophoric iron sulfide forms on the interior surfaces of tanks containing sour petroleum products through the reaction of H2S with iron in the tank shell. When exposed to air during tank opening or cleaning, it can spontaneously ignite without any external spark, causing fires and explosions in tanks that tested gas-free.',q3:'Acetylene can decompose explosively when its pressure exceeds 15 PSI (103 kPa). Above this pressure the molecule can break down in a self-sustaining exothermic reaction without any ignition source. This is why acetylene regulators must never be set above 15 PSI.',q4:'Stainless steel contains 10.5-26% chromium. When welded, hexavalent chromium (Cr VI) is released in the fume. Cr VI is a confirmed human carcinogen linked to lung cancer, requiring LEV positioned 6-12 inches from the arc, respiratory protection, and exposure documentation per OSHA 1910.1026.',q5:'BBB Tank Services requires a minimum 30-minute fire watch after all hot work ceases. Fires regularly start from smoldering materials that were ignited by sparks but do not visibly flame until minutes or hours later.',q6:'Welding current takes the path of least resistance back to the power source. If the ground clamp is far from the weld, current flows through any connected metallic path, creating arc burns at unintended locations and potentially damaging pressure gauges, transmitters, and valve actuators.',q7:'When an acetylene cylinder has been on its side, the acetone solvent migrates away from the porous matrix. If used immediately, acetone can be drawn into the hose and torch creating an unstable fuel mixture. Stand upright for at least 1 hour to allow the acetone to settle before use.',q8:'For angle grinding: safety glasses are mandatory as primary eye protection (face shield alone can fail and allows particles in from the sides), and a full face shield is required over the safety glasses for protection from disc fragments, sparks, and debris.',q9:'Oxygen-enriched atmospheres dramatically increase the flammability and burn intensity of virtually all organic materials. Clothing saturated with oxygen can ignite from a small spark and burn violently. Petroleum vapors in oxygen-enriched atmosphere have a much lower ignition energy requirement.',q10:'Atmospheric conditions change throughout the day. The permit conditions recorded at 7 AM may not reflect conditions at 1 PM. Before resuming hot work after any break, atmospheric conditions must be re-tested. If conditions changed materially, a new permit is required.'};
+  function submitQuiz(){let score=0;const total=Object.keys(ANSWERS).length;Object.keys(ANSWERS).forEach(q=>{const sel=document.querySelector(`input[name="${q}"]:checked`),fb=document.getElementById('fb'+q.slice(1)),opts=document.querySelectorAll(`input[name="${q}"]`);opts.forEach(r=>r.closest('.opt-label').classList.remove('correct','incorrect'));if(!sel){if(fb){fb.textContent='⚠ No answer selected.';fb.className='feedback show incorrect';}return;}const ok=sel.value===ANSWERS[q];if(ok)score++;opts.forEach(r=>{if(r.value===ANSWERS[q])r.closest('.opt-label').classList.add('correct');});if(!ok)sel.closest('.opt-label').classList.add('incorrect');if(fb){fb.textContent=(ok?'✅ ':'❌ Review: ')+EXPLANATIONS[q];fb.className='feedback show '+(ok?'correct':'incorrect');}});const pct=Math.round((score/total)*100),passed=pct>=70;try{const rec=JSON.parse(localStorage.getItem('bbb_training_records')||'[]');rec.push({module:'027',title:'Welding Safety & Hot Work Program',score,total,percentage:pct,passed,date:new Date().toISOString()});localStorage.setItem('bbb_training_records',JSON.stringify(rec));}catch(e){}document.getElementById('scoreBig').textContent=score+'/'+total;document.getElementById('scoreLabel').textContent=pct+'% \u2014 '+(passed?'PASS \u2713':'NEEDS REVIEW \u2717');document.getElementById('resultMsg').textContent=passed?'\u2705 Module 027 complete! Your record has been saved. Proceed to Module 028.':'\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';const r=document.getElementById('quizResult');r.classList.add('show');r.scrollIntoView({behavior:'smooth',block:'center'});setProgress(100);}
+  function retakeQuiz(){document.querySelectorAll('.opt-label').forEach(l=>l.classList.remove('correct','incorrect'));document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);document.querySelectorAll('.feedback').forEach(f=>{f.textContent='';f.className='feedback';});document.getElementById('quizResult').classList.remove('show');updateProgress();}
+</script>
+</body>
+</html>

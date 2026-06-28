@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 024 &ndash; Respiratory Protection Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* RESPIRATOR TYPE CARDS */
+    .resp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 14px 0; }
+    .resp-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; border-top: 4px solid; }
+    .resp-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; }
+    .resp-card .apf { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: .75rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .resp-card ul { padding-left: 16px; font-size: .82rem; }
+    .resp-card li { margin-bottom: 4px; }
+    .rc-filter  { border-color: #5A7184; }
+    .rc-filter h4 { color: #3a4f5e; }
+    .rc-filter .apf { background: #5A7184; }
+    .rc-half    { border-color: #2471A3; }
+    .rc-half h4 { color: #1a5278; }
+    .rc-half .apf { background: #2471A3; }
+    .rc-full    { border-color: #1D8348; }
+    .rc-full h4 { color: #145a32; }
+    .rc-full .apf { background: #1D8348; }
+    .rc-papr    { border-color: #7D3C98; }
+    .rc-papr h4 { color: #5b2c6f; }
+    .rc-papr .apf { background: #7D3C98; }
+    .rc-sar     { border-color: var(--orange2); }
+    .rc-sar h4  { color: #9a3a0a; }
+    .rc-sar .apf { background: var(--orange2); }
+    .rc-scba    { border-color: #C0392B; }
+    .rc-scba h4 { color: #7b241c; }
+    .rc-scba .apf { background: #C0392B; }
+
+    /* CARTRIDGE SELECTION TABLE */
+    .hazard-table { width: 100%; border-collapse: collapse; font-size: .85rem; margin: 14px 0; }
+    .hazard-table th { background: var(--navy); color: #fff; padding: 9px 12px; text-align: left; font-weight: 600; }
+    .hazard-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .hazard-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* FIT TEST TYPES */
+    .fit-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); margin: 14px 0; }
+    @media(max-width:520px){ .fit-compare { grid-template-columns: 1fr; } }
+    .fit-col { padding: 18px 20px; }
+    .fit-col h4 { font-size: .9rem; font-weight: 700; margin-bottom: 10px; }
+    .fit-col ul { padding-left: 18px; font-size: .86rem; }
+    .fit-col li { margin-bottom: 6px; }
+    .fc-qlft { background: #EEF4FF; }
+    .fc-qlft h4 { color: var(--navy2); }
+    .fc-qnft { background: #EDFAF2; }
+    .fc-qnft h4 { color: var(--green); }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-023.html">&larr; Mod 23</a>
+    <a href="module-024.html" class="active">Mod 24</a>
+    <a href="module-025.html">Mod 25 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 24 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 024 &middot; SHP-BBB-024</div>
+  <h1>Respiratory Protection Program</h1>
+  <p class="subtitle">Selecting, fitting, and maintaining respirators that protect BBB Tank Services employees from petroleum vapors, toxic gases, chemical fumes, and oxygen-deficient atmospheres.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 40 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Identify respiratory hazards specific to BBB Tank Services work</li>
+      <li>Explain the OSHA respiratory protection program requirements under 29 CFR 1910.134</li>
+      <li>Distinguish between air-purifying and atmosphere-supplying respirators</li>
+      <li>State the Assigned Protection Factor (APF) for each major respirator type</li>
+      <li>Select the correct respirator and cartridge for a given hazard</li>
+      <li>Explain the medical evaluation and annual fit testing requirements</li>
+      <li>Perform positive and negative pressure user seal checks</li>
+      <li>Describe respirator inspection, maintenance, storage, and cartridge change-out procedures</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Respiratory Hazards in Tank Services Work</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>BBB Tank Services employees are regularly exposed to respiratory hazards that are invisible, odorless (or olfactory-fatiguing), and immediately life-threatening if uncontrolled. Understanding what hazards are present &mdash; and why each one demands specific protection &mdash; is the foundation of using respiratory protection effectively.</p>
+
+      <h3>Primary Respiratory Hazards at BBB Tank Services</h3>
+      <table class="std-table">
+        <thead><tr><th>Hazard</th><th>Source</th><th>OSHA PEL / IDLH</th><th>Key Risk</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Hydrogen Sulfide (H&sub2;S)</strong></td>
+            <td>Crude oil, petroleum sludge, produced water, sour service tanks</td>
+            <td>PEL: 20 ppm ceiling; IDLH: 100 ppm</td>
+            <td>Immediate olfactory paralysis at high concentrations; rapid incapacitation and death</td>
+          </tr>
+          <tr>
+            <td><strong>Benzene</strong></td>
+            <td>Crude oil, gasoline, aromatic hydrocarbons; present in vapors above most petroleum tanks</td>
+            <td>PEL: 1 ppm TWA; IDLH: 500 ppm</td>
+            <td>Known human carcinogen; causes leukemia and aplastic anemia with chronic exposure</td>
+          </tr>
+          <tr>
+            <td><strong>Petroleum Vapors (VOCs)</strong></td>
+            <td>Tank vapors, sludge disturbance, product transfer</td>
+            <td>Product-dependent; gasoline: 900 ppm PEL (as aliphatic hydrocarbon)</td>
+            <td>CNS effects, fire/explosion hazard; often contain benzene and H&sub2;S</td>
+          </tr>
+          <tr>
+            <td><strong>Oxygen Deficiency</strong></td>
+            <td>Tank interiors, confined spaces, inert gas-purged vessels</td>
+            <td>Acceptable: 19.5&ndash;23.5%; IDLH: &lt;16%</td>
+            <td>Rapid incapacitation without warning; O&sub2; levels can drop to lethal levels in seconds</td>
+          </tr>
+          <tr>
+            <td><strong>Carbon Monoxide (CO)</strong></td>
+            <td>Vehicle exhaust near tank vents, gas-powered equipment in confined spaces</td>
+            <td>PEL: 50 ppm TWA; IDLH: 1,200 ppm</td>
+            <td>Colorless, odorless; carboxyhemoglobin formation leads to unconsciousness</td>
+          </tr>
+          <tr>
+            <td><strong>Lead Dust/Fume</strong></td>
+            <td>Grinding, blasting, or cutting lead-painted tank shells</td>
+            <td>PEL: 50 &mu;g/m&sup3; TWA; IDLH: 700 mg/m&sup3;</td>
+            <td>Cumulative neurotoxin; no safe level (see Module 019)</td>
+          </tr>
+          <tr>
+            <td><strong>Acid/Caustic Mist</strong></td>
+            <td>Chemical cleaning operations, mixing of cleaning solutions</td>
+            <td>HCl: 5 ppm ceiling; NaOH: 2 mg/m&sup3; ceiling</td>
+            <td>Severe respiratory tract irritation and chemical burns</td>
+          </tr>
+          <tr>
+            <td><strong>Silica Dust</strong></td>
+            <td>Abrasive blasting with silica-containing media on tank structures</td>
+            <td>PEL: 0.05 mg/m&sup3; TWA (respirable); IDLH: 25 mg/m&sup3;</td>
+            <td>Silicosis, lung cancer; OSHA Action Level is 0.025 mg/m&sup3;</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>OSHA 29 CFR 1910.134 Requirements:</strong> When atmospheric concentrations of a respiratory hazard exceed the permissible exposure limit (PEL) and engineering controls cannot reduce exposure to safe levels, BBB Tank Services must establish a written Respiratory Protection Program (RPP), provide appropriate respirators at no cost to employees, train workers, conduct medical evaluations, perform fit testing, and maintain the respirators.
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Air-Purifying Respirators Cannot Create Oxygen.</strong> The most critical rule in respirator selection: air-purifying respirators (including N95s, half-face APRs, and full-face APRs) remove contaminants from the air but do nothing about oxygen concentration. In any oxygen-deficient atmosphere (&lt;19.5% O&sub2;) &mdash; including tank interiors &mdash; only atmosphere-supplying respirators (SCBA or supplied-air) are acceptable.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Respirator Types &amp; Assigned Protection Factors</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Respirators are classified into two broad categories: <strong>Air-Purifying Respirators (APR)</strong>, which filter or chemically react with contaminants in the ambient air, and <strong>Atmosphere-Supplying Respirators (ASR)</strong>, which provide clean air from an independent source. Each type is assigned an <strong>Assigned Protection Factor (APF)</strong> &mdash; the level of protection a properly functioning, correctly worn respirator provides to a typical wearer.</p>
+
+      <h3>How APF Is Used in Respirator Selection</h3>
+      <p>To select a respirator for a known hazard concentration: <strong>Required APF = Hazard Concentration &divide; Exposure Limit</strong>. Choose a respirator whose APF equals or exceeds the required APF.</p>
+      <p><em>Example:</em> H&sub2;S concentration = 300 ppm; OSHA PEL = 20 ppm ceiling. Required APF = 300 &divide; 20 = <strong>15</strong>. A half-face APR (APF 10) is NOT adequate. A full-face APR (APF 50) IS adequate.</p>
+
+      <div class="resp-grid">
+        <div class="resp-card rc-filter">
+          <h4>Filtering Facepiece (N95, N100)</h4>
+          <div class="apf">APF 10</div>
+          <ul>
+            <li>Disposable; covers nose and mouth</li>
+            <li>N95: 95% efficient vs. non-oil aerosols</li>
+            <li>N100/P100: 99.97% efficient</li>
+            <li>No cartridges; cannot protect against gases or vapors</li>
+            <li>Use: nuisance dust, non-toxic aerosols only</li>
+            <li><strong>Not adequate for petroleum vapor or H&sub2;S</strong></li>
+          </ul>
+        </div>
+        <div class="resp-card rc-half">
+          <h4>Half-Face APR</h4>
+          <div class="apf">APF 10</div>
+          <ul>
+            <li>Reusable rubber or silicone facepiece</li>
+            <li>Covers nose and mouth; does not protect eyes</li>
+            <li>Uses replaceable cartridges/canisters</li>
+            <li>Requires fit testing; tight seal required</li>
+            <li>Cannot be used in O&sub2;-deficient atmospheres</li>
+            <li>Use: moderate vapor/gas exposures up to 10&times; PEL</li>
+          </ul>
+        </div>
+        <div class="resp-card rc-full">
+          <h4>Full-Face APR</h4>
+          <div class="apf">APF 50</div>
+          <ul>
+            <li>Covers entire face including eyes</li>
+            <li>Uses replaceable cartridges/canisters</li>
+            <li>Requires fit testing</li>
+            <li>Cannot be used in O&sub2;-deficient atmospheres</li>
+            <li>Provides eye protection from vapor and splashes</li>
+            <li>Use: higher-exposure vapor/gas tasks up to 50&times; PEL</li>
+          </ul>
+        </div>
+        <div class="resp-card rc-papr">
+          <h4>PAPR (Powered Air-Purifying)</h4>
+          <div class="apf">APF 25&ndash;1,000</div>
+          <ul>
+            <li>Battery-powered blower forces air through filters/cartridges</li>
+            <li>Hood/helmet: APF 25; tight-fitting full-face: APF 1,000</li>
+            <li>Loose-fitting hoods do not require fit testing</li>
+            <li>Heavier; better comfort for extended wear</li>
+            <li>Cannot be used in O&sub2;-deficient atmospheres</li>
+          </ul>
+        </div>
+        <div class="resp-card rc-sar">
+          <h4>Supplied Air Respirator (SAR)</h4>
+          <div class="apf">APF 25&ndash;10,000</div>
+          <ul>
+            <li>Breathable air supplied via airline from compressor or cylinder manifold</li>
+            <li>Can be used in O&sub2;-deficient atmospheres</li>
+            <li>Continuous flow (APF 25 hood / 1,000 tight-face) or pressure-demand (APF 1,000+)</li>
+            <li>Limited mobility; tethered to air supply</li>
+            <li>Must include escape cylinder for emergency egress</li>
+          </ul>
+        </div>
+        <div class="resp-card rc-scba">
+          <h4>SCBA (Self-Contained Breathing Apparatus)</h4>
+          <div class="apf">APF 10,000</div>
+          <ul>
+            <li>Compressed air cylinder worn on back; full self-contained</li>
+            <li>Pressure-demand type required for IDLH atmospheres</li>
+            <li>Full mobility; limited by cylinder duration (30&ndash;60 min)</li>
+            <li>Required for all IDLH atmospheres and unknown concentrations</li>
+            <li>Required for confined space rescue operations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Cartridge &amp; Filter Selection</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Selecting the correct cartridge or filter for the hazard is as important as selecting the correct respirator type. A cartridge matched to the wrong chemical provides no protection &mdash; the contaminant passes through as if the cartridge were not there.</p>
+
+      <h3>NIOSH Cartridge Color Code System</h3>
+      <p>NIOSH establishes a standardized color coding for respirator cartridges and canisters to aid in correct selection. Always verify by reading the label &mdash; color alone is not sufficient, as some cartridges combine protection types:</p>
+
+      <table class="hazard-table">
+        <thead><tr><th>Color</th><th>Cartridge Type</th><th>Protects Against</th><th>BBB Tank Services Use</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:#7D3C98">&#9632; Purple/Magenta</strong></td><td>P100 HEPA filter</td><td>Particulates only (99.97% efficiency) &mdash; oil and non-oil aerosols</td><td>Lead dust, silica, metallic fume during grinding/blasting</td></tr>
+          <tr><td><strong style="color:#2471A3">&#9632; Blue</strong></td><td>Acid gas</td><td>Acid gases (HCl, H&sub2;SO&sub4; mist, Cl&sub2;)</td><td>Acid cleaning operations</td></tr>
+          <tr><td><strong style="color:#2E7D32">&#9632; Green</strong></td><td>Ammonia &amp; methylamine</td><td>Ammonia and related amines</td><td>Ammonia refrigerant systems (rare at tank sites)</td></tr>
+          <tr><td><strong style="color:#7b6010">&#9632; Brown</strong></td><td>Organic vapor (OV)</td><td>Organic vapors (hydrocarbons, solvents, benzene)</td><td>Petroleum vapor during tank gauging, sampling, light surface prep</td></tr>
+          <tr><td><strong style="color:#2471A3">&#9632; Yellow</strong></td><td>Acid gas + OV combined</td><td>Organic vapors AND acid gases simultaneously</td><td>Mixed vapor/acid environments; versatile choice for tank chemical operations</td></tr>
+          <tr><td><strong style="color:#1a1a1a">&#9632; Black</strong></td><td>OV + P100 combination</td><td>Organic vapors AND particulates (most common combination cartridge)</td><td>Lead/paint removal with solvent vapors; most versatile for tank exterior work</td></tr>
+          <tr><td><strong style="color:#d4540a">&#9632; Orange</strong></td><td>Organic vapor, H&sub2;S (some)</td><td>Some manufacturers use orange for H&sub2;S-specific cartridges; always verify label</td><td>Verify label for H&sub2;S &mdash; not all orange cartridges cover H&sub2;S at meaningful concentrations</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-danger">
+        <strong>&#9888; H&sub2;S Cartridge Limitations.</strong> Standard organic vapor (OV) cartridges provide limited and unreliable protection against hydrogen sulfide. H&sub2;S at concentrations approaching IDLH (100 ppm) requires either a dedicated H&sub2;S-specific cartridge (and only on a full-face APR) or supplied-air/SCBA. At BBB Tank Services, the default for any work involving H&sub2;S risk above 10 ppm is supplied air or SCBA &mdash; not cartridge respirators. See Module 013 (H&sub2;S Safety) for the full H&sub2;S respirator selection protocol.
+      </div>
+
+      <h3>Cartridge Service Life &amp; End-of-Service-Life Indicators (ESLI)</h3>
+      <p>Organic vapor cartridges have a finite capacity &mdash; they can only absorb a limited amount of organic vapor before they are exhausted and vapor begins passing through (breakthrough). Exhausted cartridges often cannot be detected by smell because olfactory fatigue prevents detection of the very vapors that indicate failure.</p>
+      <ul>
+        <li><strong>OSHA requires a cartridge change schedule</strong> based on: the type of contaminant, its concentration, humidity, temperature, work rate, and cartridge capacity &mdash; determined before use, not by waiting for odor breakthrough</li>
+        <li><strong>Change cartridges before the shift</strong> if they have already been used. Cartridges stored overnight with vapors adsorbed can desorb (off-gas) the contaminant back into the facepiece at high concentrations when donned the next day</li>
+        <li><strong>Change immediately</strong> if you smell or taste the contaminant through the respirator (indicates breakthrough or poor seal), if breathing resistance increases significantly, or if the cartridge has been dropped in water</li>
+        <li>Some cartridges have <strong>End-of-Service-Life Indicators (ESLI)</strong> that change color when the sorbent is exhausted &mdash; check before each use</li>
+        <li><strong>P100 filters</strong> (particulate only) can be reused until breathing resistance is excessive or the filter is physically damaged; they do not have a chemical capacity limit</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Medical Evaluation &amp; Fit Testing</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Before any employee is required to wear a tight-fitting respirator, OSHA mandates two prerequisites: a <strong>medical evaluation</strong> and a <strong>fit test</strong>. These are not formalities &mdash; they exist because wearing a respirator places physiological demands on the user, and a respirator that does not seal to the face provides no meaningful protection regardless of its ratings.</p>
+
+      <h3>Medical Evaluation (OSHA 1910.134 Appendix C)</h3>
+      <p>A physician or other licensed health care professional (PLHCP) must evaluate whether a worker can safely wear a respirator. The evaluation uses OSHA&rsquo;s mandatory medical questionnaire (Appendix C to 1910.134) and may include a physical examination. Conditions that can prevent safe respirator use include:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Conditions Potentially Disqualifying</h4>
+          <ul>
+            <li>Asthma or other significant lung disease</li>
+            <li>Cardiac conditions (heart disease, uncontrolled hypertension)</li>
+            <li>Claustrophobia that prevents facepiece use</li>
+            <li>Epilepsy or seizure disorder</li>
+            <li>Prior lung disease (COPD, emphysema, chronic bronchitis)</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Medical Evaluation Requirements</h4>
+          <ul>
+            <li>Must be completed before fit testing or respirator use</li>
+            <li>Must be repeated if health status changes or PLHCP recommends it</li>
+            <li>Employee answers questionnaire confidentially &mdash; employer receives only pass/fail clearance, not medical details</li>
+            <li>Provided at no cost to the employee</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Fit Testing</h3>
+      <p>A fit test verifies that a specific respirator model and size creates an adequate seal on an individual worker&rsquo;s face. Because facial geometry varies significantly between individuals, the same respirator model may provide excellent protection for one person and poor protection for another. Fit testing is required:</p>
+      <ul>
+        <li>Before first use of any tight-fitting respirator</li>
+        <li>Annually thereafter</li>
+        <li>Any time the worker reports a change in their physical condition that could affect fit (significant weight change, facial scarring, dental work, new prescription for corrective lenses)</li>
+        <li>When a different respirator model, style, or size is to be used</li>
+      </ul>
+
+      <div class="fit-compare">
+        <div class="fit-col fc-qlft">
+          <h4>Qualitative Fit Test (QLFT)</h4>
+          <ul>
+            <li>Pass/fail test using the wearer&rsquo;s sensory detection of a test agent (isoamyl acetate &ldquo;banana oil,&rdquo; saccharin, bitrex, or irritant smoke)</li>
+            <li>No instrumentation required; less expensive</li>
+            <li>Valid for half-face APRs with APF up to 10 only</li>
+            <li>Not acceptable for full-face respirators, PAPRs, or higher-protection devices</li>
+          </ul>
+        </div>
+        <div class="fit-col fc-qnft">
+          <h4>Quantitative Fit Test (QNFT)</h4>
+          <ul>
+            <li>Measures actual face-seal leakage using a probe and particle counter (e.g., TSI PortaCount)</li>
+            <li>Produces a numerical fit factor; must meet minimum for the respirator type</li>
+            <li>Required for full-face APRs (minimum fit factor 500) and higher-protection devices</li>
+            <li>Acceptable for all respirator types; more objective and rigorous</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-warning">
+        <strong>&#9888; Beards and Facial Hair Invalidate Fit Tests.</strong> Any facial hair in the sealing zone of a tight-fitting facepiece &mdash; even 1&ndash;2 days of stubble &mdash; prevents an adequate face seal and renders the fit test invalid. Workers who must wear tight-fitting respirators must be clean-shaven at the seal area. Mustaches above the upper lip (outside the sealing zone) are generally acceptable; verify with the respirator manufacturer&rsquo;s guidance.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Donning, Seal Checks &amp; Doffing</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Correct donning and a successful user seal check are required <strong>every time</strong> a tight-fitting respirator is put on. A fit test passes on an annual basis &mdash; a user seal check verifies the seal is adequate for each individual use, since conditions change daily.</p>
+
+      <h3>Donning a Half-Face or Full-Face APR</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Inspect before donning.</strong> Check the facepiece for cracks, tears, or deformation. Confirm cartridges are the correct type, properly seated, and not expired or saturated. Check exhalation valve for proper seating and absence of cracks.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Position the facepiece.</strong> Place the respirator on your face with the nose cup centered over the nose. The chin should seat fully into the chin cup. Do not let the bottom seal rest on the chin instead of below it.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Position straps before tightening.</strong> For most half-face respirators: bottom straps go behind the neck, top straps go over the crown. For full-face: position all four straps before tightening any of them.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Tighten straps evenly.</strong> Tighten bottom straps first, then top straps. Tighten until the facepiece seats firmly &mdash; not until it is uncomfortable. Over-tightening can distort the face seal and actually reduce fit quality.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Perform a user seal check</strong> (see below) before entering the hazardous area.</div></li>
+      </ol>
+
+      <h3>User Seal Check &mdash; Two Methods</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Negative Pressure Seal Check</h4>
+          <ul>
+            <li>Cover the inhalation valve(s) or cartridge openings with your palms</li>
+            <li>Inhale gently and hold your breath for 10 seconds</li>
+            <li>If the facepiece collapses slightly toward your face and holds that slight collapse &mdash; seal is good</li>
+            <li>If air leaks in around the face seal &mdash; adjust and repeat</li>
+            <li>Most useful for half-face respirators</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Positive Pressure Seal Check</h4>
+          <ul>
+            <li>Cover the exhalation valve with your palm</li>
+            <li>Exhale gently and hold for 10 seconds</li>
+            <li>If slight positive pressure builds inside the facepiece without noticeable leakage at the seal &mdash; seal is good</li>
+            <li>If you feel air leaking at the face seal &mdash; adjust and repeat</li>
+            <li>Preferred check after positive-pressure (SCBA/SAR) use</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-warning">
+        <strong>&#9888; If the Seal Check Fails Three Times.</strong> If you cannot achieve a good seal after three attempts at adjustment, do not enter the hazardous area. The problem may be the wrong respirator model or size for your face geometry, or a defect in the facepiece. Report to your supervisor and request a different respirator or return to fit testing.
+      </div>
+
+      <h3>Doffing (Removing) a Respirator</h3>
+      <ul>
+        <li>Remove while still in the clean area &mdash; do not remove the respirator in a contaminated atmosphere</li>
+        <li>Remove by grasping the straps behind the head &mdash; avoid touching the front of the facepiece (contaminated surface)</li>
+        <li>For chemical work or lead tasks: remove outer gloves first, then remove the respirator by the straps, then wash hands before touching the facepiece further</li>
+        <li>Do not lay the respirator face-down on a contaminated surface between uses</li>
+      </ul>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Seal Check Failure</div>
+        <h4>The Beard Problem</h4>
+        <p>A worker is issued a half-face APR for an organic vapor task inside a tank shell. He has been growing a beard for a week. He performs the negative pressure seal check &mdash; he can clearly feel air entering along his jaw on both sides. He adjusts the straps tighter, but the same leak is present. He reasons that it is a minor leak and the cartridges will still reduce exposure significantly.</p>
+        <p><strong>Correct response:</strong> Stop. A failing seal check means the respirator is providing unknown and unreliable protection &mdash; potentially no protection at all. APR effectiveness depends on the seal: if air is bypassing the cartridge through the face seal leak, the wearer is breathing unfiltered atmosphere. He must not enter the hazardous area until he is either clean-shaven at the seal area or a different protection method (loose-fitting PAPR, supplied air) that does not require a face seal is substituted.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Inspection, Maintenance, Storage &amp; Program Requirements</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Respirator Inspection</h3>
+      <p>All respirators must be inspected before each use and after each cleaning. Emergency-use respirators (SCBAs kept for rescue) must be inspected monthly and after each use.</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Facepiece &mdash; Check For:</h4>
+          <ul>
+            <li>Cracks, tears, or distortion in the rubber/silicone</li>
+            <li>Damaged or missing head straps</li>
+            <li>Lens cracks, scratches, or fogging (full-face)</li>
+            <li>Exhalation valve: flat, clean, without cracks; seats properly</li>
+            <li>Inhalation valve: present, undamaged, seats properly</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Cartridges &amp; Fittings &mdash; Check For:</h4>
+          <ul>
+            <li>Correct cartridge type for the hazard (read the label)</li>
+            <li>Cartridge securely threaded or snapped onto the facepiece &mdash; no play or wobble</li>
+            <li>No signs of moisture damage or saturation</li>
+            <li>Expiration date not exceeded</li>
+            <li>ESLI color-change indicator (if present) not triggered</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Cleaning &amp; Disinfecting</h3>
+      <ul>
+        <li>Clean after each use, or before being given to another wearer (respirators should be assigned to individual workers when possible)</li>
+        <li>Remove cartridges and valves before cleaning the facepiece (do not immerse cartridges in water)</li>
+        <li>Wash with a mild detergent and warm water, or use OSHA-approved disinfectant wipes</li>
+        <li>Rinse thoroughly and allow to air dry completely before storing</li>
+        <li>Do not use solvents, bleach, or harsh cleaners on the facepiece &mdash; these degrade silicone and rubber</li>
+        <li>Inspect exhalation and inhalation valves after cleaning; replace if deformed by the cleaning process</li>
+      </ul>
+
+      <h3>Storage</h3>
+      <ul>
+        <li>Store in a sealed bag or dedicated respirator case away from dust, chemicals, sunlight, and extreme temperatures</li>
+        <li>Do not hang on a hook by the straps &mdash; this deforms the facepiece and destroys the seal geometry</li>
+        <li>Do not store with cartridges attached in the long term &mdash; adsorbed vapors can off-gas into the facepiece</li>
+        <li>Store separately from contaminated PPE, chemicals, or materials that could off-gas into the sealed bag</li>
+        <li>Emergency SCBAs stored in vehicles must be protected from extreme heat (Texas summers can exceed 140&deg;F inside vehicle cabins &mdash; this damages seals and reduces cylinder pressure through thermal expansion)</li>
+      </ul>
+
+      <h3>BBB Tank Services Written Respiratory Protection Program</h3>
+      <p>OSHA requires a written RPP when respirators are required. The BBB Tank Services RPP includes:</p>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Required Elements</h4>
+          <ul>
+            <li>Procedures for selecting respirators</li>
+            <li>Medical evaluation procedures</li>
+            <li>Fit testing procedures</li>
+            <li>Training requirements</li>
+            <li>Procedures for use in IDLH atmospheres</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Maintenance Elements</h4>
+          <ul>
+            <li>Cleaning, disinfecting, storage, and repair procedures</li>
+            <li>Inspection procedures and schedules</li>
+            <li>Cartridge change-out schedule</li>
+            <li>SCBA monthly inspection records</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Administrative Elements</h4>
+          <ul>
+            <li>Name of the program administrator</li>
+            <li>Evaluation of the program effectiveness</li>
+            <li>Annual review and update of the written program</li>
+            <li>Recordkeeping for medical evaluations and fit tests</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-success">
+        <strong>&#10003; Voluntary Use Respirators.</strong> If a worker voluntarily chooses to wear a respirator when it is not required by BBB Tank Services (e.g., wearing a filtering facepiece for personal comfort during a dusty but low-hazard task), the employer must still provide Appendix D of OSHA 1910.134 (a brief information sheet on the limitations of respirator use) to the employee. No fit testing or medical evaluation is required for voluntary filtering facepiece use, but employers must ensure voluntary use does not create a hazard (e.g., wearing a respirator in a hot confined space when it is not needed can contribute to heat stress).
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. A worker enters a tank interior where the oxygen level has been measured at 17%. Which respirator is appropriate?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> N95 filtering facepiece &mdash; oxygen deficiency is not a chemical hazard and respirators protect against chemicals</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> Full-face APR with organic vapor cartridges &mdash; the full face seal will compensate for the low oxygen</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> Pressure-demand SCBA or supplied-air respirator &mdash; air-purifying respirators cannot create oxygen and must never be used in oxygen-deficient atmospheres</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> Half-face APR with P100 filters &mdash; particulate filters provide adequate oxygen enrichment</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. The airborne concentration of a solvent is measured at 250 ppm. The OSHA PEL is 50 ppm. What is the minimum Assigned Protection Factor required, and which respirator provides it?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> APF 5 required &mdash; a filtering facepiece (N95) is adequate</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> APF 5 required &mdash; a half-face APR with OV cartridges is adequate</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> APF 5 required &mdash; a full-face APR is the only option</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> APF 5 required &mdash; but a half-face APR (APF 10) exceeds the minimum and is appropriate</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. You are working on removing lead-based paint by dry scraping. Which cartridge combination provides the best protection?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Blue acid gas cartridge &mdash; lead is a metal and acid cartridges protect against metallic hazards</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Brown organic vapor cartridge &mdash; lead vapors are organic in nature</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Black OV + P100 combination cartridge on a half-face APR &mdash; or P100-only on a full-face if no organic vapor is present</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> N95 filtering facepiece &mdash; adequate for all dust including lead</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. A worker performs a negative pressure seal check and feels air entering around her jaw every time she inhales. After adjusting the straps three times the leak is still present. What should she do?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Continue tightening until the strap is as tight as possible &mdash; more tension always improves the seal</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Enter the work area &mdash; a minor leak through the seal is acceptable for short-duration tasks</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Do not enter the hazardous area; report to her supervisor and either obtain a different respirator model or arrange an alternative protection method that does not require a face seal</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Seal the gap with petroleum jelly or silicone grease to eliminate the leak</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. How often must annual fit testing be conducted for workers required to wear tight-fitting respirators?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Every 3 years &mdash; the same frequency as OSHA PSM compliance audits</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Every 5 years &mdash; unless the worker changes respirator model or size</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Annually, and also when the worker reports a significant change in facial features or when a different respirator model is selected</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Only once &mdash; at initial hire before the first respirator use</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. What is the Assigned Protection Factor (APF) for a pressure-demand SCBA?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> APF 10 &mdash; same as a half-face air-purifying respirator</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> APF 50 &mdash; same as a full-face APR</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> APF 1,000 &mdash; same as a pressure-demand SAR</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> APF 10,000 &mdash; highest protection level available for workers</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. An organic vapor cartridge shows a color change on its end-of-service-life indicator (ESLI). What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Continue using it for the current shift &mdash; the ESLI indicates the cartridge is at 50% capacity, not fully exhausted</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Replace the cartridge immediately &mdash; the ESLI color change indicates the sorbent capacity has been reached and organic vapors may break through</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> The color change is normal &mdash; all cartridges change color in high humidity regardless of remaining capacity</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Use the cartridge until you smell vapor through it, which confirms the ESLI reading was accurate</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. What is the correct way to store a half-face APR at the end of the work day?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Hang it by the head straps on a hook near the work area for easy access the next day</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Leave the cartridges attached and store in the tool bag with other equipment</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Clean it, remove the cartridges, allow it to dry, then store in a sealed bag or case away from chemicals, sunlight, and temperature extremes</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Rinse it quickly under a hose and put it in your work truck for the next shift</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. What must happen BEFORE a worker can be required to wear a tight-fitting respirator for the first time?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> The worker must watch a 15-minute safety video on respirator use</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> A medical evaluation must be completed and the worker must pass a fit test for the specific respirator to be used</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> The worker must complete a 30-day probationary period before being allowed to use respiratory protection</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Supervisors must sign a form certifying the worker is physically capable of wearing a respirator</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. Why should organic vapor cartridges NOT be left attached to the facepiece overnight or during long storage periods?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> The cartridges will bond to the facepiece threads and become difficult to remove</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Vapors adsorbed in the cartridge can off-gas (desorb) back into the sealed facepiece, creating a high-concentration exposure when the respirator is donned the next day</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Cartridges left on the facepiece lose their NIOSH certification after 8 hours of non-use</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> The rubber facepiece material reacts chemically with cartridge sorbents during extended contact</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-023.html" class="nav-btn prev">&larr; Module 23</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-025.html" class="nav-btn next">Module 25 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-024 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'c', q2:'d', q3:'c', q4:'c', q5:'c',
+    q6:'d', q7:'b', q8:'c', q9:'b', q10:'b'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'Air-purifying respirators (N95, half-face, full-face APR) filter or absorb contaminants from ambient air but cannot add oxygen. In an oxygen-deficient atmosphere (below 19.5%), only atmosphere-supplying equipment — SCBA or supplied-air respirator — provides safe breathing air. This is one of the most critical distinctions in respirator selection.',
+    q2:  'Required APF = Hazard Concentration ÷ Exposure Limit = 250 ÷ 50 = 5. A respirator with APF ≥ 5 is required. A half-face APR has an APF of 10, which exceeds the minimum requirement of 5 and is the appropriate choice for this scenario. An N95 (APF 10) would also mathematically meet the requirement but lacks the organic vapor cartridge needed for solvent vapors.',
+    q3:  'Lead dust is a particulate hazard requiring P100 (HEPA) filter efficiency. If there are also organic solvent vapors from paint binders or cleaning agents, an OV + P100 combination cartridge (black) on a half-face or full-face APR is appropriate. A P100-only filter is acceptable if organic vapors are absent. N95 filters are not rated for lead and do not meet OSHA\'s lead standard requirements.',
+    q4:  'Three failed seal checks indicate the respirator cannot achieve an adequate seal with this worker — possibly due to facial hair, face geometry, or a defective facepiece. Entering a hazardous area with a known seal failure is not acceptable. The worker needs a different respirator model, size, or an alternative protection method such as a loose-fitting PAPR that does not require a tight face seal.',
+    q5:  'OSHA 29 CFR 1910.134 requires annual fit testing for all workers required to wear tight-fitting respirators. Additionally, fit testing must be repeated when the worker switches to a different model or size, or when any change in physical condition that might affect face seal is reported. Annual testing is a minimum — more frequent testing may be needed when conditions change.',
+    q6:  'Pressure-demand SCBA has the highest APF of any respirator type at 10,000. This reflects its ability to maintain positive pressure inside the facepiece at all times — any leak causes outward flow rather than inward contamination. This is why pressure-demand SCBA is required for all IDLH atmospheres and confined space rescue.',
+    q7:  'An ESLI color change indicates the sorbent bed has been exhausted and organic vapors are at or near breakthrough. Replace the cartridge immediately. Do not continue using it, and do not rely on smelling the vapor as a backup indicator — olfactory fatigue may prevent detection of the very vapors indicating breakthrough.',
+    q8:  'Proper storage requires cleaning first, removing cartridges (to prevent off-gassing back into the facepiece), allowing to air dry, and storing in a sealed bag or case away from sunlight, chemicals, and temperature extremes. Hanging by straps deforms the sealing surface. Storing with cartridges attached risks desorption of adsorbed vapors into the facepiece.',
+    q9:  'Before any worker is required to wear a tight-fitting respirator for the first time, OSHA mandates: (1) a medical evaluation by a PLHCP confirming the worker can safely use a respirator, and (2) a fit test for the specific make, model, and size of respirator to be used. Both must be completed before the first use and documented.',
+    q10: 'Organic vapor cartridges work by adsorbing vapors onto activated charcoal. The adsorption process is partially reversible — when ambient vapor concentrations drop (overnight, in storage), vapors can desorb back into the enclosed facepiece. Donning this facepiece the next morning can expose the worker to a concentrated pulse of the vapor that desorbed overnight, potentially at levels far exceeding the cartridge\'s intended protection.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'024', title:'Respiratory Protection Program', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 024 complete! Your record has been saved. Proceed to Module 025.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

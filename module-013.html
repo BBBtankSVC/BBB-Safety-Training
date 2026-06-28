@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 013 – GFCI &amp; Assured Grounding Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --steel:   #5A7184;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* TOP NAV */
+    .top-bar {
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,.4);
+      border-bottom: 3px solid var(--orange);
+    }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a {
+      color: #8FAEC8; text-decoration: none; font-size: .82rem;
+      padding: 6px 12px; border-radius: 6px;
+      transition: background .15s, color .15s;
+    }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    /* PROGRESS */
+    .progress-container {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 9px 24px;
+      display: flex; align-items: center; gap: 14px;
+      font-size: .78rem; color: var(--muted);
+    }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange2), var(--orange));
+      border-radius: 6px; width: 0%; transition: width .4s ease;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%);
+      color: #fff; padding: 44px 28px 36px; text-align: center;
+    }
+    .module-tag {
+      display: inline-block; background: var(--orange); color: #fff;
+      font-size: .72rem; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px;
+    }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 580px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    /* PAGE WRAP */
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    /* OBJECTIVES */
+    .objectives-card {
+      background: var(--card); border-left: 5px solid var(--orange);
+      border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .objectives-card h2 {
+      font-size: .82rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px;
+    }
+    .objectives-card ul {
+      list-style: none;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px;
+    }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    /* SECTION ACCORDION */
+    .section-card {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px;
+      overflow: hidden; border: 1px solid var(--border);
+    }
+    .sec-header {
+      background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      user-select: none; transition: background .2s;
+    }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num {
+      background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800;
+      padding: 3px 9px; border-radius: 12px; letter-spacing: .5px;
+    }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 26px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p  { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    /* CALLOUT BOXES */
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong  { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong    { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    /* TWO-COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    /* TABLE */
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* STEPS */
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num {
+      flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .82rem;
+    }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    /* SCENARIO */
+    .scenario {
+      background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%);
+      color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0;
+    }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p  { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    /* QUIZ */
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label {
+      display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px;
+      border-radius: 6px; cursor: pointer; margin-bottom: 6px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+      transition: background .15s; font-size: .88rem;
+    }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit {
+      display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff;
+      font-size: .97rem; font-weight: 700; border: none; border-radius: 8px;
+      cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s;
+    }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result {
+      display: none; margin-top: 20px; background: rgba(255,255,255,.08);
+      border-radius: 10px; padding: 22px; text-align: center;
+    }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn {
+      background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25);
+      border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s;
+    }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    /* MODULE NAV */
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn {
+      flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px;
+      text-decoration: none; font-weight: 600; font-size: .88rem;
+      text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer;
+    }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    /* FOOTER */
+    .page-footer {
+      background: var(--navy); color: #4A6785; text-align: center;
+      font-size: .74rem; padding: 18px 16px; margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &#8212; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-012.html">&larr; Mod 12</a>
+    <a href="module-013.html" class="active">Mod 13</a>
+    <a href="module-014.html">Mod 14 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 13 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 013 &middot; SHP-BBB-013</div>
+  <h1>GFCI &amp; Assured Grounding Program</h1>
+  <p class="subtitle">Understanding ground fault protection, assured grounding requirements, and OSHA compliance for electrical safety on BBB Tank Services job sites.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 30 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Explain what a ground fault is and why it is dangerous</li>
+      <li>Describe how a GFCI detects and interrupts ground faults</li>
+      <li>Identify the three types of GFCI devices used on job sites</li>
+      <li>State OSHA requirements for GFCI use in construction and general industry</li>
+      <li>Describe the key elements of an Assured Equipment Grounding Conductor Program</li>
+      <li>Perform the daily TEST/RESET procedure on a GFCI device</li>
+      <li>Follow correct procedures when a GFCI trips or equipment is found damaged</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Ground Faults &mdash; What They Are &amp; Why They Kill</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Electrical current always seeks the path of least resistance back to its source. A <strong>ground fault</strong> occurs when current escapes its intended path and flows through an unintended conductor &mdash; which could be a person, a puddle of water, or a metal surface connected to ground.</p>
+
+      <div class="box box-danger">
+        <strong>&#9889; Why This Matters:</strong> It takes as little as <strong>10 milliamps (0.010 A)</strong> to cause muscle freeze &mdash; the inability to let go of an energized object. As little as <strong>100 mA</strong> passing through the chest for one second can cause fatal ventricular fibrillation. A standard 15-amp circuit can deliver 150 times the lethal dose.
+      </div>
+
+      <h3>Common Causes of Ground Faults at Tank Services Job Sites</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Equipment &amp; Cord Issues</h4>
+          <ul>
+            <li>Damaged or cut extension cord insulation</li>
+            <li>Worn or cracked tool casings exposing internal wiring</li>
+            <li>Missing or broken ground pins on plugs</li>
+            <li>Moisture inside power tools</li>
+            <li>Improperly repaired splices or connections</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Environmental Conditions</h4>
+          <ul>
+            <li>Water on tank surfaces, grating, or decking</li>
+            <li>Condensation inside tanks and confined spaces</li>
+            <li>Wet concrete or soil completing the return path</li>
+            <li>Metal scaffolding and tank shells conducting fault current</li>
+            <li>Cleaning water and chemical spray during tank work</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>How a Fault Flows Through a Person</h3>
+      <p>When a worker touches a tool or surface carrying fault current while simultaneously contacting a grounded surface (wet ground, metal tank, wet boots), they complete the circuit. Current enters at the point of contact, travels through the body &mdash; often through the chest and heart &mdash; and exits through the grounding contact. Severity depends on current magnitude, path through the body, and duration of contact.</p>
+
+      <div class="box box-warning">
+        <strong>Tank Work Is Higher Risk:</strong> Confined spaces inside tanks are often wet, humid, and surrounded by conductive metal. Workers in cramped positions may be unable to pull away from energized equipment. These conditions make ground fault protection non-negotiable on every BBB Tank Services job site.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> How GFCI Works &amp; Types of Devices</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>A <strong>Ground Fault Circuit Interrupter (GFCI)</strong> continuously monitors current flowing out through the hot wire and returning through the neutral wire. Under normal conditions these are equal. If even a tiny amount leaks through an unintended path, the GFCI detects the imbalance and shuts off the circuit almost instantly.</p>
+
+      <h3>Detection Threshold &amp; Response Time</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Trip Sensitivity</h4>
+          <ul>
+            <li>Trips at <strong>4&ndash;6 milliamps</strong> of imbalance</li>
+            <li>Well below the 10 mA muscle-freeze threshold</li>
+            <li>Well below the 100 mA fibrillation threshold</li>
+            <li>Cannot be adjusted or defeated in the field</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Response Time</h4>
+          <ul>
+            <li>Interrupts the circuit in <strong>1/40th of a second</strong> or less</li>
+            <li>Fast enough to prevent electrocution in most scenarios</li>
+            <li>Does NOT protect against line-to-neutral contact</li>
+            <li>Does NOT replace the circuit breaker (which protects wiring)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-info">
+        <strong>Important Distinction:</strong> A circuit breaker protects wiring from overheating and fire. The GFCI protects <em>people</em> from electrocution due to ground faults. Both are required and serve different purposes.
+      </div>
+
+      <h3>Types of GFCI Devices</h3>
+      <table class="std-table">
+        <thead><tr><th>Type</th><th>Description</th><th>Typical BBB Tank Services Use</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Receptacle-Type</strong></td>
+            <td>Built into an outlet with TEST and RESET buttons. Protects that outlet and any outlets wired downstream.</td>
+            <td>Fixed receptacles in shops, trailers, and permanent site structures</td>
+          </tr>
+          <tr>
+            <td><strong>Portable Cord-Type</strong></td>
+            <td>Plug-in unit with built-in GFCI. Plugs into any standard outlet and protects all tools connected to it.</td>
+            <td>Primary field method &mdash; required whenever site outlets are not confirmed GFCI-protected</td>
+          </tr>
+          <tr>
+            <td><strong>Breaker-Type</strong></td>
+            <td>GFCI built into a circuit breaker installed in the panel, protecting the entire branch circuit.</td>
+            <td>Permanent electrical panels in facilities; not typically present at mobile field sites</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box box-success">
+        <strong>&#10003; Field Rule:</strong> On every BBB Tank Services field job, each crew must have at least one cord-type GFCI for every power tool in use. If you cannot verify a receptacle is GFCI-protected, use a portable cord-type GFCI &mdash; no exceptions.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> OSHA Requirements</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>OSHA mandates ground fault protection for temporary power situations. BBB Tank Services operations may fall under Construction or General Industry standards depending on scope &mdash; both impose similar requirements.</p>
+
+      <h3>Construction Standard &mdash; 29 CFR 1926.404(b)(1)</h3>
+      <p>For all construction worksites, OSHA requires one of the following for 120V, single-phase, 15- and 20-amp receptacle outlets that are not part of the permanent building wiring:</p>
+      <ul>
+        <li><strong>Option A: GFCI protection</strong> &mdash; All such receptacles are protected by a GFCI device, OR</li>
+        <li><strong>Option B: Assured Equipment Grounding Conductor Program (AEGCP)</strong> &mdash; A written program with specific inspection and testing requirements (see Section 4)</li>
+      </ul>
+
+      <div class="box box-info">
+        <strong>BBB Tank Services Policy:</strong> We use <strong>GFCI protection</strong> as our primary method of compliance. The AEGCP supplements GFCI for equipment where cord-type GFCIs cannot be used &mdash; it does not replace GFCI as the default approach.
+      </div>
+
+      <h3>General Industry &mdash; 29 CFR 1910.304 &amp; 1910.305</h3>
+      <p>For facilities and non-construction environments, OSHA requires GFCI protection for receptacles in bathrooms, rooftops, kitchens, wet areas, and temporary construction-like power installations (e.g., generator power delivered to a job site inside a facility).</p>
+
+      <h3>OSHA Penalties (2025)</h3>
+      <table class="std-table">
+        <thead><tr><th>Violation Type</th><th>Maximum Penalty</th></tr></thead>
+        <tbody>
+          <tr><td>Serious (worker exposed to shock hazard without GFCI)</td><td>Up to $16,550 per violation</td></tr>
+          <tr><td>Willful or Repeated</td><td>Up to $165,514 per violation</td></tr>
+          <tr><td>Failure to Abate</td><td>Up to $16,550 per day past abatement date</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-warning">
+        <strong>&#9888; OSHA Enforcement Focus:</strong> Electrocution is one of OSHA&rsquo;s &ldquo;Fatal Four&rdquo; in construction. OSHA inspectors specifically check for GFCI compliance. Non-compliance results in public citations that can affect BBB Tank Services&rsquo; ability to bid on customer contracts.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Assured Equipment Grounding Conductor Program (AEGCP)</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>The <strong>AEGCP</strong> is OSHA&rsquo;s written, systematic alternative to GFCI. It verifies that equipment grounding conductors are intact through regular inspection and testing. It applies when GFCI devices cannot be used for specific equipment.</p>
+
+      <div class="box box-warning">
+        <strong>&#9888; Key Difference:</strong> A GFCI automatically protects the worker in real time. The AEGCP relies on periodic testing &mdash; it does not interrupt a fault. GFCI is always the preferred method.
+      </div>
+
+      <h3>Required Elements of the BBB Tank Services AEGCP</h3>
+      <p>Per OSHA 29 CFR 1926.404(b)(1)(iii), the program must include:</p>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Written Program.</strong> A written AEGCP document is maintained on every job site where the program applies, identifying the responsible person.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Equipment Identification.</strong> All covered cord sets, receptacles, and tools are distinctly marked &mdash; typically by color-coded tape changed each quarter.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Visual Inspection Before Each Use.</strong> A competent person visually inspects every cord, plug, tool, and receptacle for damage before each day&rsquo;s use. Damaged equipment is immediately removed from service.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Continuity Test.</strong> All equipment grounding conductors are tested for continuity with an ohmmeter before first use, after any repair, and at 3-month intervals. Results are documented.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Receptacle Polarity &amp; Grounding Test.</strong> All receptacles and plugs are tested to verify correct wiring (hot, neutral, ground) before first use, after repair, and quarterly. A plug-in outlet tester is used.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Documentation.</strong> All test results are recorded: date, equipment description and ID, and name of the person who performed the test. Records are kept on-site and available for OSHA inspection.</div></li>
+      </ol>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Field Application</div>
+        <h4>When Would BBB Tank Services Use the AEGCP?</h4>
+        <p>A crew is operating a large industrial vacuum (over 20 amps, 3-phase) that cannot connect through a standard cord-type GFCI. The AEGCP applies: the equipment must be inspected before use, continuity and polarity tests must be current, and the equipment must bear the current quarter&rsquo;s color-coded tape.</p>
+        <p>Even in this scenario, any 120V single-phase tools used alongside the vacuum &mdash; lights, hand tools, extension cords &mdash; must still use GFCI protection.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Inspection, Testing &amp; Tagging</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Daily Visual Inspection &mdash; Every Worker&rsquo;s Responsibility</h3>
+      <p>Before using any cord, tool, or GFCI device, perform a quick visual inspection. This takes less than 60 seconds and can prevent a fatality.</p>
+
+      <table class="std-table">
+        <thead><tr><th>Item</th><th>What to Look For</th><th>If Damaged &mdash; Do This</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Extension Cords</strong></td><td>Cuts, abrasions, exposed copper, burn marks, missing ground pin</td><td>Remove from service. Tag &ldquo;DO NOT USE.&rdquo; Return to supervisor.</td></tr>
+          <tr><td><strong>Power Tool Cords</strong></td><td>Fraying at cord-tool junction, exposed wiring, cracked insulation</td><td>Remove tool from service. Tag &ldquo;DO NOT USE.&rdquo; Do not repair in the field.</td></tr>
+          <tr><td><strong>Plugs &amp; Connectors</strong></td><td>Cracked casing, bent or missing prongs, burn marks, loose connections</td><td>Remove from service. Do not straighten bent prongs.</td></tr>
+          <tr><td><strong>Cord-Type GFCI</strong></td><td>Cracked housing, damaged indicator lights, TEST/RESET buttons not functioning</td><td>Test using TEST/RESET procedure. If GFCI fails, remove from service.</td></tr>
+          <tr><td><strong>Receptacle GFCI</strong></td><td>Cracked face, loose mounting, unresponsive TEST/RESET buttons</td><td>Do not use. Notify supervisor &mdash; requires replacement by a qualified electrician.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>GFCI TEST/RESET Procedure</h3>
+      <p>All GFCI devices must be tested before first use each day and after any tripping event.</p>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Plug in a test load.</strong> Plug a lamp or trouble light into the GFCI output to confirm power is passing through normally.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Press the TEST button.</strong> The load must go off immediately. If it does not, the GFCI is faulty &mdash; remove from service.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Press the RESET button.</strong> The load must come back on. If it does not reset or the button does not click and hold, the GFCI is faulty &mdash; remove from service.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Document for AEGCP equipment.</strong> Record date, GFCI ID, and your name in the inspection log. Note any anomalies in the daily safety report.</div></li>
+      </ol>
+
+      <h3>Quarterly Color-Code System (AEGCP)</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Color Schedule Example</h4>
+          <ul>
+            <li><strong style="color:#1D8348">Green</strong> &mdash; Q1 (Jan&ndash;Mar)</li>
+            <li><strong style="color:#2471A3">Blue</strong>  &mdash; Q2 (Apr&ndash;Jun)</li>
+            <li><strong style="color:#2461AE">Orange</strong>&mdash; Q3 (Jul&ndash;Sep)</li>
+            <li><strong style="color:#8E44AD">Purple</strong>&mdash; Q4 (Oct&ndash;Dec)</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Tape Application Rules</h4>
+          <ul>
+            <li>Applied to the plug end and at the cord-tool exit</li>
+            <li>Previous quarter&rsquo;s tape removed before new tape applied</li>
+            <li>Wrong-quarter or missing tape = remove from service</li>
+            <li>Tape applied only after passing all tests</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Safe Work Practices &amp; When a GFCI Trips</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Safe Electrical Practices &mdash; Daily Habits</h3>
+      <ul>
+        <li><strong>Never remove the ground pin.</strong> Eliminating the ground pin eliminates grounding protection entirely.</li>
+        <li><strong>Never use damaged cords.</strong> Tape over damaged insulation is not a repair &mdash; it is a masked hazard. Remove the cord from service.</li>
+        <li><strong>Route cords safely.</strong> Keep cords out of walkways and away from sharp edges. Never run them under mats where damage goes unseen. Use cord bridges at crossing points.</li>
+        <li><strong>Keep cords out of water.</strong> If a cord or tool gets wet, unplug it, allow it to dry, and inspect it before re-use. GFCI protection does not make wet equipment safe to use.</li>
+        <li><strong>Unplug tools before changing accessories</strong> (bits, blades, wheels). Never yank a cord from an outlet &mdash; grip the plug body.</li>
+        <li><strong>Use only three-wire extension cords</strong> with three-prong tools. Never use a two-prong extension cord with a grounded tool.</li>
+        <li><strong>Keep extension cords as short as feasible.</strong> Long runs increase resistance, heat, voltage drop &mdash; and create more cord exposed to damage.</li>
+      </ul>
+
+      <h3>When a GFCI Trips &mdash; Step by Step</h3>
+      <div class="box box-danger">
+        <strong>&#9889; A tripping GFCI is a warning, not an inconvenience.</strong> Never simply reset it and resume work without investigating. A persistent or recurring trip means a ground fault exists and must be identified and corrected before work continues.
+      </div>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Stop work. Unplug the tool or equipment.</strong> Do not attempt a reset with equipment still connected.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Inspect the tool and cord.</strong> Look for visible damage. If found, tag &ldquo;DO NOT USE&rdquo; and remove from service. Do not reset.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>If no visible damage, press RESET once.</strong> Connect a known-good tool and test. If the GFCI trips again with a different tool, the problem is in the GFCI or circuit &mdash; notify your supervisor.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>If the GFCI trips again &mdash; stop.</strong> Do not continue resetting. A real fault exists. Notify your supervisor and a qualified electrician before any equipment is used on that circuit.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Document and report.</strong> Record in the daily safety log: date, time, which GFCI, what equipment was connected, number of trips, and action taken.</div></li>
+      </ol>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Think It Through</div>
+        <h4>The Recurring Trip Inside the Tank</h4>
+        <p>A crew member is using an angle grinder inside a tank. The cord-type GFCI trips. He presses RESET, plugs back in, and the GFCI trips again within 30 seconds. He tells the foreman the GFCI must be &ldquo;weak&rdquo; and asks to plug directly into the generator without it to finish faster.</p>
+        <p><strong>Correct response:</strong> Deny the request. Two trips in quick succession means a ground fault is present &mdash; either the tool is damaged or the cord is compromised. Inside a metal tank with potential for moisture and full-body conductive contact, bypassing GFCI protection could be fatal. Remove the grinder and cord from service, inspect both, and use a different tool with a verified working GFCI before resuming work.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A passing score of <strong>70% or higher</strong> is required. Your result will be saved automatically to your training record.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is a ground fault?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> An overloaded circuit breaker that trips due to excess current draw</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> When electrical current leaves its intended path and flows through an unintended conductor &mdash; such as a worker&rsquo;s body &mdash; to ground</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> A short circuit caused by two hot wires touching inside a tool</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> A voltage drop caused by a long extension cord run</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. At what current level does a GFCI trip to protect a worker?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> 15 amps &mdash; the same rating as the circuit breaker</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> 100 milliamps &mdash; the threshold for ventricular fibrillation</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> 4 to 6 milliamps &mdash; well below the threshold for serious injury</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> 1 amp &mdash; when equipment begins to overheat</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. Which type of GFCI is the primary field protection method for BBB Tank Services crews using hand tools at a job site?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Breaker-type GFCI installed in the electrical panel</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Receptacle-type GFCI built into a permanent outlet</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Portable cord-type GFCI plugged into the available outlet</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> The generator&rsquo;s built-in circuit breaker &mdash; it provides GFCI protection automatically</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. A GFCI trips while you are using a grinder inside a tank. What is the CORRECT first step?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Press RESET immediately and keep working &mdash; GFCIs sometimes trip for no reason</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Unplug the grinder, inspect the tool and cord for damage, then investigate before resetting</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Remove the GFCI and plug the grinder directly into the outlet to avoid further trips</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Use a longer extension cord to reduce the load on the GFCI</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. What should you do with a power tool that has its ground pin broken off?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Use it &mdash; two-prong tools are common and the GFCI will still protect you</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Bend a piece of wire into the ground slot to restore contact temporarily</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Remove it from service immediately, tag it &ldquo;DO NOT USE,&rdquo; and return it to your supervisor</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Use a two-prong adapter so it fits a two-slot outlet</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. Under OSHA 29 CFR 1926.404(b)(1), what are the two options for protecting workers from ground faults on construction job sites?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> GFCI protection OR the Assured Equipment Grounding Conductor Program (AEGCP)</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Circuit breakers OR fuses &mdash; one must be present on every circuit</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Insulated tools OR rubber gloves worn at all times</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> GFCI protection OR a written electrical hazard awareness training record</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. How often must equipment covered under the AEGCP have continuity and polarity tests performed?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Annually &mdash; once per year during the safety audit</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Monthly &mdash; on the first Monday of each month</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> Every 3 months (quarterly) and after any repair</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Weekly &mdash; before each new job assignment</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. You press the TEST button on a cord-type GFCI and the lamp plugged into it does NOT go off. What does this mean?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> The GFCI is working correctly &mdash; it only trips during an actual fault event</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> The GFCI is faulty and must be removed from service immediately</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> The lamp is drawing too much load &mdash; try a smaller light bulb and retest</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> The supplying outlet has no ground wire, but the GFCI output is still safe</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. Which is the BEST way to manage an extension cord that must cross a worker walkway?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Cover it with a rubber mat to conceal it and prevent tripping</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Route it overhead or use a cord bridge designed for walkway crossing</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Tape it flat to the floor with duct tape so it cannot move</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Wrap extra electrical tape around the crossing area for additional insulation</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. Why is GFCI protection preferred over the AEGCP at BBB Tank Services?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> GFCI is cheaper and requires less documentation than the AEGCP</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> The AEGCP applies only to facilities &mdash; GFCI is the OSHA standard for all field work</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> GFCI automatically interrupts a fault in real time, while the AEGCP relies on periodic testing that cannot catch a fault that develops between test dates</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> The AEGCP requires annual state recertification, making it impractical for field crews</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-012.html" class="nav-btn prev">&larr; Module 12</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-014.html" class="nav-btn next">Module 14 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-013 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  /* ── Section Accordion ────────────────────────────────────── */
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+
+    if (!wasOpen) {
+      header.classList.add('open');
+      body.classList.add('open');
+      openedSections.add(idx);
+    }
+    updateProgress();
+  }
+
+  /* ── Progress Bar ─────────────────────────────────────────── */
+  function updateProgress() {
+    const pct = Math.round(Math.min(openedSections.size / 6, 1) * 80);
+    setProgress(pct);
+  }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  /* ── Quiz ─────────────────────────────────────────────────── */
+  const ANSWERS = {
+    q1:'b', q2:'c', q3:'c', q4:'b', q5:'c',
+    q6:'a', q7:'c', q8:'b', q9:'b', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'A ground fault occurs when current escapes its intended circuit path and travels to ground through an unintended conductor — including a worker\'s body. The resulting shock current can be lethal even though it is far too small to trip a standard circuit breaker.',
+    q2:  'GFCIs trip at 4–6 milliamps — far below the 10 mA that causes muscle freeze and the 100 mA that causes fatal cardiac arrest. This precise sensitivity is what makes GFCIs the most effective personal protection against electrocution.',
+    q3:  'Portable cord-type GFCIs are the primary field tool because customer site outlets and generators may not have built-in GFCI protection. Every BBB Tank Services crew must carry cord-type GFCIs for all 120V tool use in the field.',
+    q4:  'Always unplug the equipment first, then inspect it for damage before considering a reset. A tripped GFCI is a warning signal — you must identify the cause before resuming work, not simply reset and continue.',
+    q5:  'A missing ground pin means the tool is ungrounded — remove it from service and tag it "DO NOT USE." Never improvise a field fix. A proper repair by a qualified person is the only acceptable correction.',
+    q6:  'OSHA 29 CFR 1926.404(b)(1) allows employers to choose GFCI protection or the AEGCP. BBB Tank Services uses GFCI as the primary approach; the AEGCP supplements it for equipment where cord-type GFCIs cannot be applied.',
+    q7:  'AEGCP testing is required before first use, after any repair, and every three months. Between test cycles, equipment must bear the current quarter\'s color-coded tape as visual confirmation that it has passed the required inspections.',
+    q8:  'If pressing TEST does not trip the GFCI — the load stays on — the internal mechanism has failed and the device cannot protect anyone. Remove it from service immediately and replace it with a functioning unit.',
+    q9:  'Routing overhead or using a purpose-built cord bridge prevents damage from foot traffic, equipment, and vehicles — and keeps the cord visible for inspection. Covering cords with mats or tape hides damage and creates additional hazards.',
+    q10: 'GFCI protection is automatic and instant — it interrupts a fault the moment it occurs. The AEGCP only confirms equipment was safe at the last test date; a fault can develop between test intervals with no detection mechanism in place.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+
+      allOpts.forEach(r => {
+        if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct');
+      });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+
+    // Save to localStorage — matches the key used by index.html
+    try {
+      const STORAGE_KEY = 'bbb_training_records';
+      const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      records.push({
+        module:     '013',
+        title:      'GFCI & Assured Grounding Program',
+        score:      score,
+        total:      total,
+        percentage: pct,
+        passed:     passed,
+        date:       new Date().toISOString()
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% — ' + (passed ? 'PASS ✓' : 'NEEDS REVIEW ✗');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '✅ Module 013 complete! Your record has been saved. Proceed to Module 014.'
+      : '❌ A score of 70% is required to pass. Review the flagged sections and retake the quiz, or see your supervisor.';
+
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

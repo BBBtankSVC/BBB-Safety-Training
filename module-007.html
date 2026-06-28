@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 007 — Electrical Safety Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0D1B2A; --navy2:#1A2E4A; --orange:#E8611A; --orange2:#C9510E;
+      --bg:#F0F4F8; --card:#FFFFFF; --text:#1C2B3A; --muted:#6B7E8E;
+      --border:#D3DCE6; --green:#1D8348; --red:#C0392B; --yellow:#B45309;
+      --radius:10px;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+    header { background:var(--navy); color:white; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+    .header-inner { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:3px solid var(--orange); }
+    .back-link { color:#8FAEC8; text-decoration:none; font-size:14px; white-space:nowrap; }
+    .back-link:hover { color:white; }
+    .header-title { font-size:15px; font-weight:700; color:white; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-std { font-size:12px; color:var(--orange); font-weight:700; white-space:nowrap; }
+    .read-progress-wrap { background:var(--navy2); padding:8px 20px; display:flex; align-items:center; gap:12px; }
+    .read-progress-label { font-size:12px; color:#8FAEC8; white-space:nowrap; }
+    .read-progress-bg { flex:1; background:rgba(255,255,255,0.15); border-radius:8px; height:6px; }
+    .read-progress-fill { background:var(--orange); height:100%; border-radius:8px; width:0; transition:width 0.3s; }
+    .scroll-pct { font-size:12px; color:#8FAEC8; min-width:36px; text-align:right; }
+    main { max-width:820px; margin:0 auto; padding:28px 16px 80px; }
+    .module-banner { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:white; border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+    .module-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--orange); font-weight:700; margin-bottom:8px; }
+    .module-banner h1 { font-size:clamp(20px,4vw,28px); font-weight:800; margin-bottom:10px; }
+    .module-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#8FAEC8; }
+    .content-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+    .section-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:16px; font-weight:700; }
+    .section-body { padding:20px 22px; }
+    .section-body p { margin-bottom:14px; }
+    .section-body p:last-child { margin-bottom:0; }
+    .callout { border-radius:8px; padding:14px 16px; margin:14px 0; font-size:15px; }
+    .callout-orange { background:#FFF4EE; border-left:4px solid var(--orange); }
+    .callout-blue   { background:#EEF4FF; border-left:4px solid #2E6AE8; }
+    .callout-green  { background:#EDFAF3; border-left:4px solid var(--green); }
+    .callout-red    { background:#FEF0EE; border-left:4px solid var(--red); }
+    .callout-yellow { background:#FEFCE8; border-left:4px solid #CA8A04; }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; opacity:0.75; }
+    .resp-list { list-style:none; padding:0; margin:10px 0; }
+    .resp-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; }
+    .resp-list li::before { content:'✓'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+    .no-list { list-style:none; padding:0; margin:10px 0; }
+    .no-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#FEF0EE; border:1px solid #FECACA; position:relative; font-size:15px; }
+    .no-list li::before { content:'✗'; position:absolute; left:12px; color:var(--red); font-weight:800; }
+    .role-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin:14px 0; }
+    .role-card { background:#F7F9FC; border:1px solid var(--border); border-radius:8px; padding:14px; }
+    .role-card .role-title { font-size:13px; font-weight:800; color:var(--orange); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .role-card .role-desc  { font-size:13px; color:var(--muted); line-height:1.5; }
+    .key-fact { display:flex; align-items:center; gap:14px; background:var(--navy); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; }
+    .key-fact .fact-num { font-size:22px; font-weight:800; color:var(--orange); white-space:nowrap; }
+    .key-fact .fact-lbl { font-size:14px; color:#8FAEC8; line-height:1.4; }
+    .section-divider { height:1px; background:var(--border); margin:14px 0; }
+    /* Approach distance table */
+    .dist-table { width:100%; border-collapse:collapse; font-size:14px; margin:14px 0; border-radius:8px; overflow:hidden; }
+    .dist-table th { background:var(--navy); color:white; padding:10px 14px; text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+    .dist-table td { padding:9px 14px; border-bottom:1px solid var(--border); }
+    .dist-table tr:last-child td { border-bottom:none; }
+    .dist-table tr:nth-child(even) td { background:#F7F9FC; }
+    .dist-table tr:first-child td { background:#FEF0EE; font-weight:700; color:var(--red); }
+    /* quiz */
+    #quiz-section { background:var(--card); border:2px solid var(--orange); border-radius:var(--radius); overflow:hidden; margin-top:32px; }
+    .quiz-header { background:var(--orange); color:white; padding:20px 24px; }
+    .quiz-header h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+    .quiz-header p  { font-size:14px; opacity:0.9; }
+    .quiz-body { padding:24px; }
+    .name-block { margin-bottom:28px; }
+    .name-block label { display:block; font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .name-block input { width:100%; padding:12px 16px; font-size:16px; border:2px solid var(--border); border-radius:8px; background:#F7F9FC; color:var(--text); transition:border-color 0.2s; }
+    .name-block input:focus { outline:none; border-color:var(--orange); background:white; }
+    .name-block input.error { border-color:var(--red); }
+    .question-block { margin-bottom:28px; }
+    .question-num  { font-size:12px; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .question-text { font-size:16px; font-weight:600; margin-bottom:14px; line-height:1.5; }
+    .options { display:flex; flex-direction:column; gap:8px; }
+    .option-label { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:15px; line-height:1.4; }
+    .option-label:hover { border-color:var(--orange); background:#FFF8F4; }
+    .option-label input[type="radio"] { margin-top:3px; accent-color:var(--orange); flex-shrink:0; width:18px; height:18px; }
+    .option-label.correct-ans { border-color:var(--green); background:#EDFAF3; }
+    .option-label.wrong-ans   { border-color:var(--red);   background:#FEF0EE; }
+    .question-divider { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+    .submit-wrap { text-align:center; margin-top:12px; }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:15px 48px; font-size:17px; font-weight:700; border-radius:8px; cursor:pointer; width:100%; max-width:360px; transition:background 0.2s; }
+    .submit-btn:hover { background:var(--orange2); }
+    .submit-btn:disabled { background:var(--muted); cursor:not-allowed; }
+    #results-section { display:none; }
+    .result-card { border-radius:var(--radius); padding:28px; margin-bottom:20px; text-align:center; }
+    .result-card.pass { background:#EDFAF3; border:2px solid var(--green); }
+    .result-card.fail { background:#FEF0EE; border:2px solid var(--red); }
+    .result-icon  { font-size:52px; margin-bottom:12px; }
+    .result-title { font-size:26px; font-weight:800; margin-bottom:6px; }
+    .result-card.pass .result-title { color:var(--green); }
+    .result-card.fail .result-title { color:var(--red); }
+    .result-score { font-size:48px; font-weight:800; margin:12px 0 4px; }
+    .result-card.pass .result-score { color:var(--green); }
+    .result-card.fail .result-score { color:var(--red); }
+    .result-sub { font-size:15px; color:var(--muted); }
+    .cert-block { background:white; border:2px solid var(--navy); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+    .cert-block h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .cert-table { width:100%; border-collapse:collapse; }
+    .cert-table td { padding:9px 0; border-bottom:1px solid var(--border); font-size:15px; }
+    .cert-table td:first-child { color:var(--muted); font-size:13px; width:40%; }
+    .cert-table td:last-child  { font-weight:700; }
+    .cert-company { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+    .action-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .btn { flex:1; min-width:140px; padding:13px 18px; border-radius:8px; font-size:14px; font-weight:700; border:none; cursor:pointer; text-align:center; text-decoration:none; display:inline-block; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.88; }
+    .btn-primary { background:var(--navy);   color:white; }
+    .btn-orange  { background:var(--orange); color:white; }
+    .btn-green   { background:var(--green);  color:white; }
+    .btn-outline { background:white; color:var(--navy); border:2px solid var(--navy); }
+    .retake-btn  { width:100%; padding:13px; font-size:16px; font-weight:700; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer; margin-top:8px; }
+    @media print { header,.read-progress-wrap,.module-banner,.content-card,#quiz-section,.action-row,.retake-btn,footer { display:none !important; } body { background:white; } #results-section { display:block !important; } }
+    footer { background:var(--navy); color:#4A6785; text-align:center; font-size:12px; padding:20px; margin-top:40px; }
+    @media(max-width:600px) { .role-grid { grid-template-columns:1fr; } main { padding:20px 12px 60px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← All Modules</a>
+    <span class="header-title">Electrical Safety Program</span>
+    <span class="header-std">SHP-BBB-007</span>
+  </div>
+  <div class="read-progress-wrap">
+    <span class="read-progress-label">Reading progress</span>
+    <div class="read-progress-bg"><div class="read-progress-fill" id="read-fill"></div></div>
+    <span class="scroll-pct" id="scroll-pct">0%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="module-banner">
+    <div class="module-eyebrow">Module 007 · SHP-BBB-007</div>
+    <h1>Electrical Safety Program</h1>
+    <div class="module-meta">
+      <span>📅 Rev. 10/31/2025</span>
+      <span>⚖ OSHA 29 CFR 1910.332–333 · NFPA 70E</span>
+      <span>⏱ ~18 min read</span>
+      <span>📝 10-question quiz</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — PURPOSE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">⚡</span><span class="section-title">1. Purpose</span></div>
+    <div class="section-body">
+      <p>This program is adopted to <strong>prevent electrically related injuries</strong> to personnel from direct or indirect electrical contact, and to prevent damage to company property and client facilities when work is performed near or on energized equipment or circuits.</p>
+      <div class="callout callout-red">
+        <strong>Authorized Personnel Only</strong>
+        Only employees who are <strong>qualified, knowledgeable about this program, and authorized by the company</strong> may repair or replace electrical components or electrically powered tools or equipment. All others are prohibited.
+      </div>
+      <p>Electricity has long been recognized as a serious workplace hazard, exposing employees to electric shock, electrocution, fires, and explosions. Safe work practices regarding electricity shall be followed by all employees as they relate to their specific job assignments.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — RESPONSIBILITIES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">👷</span><span class="section-title">2. Responsibilities</span></div>
+    <div class="section-body">
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-title">Management Must:</div>
+          <div class="role-desc">Provide training for all qualified and unqualified employees. Conduct inspections to identify electrical safety deficiencies. Guard and correct all electrical deficiencies promptly. Ensure all new electrical installations meet codes and regulations.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Employees Must:</div>
+          <div class="role-desc">Report electrical deficiencies immediately. <strong>Do NOT work on electrical equipment unless authorized and trained.</strong> Thoroughly inspect all electrical equipment before use. Know how to distinguish exposed live parts from other equipment parts.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — TRAINING -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🎓</span><span class="section-title">3. Training — Qualified vs. Unqualified Persons</span></div>
+    <div class="section-body">
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-title">Unqualified Persons</div>
+          <div class="role-desc">Must be trained in any electrically related safety practices necessary for their safety. They may NOT work on or near exposed energized parts. Must maintain specific clearance distances from all live electrical equipment.</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Qualified Persons</div>
+          <div class="role-desc">Must be trained in: distinguishing live parts, determining nominal voltage of exposed parts, and clearance distances per 1910.333(c). Must complete ALL training requirements in this program. Must be capable of safely working on energized circuits and familiar with PPE, insulating materials, and insulated tools.</div>
+        </div>
+      </div>
+      <div class="callout callout-blue">
+        <strong>Who Faces Higher Electrical Risk?</strong>
+        Occupations with higher-than-normal electrical accident risk include: blue collar supervisors, electricians, industrial machine operators, mechanics and repairers, painters, riggers and roustabouts, stationary engineers, and welders.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4-5 — DE-ENERGIZED / ENERGIZED -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🔌</span><span class="section-title">4–5. De-Energized &amp; Energized Parts</span></div>
+    <div class="section-body">
+      <p>If an employee is exposed to live energized parts, those parts <strong>shall be de-energized before work begins</strong> — with two exceptions:</p>
+      <ul class="resp-list">
+        <li>De-energizing would create additional or increased hazards (e.g., deactivating emergency alarm systems or hazardous location ventilation).</li>
+        <li>De-energizing is not feasible due to equipment design or operational limitations (e.g., testing circuits that can only be tested while energized).</li>
+      </ul>
+      <div class="key-fact">
+        <div class="fact-num">&lt; 50V</div>
+        <div class="fact-lbl">Live parts operating at <strong>less than 50 volts to ground</strong> need not be de-energized if there will be no increased exposure to electrical burns or explosion due to electric arcs.</div>
+      </div>
+      <div class="callout callout-red">
+        <strong>De-energized Does NOT Mean Safe</strong>
+        Conductors and parts of electric equipment that have been de-energized but have NOT been locked out or tagged shall be treated as energized parts and all energized-part precautions apply.
+      </div>
+      <p>If live parts cannot be de-energized, other safety-related work practices must be used to protect employees from direct contact with any part of their body or indirect contact through conductive objects.</p>
+    </div>
+  </div>
+
+  <!-- SECTIONS 7-11 — LOCKOUT/TAGOUT -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🔒</span><span class="section-title">7–11. Lockout &amp; Tagout Procedures</span></div>
+    <div class="section-body">
+      <div class="callout callout-red">
+        <strong>Both Lock AND Tag Required</strong>
+        A lock AND a tag shall be placed on each disconnecting means used to de-energize circuits and equipment. <strong>Lockout-only or tagout-only is NOT permitted</strong> as a safe work procedure, except in specific documented circumstances when a lock cannot be applied.
+      </div>
+
+      <p><strong>When applying locks and tags:</strong></p>
+      <ul class="resp-list">
+        <li>Locks must be attached to prevent any person from operating the disconnecting means without undue force or tools.</li>
+        <li>Each tag must contain a statement <strong>prohibiting unauthorized operation</strong> of the disconnecting means and removal of the tag.</li>
+        <li>Control circuit devices such as push buttons, selector switches, and interlocks <strong>may NOT be used as the sole means</strong> of de-energizing circuits or equipment.</li>
+        <li>Stored electric energy that could endanger personnel must be released. Capacitors must be discharged.</li>
+      </ul>
+
+      <p><strong>Verifying the de-energized condition:</strong></p>
+      <ul class="resp-list">
+        <li>A qualified person must operate the equipment controls or otherwise verify it cannot be restarted.</li>
+        <li>A qualified person must use test equipment to verify circuit elements are de-energized.</li>
+        <li>Testing must also check for inadvertently induced voltage or voltage back-feed.</li>
+        <li>If the circuit is more than 600 volts nominal, test equipment must be checked for proper operation immediately after the test.</li>
+      </ul>
+
+      <div class="callout callout-orange">
+        <strong>Re-Energizing — Lock/Tag Removal</strong>
+        Each lock and tag must be removed by the <strong>employee who applied it</strong>, or under their direct supervision. If the employee is absent, a qualified person designated for this task may remove it — but only if the on-duty supervisor confirms the employee is unavailable AND ensures the employee is notified the lock/tag was removed before they return to work.
+      </div>
+
+      <p>Before re-energizing, a qualified person must visually inspect and test to confirm all tools, jumpers, shorts, and grounds have been removed. All employees must be warned to stay clear, and a visual determination must be made that all employees are clear.</p>
+    </div>
+  </div>
+
+  <!-- SECTIONS 12-14 — WORKING NEAR OVERHEAD LINES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🏗</span><span class="section-title">12–14. Working Near Overhead Lines &amp; Clearance Distances</span></div>
+    <div class="section-body">
+      <p>If work is to be performed near overhead lines, the lines shall be <strong>de-energized and grounded</strong>, or other protective measures provided, before work starts. Only qualified persons may work on energized circuit parts that cannot be de-energized.</p>
+
+      <div class="key-fact">
+        <div class="fact-num">10 ft</div>
+        <div class="fact-lbl">Minimum clearance for <strong>unqualified persons</strong> from unguarded energized overhead lines rated at <strong>50 kV or below</strong>. Add 4 inches for every 10 kV over 50 kV.</div>
+      </div>
+
+      <p><strong>Unqualified persons are specifically prohibited</strong> from performing work on or near exposed energized parts. Unqualified persons working on the ground may not bring any conductive object closer to unguarded energized overhead lines than the 10-foot minimum.</p>
+
+      <div class="section-divider"></div>
+      <p><strong>Approach Distances for Qualified Employees (AC):</strong></p>
+      <table class="dist-table">
+        <thead><tr><th>Voltage Range (Phase to Phase)</th><th>Minimum Approach Distance</th></tr></thead>
+        <tbody>
+          <tr><td>300V and less</td><td>Avoid Contact</td></tr>
+          <tr><td>Over 300V, not over 750V</td><td>1 ft. 0 in. (30.5 cm)</td></tr>
+          <tr><td>Over 750V, not over 2kV</td><td>1 ft. 6 in. (46 cm)</td></tr>
+          <tr><td>Over 2kV, not over 15kV</td><td>2 ft. 0 in. (61 cm)</td></tr>
+          <tr><td>Over 15kV, not over 37kV</td><td>3 ft. 0 in. (91 cm)</td></tr>
+          <tr><td>Over 37kV, not over 87.5kV</td><td>3 ft. 6 in. (107 cm)</td></tr>
+          <tr><td>Over 87.5kV, not over 121kV</td><td>4 ft. 0 in. (122 cm)</td></tr>
+          <tr><td>Over 121kV, not over 140kV</td><td>4 ft. 6 in. (137 cm)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 15 — VEHICLES & MECHANICAL EQUIPMENT -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🚛</span><span class="section-title">15. Vehicular &amp; Mechanical Equipment Near Power Lines</span></div>
+    <div class="section-body">
+      <div class="key-fact">
+        <div class="fact-num">10 ft</div>
+        <div class="fact-lbl">Any vehicle or mechanical equipment with elevated parts must maintain a <strong>10-foot clearance</strong> from energized overhead lines. For voltages over 50 kV, add 4 inches for every 10 kV over that voltage.</div>
+      </div>
+      <ul class="resp-list">
+        <li>Vehicle in transit with structure lowered: clearance may be reduced to <strong>4 feet</strong> (plus 4 in. per 10 kV over 50 kV).</li>
+        <li>If insulating barriers are installed and rated for the voltage: clearance may be reduced to within the designed working dimensions of the barrier.</li>
+        <li>Employees standing on the ground may NOT contact the vehicle or its attachments unless using protective equipment rated for the voltage or the equipment is positioned so no un-insulated part can come closer than permitted.</li>
+        <li>If equipment near overhead lines is intentionally grounded, employees must NOT stand at the grounding location when there is a possibility of overhead line contact.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTIONS 16-22 — ADDITIONAL RULES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📋</span><span class="section-title">16–22. Additional Electrical Safety Rules</span></div>
+    <div class="section-body">
+
+      <p style="font-weight:700;color:var(--orange);margin-bottom:6px;">Illumination (Section 16)</p>
+      <ul class="no-list">
+        <li>Employees may NOT enter spaces with exposed energized parts unless illumination is sufficient to perform work safely.</li>
+        <li>Employees may NOT perform tasks near exposed energized parts where lack of lighting precludes observation of the work.</li>
+        <li>Employees may NOT reach blindly into areas that may contain energized parts — ever.</li>
+      </ul>
+
+      <div class="section-divider"></div>
+      <p style="font-weight:700;color:var(--orange);margin-bottom:6px;">Portable Ladders (Section 19)</p>
+      <div class="callout callout-orange">
+        <strong>Nonconductive Side Rails Required</strong>
+        Portable ladders must have <strong>nonconductive side rails</strong> if used where the employee or ladder could contact exposed energized parts.
+      </div>
+
+      <div class="section-divider"></div>
+      <p style="font-weight:700;color:var(--orange);margin-bottom:6px;">Conductive Apparel (Section 20)</p>
+      <ul class="no-list">
+        <li>Conductive articles of jewelry and clothing — watches, bracelets, rings, key chains, necklaces, metalized aprons, metal headgear — <strong>may NOT be worn</strong> near exposed energized parts.</li>
+      </ul>
+      <p style="font-size:14px;color:var(--muted);margin-top:6px;">Exception: Such articles may be worn if they are rendered nonconductive by covering, wrapping, or other insulating means.</p>
+
+      <div class="section-divider"></div>
+      <p style="font-weight:700;color:var(--orange);margin-bottom:6px;">Confined Workspaces (Section 17)</p>
+      <ul class="resp-list">
+        <li>When working in a confined or enclosed space with exposed energized parts, protective shields, barriers, or insulating materials must be provided and used to avoid inadvertent contact.</li>
+        <li>Doors and hinged panels must be secured to prevent them swinging into an employee and causing contact with energized parts.</li>
+      </ul>
+
+      <div class="section-divider"></div>
+      <p style="font-weight:700;color:var(--orange);margin-bottom:6px;">Interlocks (Section 22)</p>
+      <div class="callout callout-red">
+        <strong>Defeating Safety Interlocks</strong>
+        Only a <strong>qualified person following established safe work procedures</strong> may defeat an electrical safety interlock — and only <strong>temporarily</strong> while working on the equipment. The interlock system must be returned to its operable condition immediately when work is completed.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 Knowledge Check — Module 007</h2>
+      <p>Answer all 10 questions. You need 70% (7/10) or higher to pass.</p>
+    </div>
+    <div class="quiz-body">
+
+      <div class="name-block">
+        <label for="employee-name">Your Full Name (required for records)</label>
+        <input type="text" id="employee-name" placeholder="First Last" autocomplete="name">
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block">
+        <div class="question-num">Question 1 of 10</div>
+        <div class="question-text">Who is permitted to repair or replace electrical components or electrically powered tools at BBB Tank Services?</div>
+        <div class="options" id="q1">
+          <label class="option-label"><input type="radio" name="q1" value="a"> Any employee who has completed general safety orientation.</label>
+          <label class="option-label"><input type="radio" name="q1" value="b"> Only employees who are qualified, knowledgeable about this program, and specifically authorized by the company.</label>
+          <label class="option-label"><input type="radio" name="q1" value="c"> Any site supervisor or foreman, regardless of electrical training.</label>
+          <label class="option-label"><input type="radio" name="q1" value="d"> Any employee with more than 2 years of field experience.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q2 -->
+      <div class="question-block">
+        <div class="question-num">Question 2 of 10</div>
+        <div class="question-text">Live parts operating at less than what voltage need not be de-energized (assuming no increased exposure to burns or arcing hazards)?</div>
+        <div class="options" id="q2">
+          <label class="option-label"><input type="radio" name="q2" value="a"> Less than 12 volts to ground.</label>
+          <label class="option-label"><input type="radio" name="q2" value="b"> Less than 120 volts to ground.</label>
+          <label class="option-label"><input type="radio" name="q2" value="c"> Less than 50 volts to ground.</label>
+          <label class="option-label"><input type="radio" name="q2" value="d"> Less than 240 volts to ground.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q3 -->
+      <div class="question-block">
+        <div class="question-num">Question 3 of 10</div>
+        <div class="question-text">May push buttons, selector switches, or interlocks be used as the SOLE means of de-energizing circuits before electrical work?</div>
+        <div class="options" id="q3">
+          <label class="option-label"><input type="radio" name="q3" value="a"> Yes, they are acceptable sole means of de-energizing for circuits under 120V.</label>
+          <label class="option-label"><input type="radio" name="q3" value="b"> Yes, but only when a qualified person has verified the de-energized state.</label>
+          <label class="option-label"><input type="radio" name="q3" value="c"> No — control circuit devices may NOT be used as the sole means of de-energizing circuits or equipment.</label>
+          <label class="option-label"><input type="radio" name="q3" value="d"> Yes, interlocks are always an acceptable substitute for lockout/tagout.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q4 -->
+      <div class="question-block">
+        <div class="question-num">Question 4 of 10</div>
+        <div class="question-text">When working on de-energized circuits, what must be applied to each disconnecting means?</div>
+        <div class="options" id="q4">
+          <label class="option-label"><input type="radio" name="q4" value="a"> A tag only is sufficient for circuits under 600V.</label>
+          <label class="option-label"><input type="radio" name="q4" value="b"> A lock only — tags are optional.</label>
+          <label class="option-label"><input type="radio" name="q4" value="c"> Both a lock AND a tag — lockout-only or tagout-only is not permitted.</label>
+          <label class="option-label"><input type="radio" name="q4" value="d"> A verbal notification to the safety director is sufficient.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q5 -->
+      <div class="question-block">
+        <div class="question-num">Question 5 of 10</div>
+        <div class="question-text">Who must remove a lockout/tagout lock and tag when the work is complete?</div>
+        <div class="options" id="q5">
+          <label class="option-label"><input type="radio" name="q5" value="a"> The site supervisor, who is responsible for all lockout/tagout operations.</label>
+          <label class="option-label"><input type="radio" name="q5" value="b"> The employee who applied it, or under their direct supervision. If absent, a designated qualified person may remove it under specific conditions.</label>
+          <label class="option-label"><input type="radio" name="q5" value="c"> Any qualified person on the crew, as a team effort.</label>
+          <label class="option-label"><input type="radio" name="q5" value="d"> The Safety Director only, to maintain the chain of custody.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q6 -->
+      <div class="question-block">
+        <div class="question-num">Question 6 of 10</div>
+        <div class="question-text">What is the minimum clearance distance an unqualified person must maintain from unguarded energized overhead lines rated at 50 kV or below?</div>
+        <div class="options" id="q6">
+          <label class="option-label"><input type="radio" name="q6" value="a"> 3 feet.</label>
+          <label class="option-label"><input type="radio" name="q6" value="b"> 6 feet.</label>
+          <label class="option-label"><input type="radio" name="q6" value="c"> 10 feet.</label>
+          <label class="option-label"><input type="radio" name="q6" value="d"> 25 feet.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q7 -->
+      <div class="question-block">
+        <div class="question-num">Question 7 of 10</div>
+        <div class="question-text">What type of side rails must portable ladders have if they are used where the employee or ladder could contact exposed energized parts?</div>
+        <div class="options" id="q7">
+          <label class="option-label"><input type="radio" name="q7" value="a"> Grounded metal side rails for electrical discharge.</label>
+          <label class="option-label"><input type="radio" name="q7" value="b"> Nonconductive side rails.</label>
+          <label class="option-label"><input type="radio" name="q7" value="c"> Rubber-coated aluminum side rails rated for 600V.</label>
+          <label class="option-label"><input type="radio" name="q7" value="d"> Standard aluminum side rails are acceptable for voltages under 240V.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q8 -->
+      <div class="question-block">
+        <div class="question-num">Question 8 of 10</div>
+        <div class="question-text">May an employee wear a watch, bracelet, or ring when working near exposed energized electrical parts?</div>
+        <div class="options" id="q8">
+          <label class="option-label"><input type="radio" name="q8" value="a"> Yes, as long as the jewelry is not touching any live parts.</label>
+          <label class="option-label"><input type="radio" name="q8" value="b"> Yes, jewelry is permitted as long as the voltage is below 120V.</label>
+          <label class="option-label"><input type="radio" name="q8" value="c"> No — conductive jewelry may not be worn near energized parts, unless it has been rendered nonconductive by covering or wrapping.</label>
+          <label class="option-label"><input type="radio" name="q8" value="d"> Yes — personal items are not regulated by the electrical safety program.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q9 -->
+      <div class="question-block">
+        <div class="question-num">Question 9 of 10</div>
+        <div class="question-text">May an employee reach blindly into an area that may contain energized electrical parts?</div>
+        <div class="options" id="q9">
+          <label class="option-label"><input type="radio" name="q9" value="a"> Yes, if they are wearing insulated gloves rated for the voltage.</label>
+          <label class="option-label"><input type="radio" name="q9" value="b"> Yes, if a supervisor has visually inspected the area within the last hour.</label>
+          <label class="option-label"><input type="radio" name="q9" value="c"> No — employees may never reach blindly into areas that may contain energized parts.</label>
+          <label class="option-label"><input type="radio" name="q9" value="d"> Yes, as long as the area has been de-energized at the main panel.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q10 -->
+      <div class="question-block">
+        <div class="question-num">Question 10 of 10</div>
+        <div class="question-text">Who may defeat an electrical safety interlock, and for how long?</div>
+        <div class="options" id="q10">
+          <label class="option-label"><input type="radio" name="q10" value="a"> Any employee may defeat an interlock if it is preventing them from completing a time-sensitive task.</label>
+          <label class="option-label"><input type="radio" name="q10" value="b"> Only a qualified person following established safe work procedures — and only temporarily while working on the equipment. The interlock must be restored when work is complete.</label>
+          <label class="option-label"><input type="radio" name="q10" value="c"> The site supervisor may permanently disable interlocks that interfere with production.</label>
+          <label class="option-label"><input type="radio" name="q10" value="d"> Interlocks may never be defeated under any circumstances.</label>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div id="result-card-pass" class="result-card pass" style="display:none">
+      <div class="result-icon">🏆</div><div class="result-title">Training Complete — PASSED!</div>
+      <div class="result-score" id="pass-pct"></div><div class="result-sub" id="pass-sub"></div>
+    </div>
+    <div id="result-card-fail" class="result-card fail" style="display:none">
+      <div class="result-icon">⚠️</div><div class="result-title">Quiz Not Passed</div>
+      <div class="result-score" id="fail-pct"></div><div class="result-sub" id="fail-sub"></div>
+    </div>
+    <div id="firebase-sync-status" style="display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;border:2px solid var(--border);background:#F7F9FC;font-size:14px;font-weight:600;margin-bottom:14px;"></div>
+    <div class="cert-block" id="cert-block" style="display:none">
+      <h3>📄 Training Completion Record</h3>
+      <table class="cert-table">
+        <tr><td>Employee Name</td><td id="cert-name">—</td></tr>
+        <tr><td>Module</td><td>007 — Electrical Safety Program</td></tr>
+        <tr><td>Standard #</td><td>SHP-BBB-007</td></tr>
+        <tr><td>Score</td><td id="cert-score">—</td></tr>
+        <tr><td>Result</td><td id="cert-result">—</td></tr>
+        <tr><td>Date Completed</td><td id="cert-date">—</td></tr>
+        <tr><td>Company</td><td>BBB Tank Services, LLC</td></tr>
+      </table>
+      <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
+    </div>
+    <div class="action-row" id="pass-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
+      <button class="btn btn-green"   onclick="downloadCSV()">⬇ Download CSV</button>
+      <a      class="btn btn-orange"  href="director.html">📊 Director Dashboard</a>
+      <a      class="btn btn-outline" href="index.html">← Back to Modules</a>
+    </div>
+    <button class="retake-btn" id="retake-btn" style="display:none" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+  </div>
+
+</main>
+<footer>BBB Tank Services, LLC · Safety Training Portal · SHP-BBB-007 · Rev. 10/31/2025</footer>
+
+<script>
+  document.addEventListener('scroll',()=>{const el=document.documentElement,h=el.scrollHeight-el.clientHeight,p=h>0?Math.round((el.scrollTop/h)*100):0;document.getElementById('read-fill').style.width=p+'%';document.getElementById('scroll-pct').textContent=p+'%';},{passive:true});
+  const ANSWERS={q1:'b',q2:'c',q3:'c',q4:'c',q5:'b',q6:'c',q7:'b',q8:'c',q9:'c',q10:'b'};
+  const STORAGE_KEY='bbb_training_records',FB_KEY='bbb_firebase_config';
+
+  function submitQuiz(){
+    const name=document.getElementById('employee-name').value.trim();
+    if(!name){document.getElementById('employee-name').classList.add('error');document.getElementById('employee-name').focus();alert('Please enter your full name before submitting.');return;}
+    for(let i=1;i<=10;i++){if(!document.querySelector(`input[name="q${i}"]:checked`)){alert(`Please answer Question ${i} before submitting.`);document.getElementById(`q${i}`).scrollIntoView({behavior:'smooth',block:'center'});return;}}
+    let correct=0;
+    for(const[q,ans]of Object.entries(ANSWERS)){const sel=document.querySelector(`input[name="${q}"]:checked`),val=sel?sel.value:null;document.querySelectorAll(`#${q} .option-label`).forEach(l=>{const r=l.querySelector('input');if(r.value===ans)l.classList.add('correct-ans');else if(r.value===val&&val!==ans)l.classList.add('wrong-ans');r.disabled=true;});if(val===ans)correct++;}
+    const pct=Math.round((correct/10)*100),passed=pct>=70;
+    const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),isoDate=new Date().toISOString().slice(0,10);
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('results-section').style.display='block';
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+    document.getElementById('cert-name').textContent=name;
+    document.getElementById('cert-score').textContent=correct+'/10 ('+pct+'%)';
+    document.getElementById('cert-result').textContent=passed?'✅ PASSED':'❌ DID NOT PASS';
+    document.getElementById('cert-date').textContent=dateStr;
+    document.getElementById('cert-block').style.display='block';
+    if(passed){document.getElementById('result-card-pass').style.display='block';document.getElementById('pass-pct').textContent=pct+'%';document.getElementById('pass-sub').textContent=correct+' out of 10 correct. Record saved.';document.getElementById('pass-actions').style.display='flex';document.getElementById('cert-result').style.color='#1D8348';}
+    else{document.getElementById('result-card-fail').style.display='block';document.getElementById('fail-pct').textContent=pct+'%';document.getElementById('fail-sub').textContent=correct+' out of 10 correct. You need 70% to pass. Review the material and try again.';document.getElementById('retake-btn').style.display='block';document.getElementById('cert-result').style.color='#C0392B';}
+    const record={id:Date.now().toString(),module:'007',moduleName:'Electrical Safety Program',standardNum:'SHP-BBB-007',employeeName:name,score:correct,totalQ:10,percentage:pct,passed,dateISO:isoDate,dateDisplay:dateStr,completedAt:new Date().toISOString()};
+    try{const r=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');r.push(record);localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}
+    syncToFirebase(record);
+  }
+
+  function syncToFirebase(record){
+    const raw=localStorage.getItem(FB_KEY);if(!raw)return;
+    const syncEl=document.getElementById('firebase-sync-status');
+    if(syncEl){syncEl.style.display='flex';syncEl.innerHTML='<span>⏳</span>&nbsp; Sending to Safety Director...';}
+    loadFirebaseSDK().then(()=>{const cfg=JSON.parse(raw),app=firebase.apps.length?firebase.apps[0]:firebase.initializeApp(cfg);return firebase.firestore(app).collection('training_records').add(record);})
+    .then(()=>{if(syncEl){syncEl.innerHTML='✅ Record sent to Safety Director\'s dashboard.';syncEl.style.background='#EDFAF3';syncEl.style.borderColor='#1D8348';syncEl.style.color='#1D8348';}})
+    .catch(()=>{if(syncEl){syncEl.innerHTML='⚠️ Could not sync to Safety Director. Download your CSV as backup.';syncEl.style.background='#FFF8F4';syncEl.style.borderColor='#E8611A';syncEl.style.color='#C9510E';}});
+  }
+
+  function loadFirebaseSDK(){
+    if(window.firebase)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';s2.onload=resolve;s2.onerror=reject;document.head.appendChild(s2);};
+      s1.onerror=reject;document.head.appendChild(s1);
+    });
+  }
+
+  function downloadCSV(){
+    try{const records=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),last=records.filter(r=>r.module==='007').pop();if(!last)return;
+    const csv='Employee Name,Module,Module Name,Standard #,Score,Percentage,Passed,Date Completed\n'+`"${last.employeeName}",${last.module},"${last.moduleName}",${last.standardNum},${last.score}/10,${last.percentage}%,${last.passed?'YES':'NO'},"${last.dateDisplay}"`;
+    const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`BBB_Training_${last.employeeName.replace(/\s+/g,'_')}_Module007_${last.dateISO}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+    catch(e){alert('Could not download CSV. Please print the record instead.');}
+  }
+
+  function retakeQuiz(){
+    for(let i=1;i<=10;i++){document.querySelectorAll(`#q${i} .option-label`).forEach(l=>{l.classList.remove('correct-ans','wrong-ans');const r=l.querySelector('input');r.checked=false;r.disabled=false;});}
+    document.getElementById('employee-name').value='';document.getElementById('submit-btn').disabled=false;
+    ['results-section','result-card-pass','result-card-fail','cert-block','pass-actions','retake-btn'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('quiz-section').style.display='block';document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 011 — First Aid, CPR &amp; Emergency Medical Response | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0D1B2A; --navy2:#1A2E4A; --orange:#E8611A; --orange2:#C9510E;
+      --bg:#F0F4F8; --card:#FFFFFF; --text:#1C2B3A; --muted:#6B7E8E;
+      --border:#D3DCE6; --green:#1D8348; --red:#C0392B; --radius:10px;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+    header { background:var(--navy); color:white; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+    .header-inner { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:3px solid var(--orange); }
+    .back-link { color:#8FAEC8; text-decoration:none; font-size:14px; white-space:nowrap; }
+    .back-link:hover { color:white; }
+    .header-title { font-size:15px; font-weight:700; color:white; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-std { font-size:12px; color:var(--orange); font-weight:700; white-space:nowrap; }
+    .read-progress-wrap { background:var(--navy2); padding:8px 20px; display:flex; align-items:center; gap:12px; }
+    .read-progress-label { font-size:12px; color:#8FAEC8; white-space:nowrap; }
+    .read-progress-bg { flex:1; background:rgba(255,255,255,0.15); border-radius:8px; height:6px; }
+    .read-progress-fill { background:var(--orange); height:100%; border-radius:8px; width:0; transition:width 0.3s; }
+    .scroll-pct { font-size:12px; color:#8FAEC8; min-width:36px; text-align:right; }
+    main { max-width:820px; margin:0 auto; padding:28px 16px 80px; }
+    .module-banner { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:white; border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+    .module-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--orange); font-weight:700; margin-bottom:8px; }
+    .module-banner h1 { font-size:clamp(20px,4vw,28px); font-weight:800; margin-bottom:10px; }
+    .module-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#8FAEC8; }
+    .content-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+    .section-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:16px; font-weight:700; }
+    .section-body { padding:20px 22px; }
+    .section-body p { margin-bottom:14px; }
+    .section-body p:last-child { margin-bottom:0; }
+    .callout { border-radius:8px; padding:14px 16px; margin:14px 0; font-size:15px; }
+    .callout-orange { background:#FFF4EE; border-left:4px solid var(--orange); }
+    .callout-blue   { background:#EEF4FF; border-left:4px solid #2E6AE8; }
+    .callout-green  { background:#EDFAF3; border-left:4px solid var(--green); }
+    .callout-red    { background:#FEF0EE; border-left:4px solid var(--red); }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; opacity:0.75; }
+    .resp-list { list-style:none; padding:0; margin:10px 0; }
+    .resp-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; }
+    .resp-list li::before { content:'✓'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+    .key-fact { display:flex; align-items:center; gap:14px; background:var(--navy); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; }
+    .key-fact .fact-num { font-size:24px; font-weight:800; color:var(--orange); white-space:nowrap; }
+    .key-fact .fact-lbl { font-size:14px; color:#8FAEC8; line-height:1.4; }
+    .section-divider { height:1px; background:var(--border); margin:14px 0; }
+    /* PPE table */
+    .ppe-table { width:100%; border-collapse:collapse; font-size:14px; margin:14px 0; border-radius:8px; overflow:hidden; }
+    .ppe-table th { background:var(--navy); color:white; padding:10px 14px; text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+    .ppe-table td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.5; }
+    .ppe-table tr:last-child td { border-bottom:none; }
+    .ppe-table tr:nth-child(even) td { background:#F7F9FC; }
+    /* Heat illness severity */
+    .heat-grid { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+    .heat-row { display:flex; gap:14px; padding:12px 16px; border-radius:8px; border-left:4px solid; align-items:flex-start; }
+    .heat-row.mild   { background:#FFF8F4; border-color:#FDBA74; }
+    .heat-row.mod    { background:#FEF9C3; border-color:#CA8A04; }
+    .heat-row.severe { background:#FEE2E2; border-color:var(--red); }
+    .heat-row.critical{ background:#1C2B3A; color:white; border-color:var(--orange); }
+    .heat-label { font-size:13px; font-weight:800; min-width:110px; }
+    .heat-row.mild    .heat-label { color:var(--orange2); }
+    .heat-row.mod     .heat-label { color:#854D0E; }
+    .heat-row.severe  .heat-label { color:var(--red); }
+    .heat-row.critical .heat-label { color:var(--orange); }
+    .heat-desc { font-size:14px; line-height:1.5; }
+    .heat-row.critical .heat-desc { color:#8FAEC8; }
+    /* quiz */
+    #quiz-section { background:var(--card); border:2px solid var(--orange); border-radius:var(--radius); overflow:hidden; margin-top:32px; }
+    .quiz-header { background:var(--orange); color:white; padding:20px 24px; }
+    .quiz-header h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+    .quiz-header p  { font-size:14px; opacity:0.9; }
+    .quiz-body { padding:24px; }
+    .name-block { margin-bottom:28px; }
+    .name-block label { display:block; font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .name-block input { width:100%; padding:12px 16px; font-size:16px; border:2px solid var(--border); border-radius:8px; background:#F7F9FC; color:var(--text); transition:border-color 0.2s; }
+    .name-block input:focus { outline:none; border-color:var(--orange); background:white; }
+    .name-block input.error { border-color:var(--red); }
+    .question-block { margin-bottom:28px; }
+    .question-num  { font-size:12px; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .question-text { font-size:16px; font-weight:600; margin-bottom:14px; line-height:1.5; }
+    .options { display:flex; flex-direction:column; gap:8px; }
+    .option-label { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:15px; line-height:1.4; }
+    .option-label:hover { border-color:var(--orange); background:#FFF8F4; }
+    .option-label input[type="radio"] { margin-top:3px; accent-color:var(--orange); flex-shrink:0; width:18px; height:18px; }
+    .option-label.correct-ans { border-color:var(--green); background:#EDFAF3; }
+    .option-label.wrong-ans   { border-color:var(--red);   background:#FEF0EE; }
+    .question-divider { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+    .submit-wrap { text-align:center; margin-top:12px; }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:15px 48px; font-size:17px; font-weight:700; border-radius:8px; cursor:pointer; width:100%; max-width:360px; transition:background 0.2s; }
+    .submit-btn:hover { background:var(--orange2); }
+    .submit-btn:disabled { background:var(--muted); cursor:not-allowed; }
+    #results-section { display:none; }
+    .result-card { border-radius:var(--radius); padding:28px; margin-bottom:20px; text-align:center; }
+    .result-card.pass { background:#EDFAF3; border:2px solid var(--green); }
+    .result-card.fail { background:#FEF0EE; border:2px solid var(--red); }
+    .result-icon  { font-size:52px; margin-bottom:12px; }
+    .result-title { font-size:26px; font-weight:800; margin-bottom:6px; }
+    .result-card.pass .result-title { color:var(--green); }
+    .result-card.fail .result-title { color:var(--red); }
+    .result-score { font-size:48px; font-weight:800; margin:12px 0 4px; }
+    .result-card.pass .result-score { color:var(--green); }
+    .result-card.fail .result-score { color:var(--red); }
+    .result-sub { font-size:15px; color:var(--muted); }
+    .cert-block { background:white; border:2px solid var(--navy); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+    .cert-block h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .cert-table { width:100%; border-collapse:collapse; }
+    .cert-table td { padding:9px 0; border-bottom:1px solid var(--border); font-size:15px; }
+    .cert-table td:first-child { color:var(--muted); font-size:13px; width:40%; }
+    .cert-table td:last-child  { font-weight:700; }
+    .cert-company { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+    .action-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .btn { flex:1; min-width:140px; padding:13px 18px; border-radius:8px; font-size:14px; font-weight:700; border:none; cursor:pointer; text-align:center; text-decoration:none; display:inline-block; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.88; }
+    .btn-primary { background:var(--navy);   color:white; }
+    .btn-orange  { background:var(--orange); color:white; }
+    .btn-green   { background:var(--green);  color:white; }
+    .btn-outline { background:white; color:var(--navy); border:2px solid var(--navy); }
+    .retake-btn  { width:100%; padding:13px; font-size:16px; font-weight:700; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer; margin-top:8px; }
+    @media print { header,.read-progress-wrap,.module-banner,.content-card,#quiz-section,.action-row,.retake-btn,footer { display:none !important; } body { background:white; } #results-section { display:block !important; } }
+    footer { background:var(--navy); color:#4A6785; text-align:center; font-size:12px; padding:20px; margin-top:40px; }
+    @media(max-width:600px) { main { padding:20px 12px 60px; } .heat-row { flex-direction:column; gap:4px; } .heat-label { min-width:auto; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← All Modules</a>
+    <span class="header-title">First Aid, CPR &amp; Emergency Medical Response</span>
+    <span class="header-std">SHP-BBB-011</span>
+  </div>
+  <div class="read-progress-wrap">
+    <span class="read-progress-label">Reading progress</span>
+    <div class="read-progress-bg"><div class="read-progress-fill" id="read-fill"></div></div>
+    <span class="scroll-pct" id="scroll-pct">0%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="module-banner">
+    <div class="module-eyebrow">Module 011 · SHP-BBB-011</div>
+    <h1>First Aid, CPR &amp; Emergency Medical Response</h1>
+    <div class="module-meta">
+      <span>📅 Rev. 10/31/2025</span>
+      <span>⚖ OSHA 29 CFR 1926.50</span>
+      <span>⏱ ~15 min read</span>
+      <span>📝 10-question quiz</span>
+    </div>
+  </div>
+
+  <!-- SECTION 2-3 — GENERAL REQUIREMENTS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🏥</span><span class="section-title">2–3. General Requirements &amp; Emergency Response</span></div>
+    <div class="section-body">
+      <ul class="resp-list">
+        <li>The Company ensures the availability of medical personnel for advice on occupational health matters.</li>
+        <li>Provisions for prompt medical attention in case of severe injury must be made <strong>before</strong> a project commences.</li>
+        <li>Where an infirmary, clinic, or hospital is not reasonably accessible in terms of time and distance, a person with a valid <strong>first aid certificate</strong> (U.S. Bureau of Mines, American Red Cross, or equivalent) must be available at the worksite.</li>
+        <li>The <strong>Site Supervisor</strong> is responsible for confirming availability of emergency medical services before work begins, and ensuring transportation arrangements are in place for injured workers.</li>
+        <li>In areas where 911 is not available, the Site Supervisor must post the phone numbers of physicians, hospitals, and ambulances.</li>
+      </ul>
+
+      <div class="callout callout-blue">
+        <strong>Post Names of CPR-Trained Employees</strong>
+        The names of all jobsite employees trained in CPR and first aid must be <strong>posted by the telephone or other communications method</strong>, or in another prominent place at the worksite.
+      </div>
+
+      <p><strong>When responding to an emergency:</strong></p>
+      <ul class="resp-list">
+        <li>The first person at the scene should react <strong>quickly but calmly and in a reassuring manner</strong>.</li>
+        <li>Immediately summon medical help — be explicit: state the suspected type of injury or illness, the location of the victim, and the type of assistance required.</li>
+        <li>Send people to highway intersections or entrance roadways to direct EMS to the scene.</li>
+        <li><strong>The injured person should NOT be moved</strong> except where necessary to prevent further injury.</li>
+        <li>If using a communication system where location is not automatically provided to 911, post the worksite latitude/longitude or location-identification information in a conspicuous location.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — GENERAL FIRST AID -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🩹</span><span class="section-title">4. General First Aid for Minor Injuries</span></div>
+    <div class="section-body">
+      <p>General first aid is defined as any one-time treatment — or follow-up visit for observation — of minor scratches, cuts, burns, or splinters that do not ordinarily require medical care.</p>
+      <ul class="resp-list">
+        <li>Minor injuries should be initially treated with <strong>self-administered first aid</strong> unless assistance is required. This limits the exposure of others to potential pathogens.</li>
+        <li><strong>All minor injuries must be reported to a supervisor</strong> and recorded on the First Aid Report form at each work location. A minor injury may indicate a hazardous condition that could cause serious future injuries.</li>
+        <li>Documentation is critical — a minor injury should be recorded as "work related" in case it later leads to serious complications such as infection.</li>
+      </ul>
+
+      <div class="callout callout-red">
+        <strong>Employee Refusing First Aid — Cannot Return to Work</strong>
+        If an employee declines first aid and/or medical treatment recommended by the Site Supervisor, <strong>the employee will NOT be allowed to continue work</strong>. The Site Supervisor must discuss the situation with the Company Safety Representative or Personnel Department before allowing the employee to return to duty.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — PPE DURING FIRST AID -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🦺</span><span class="section-title">5. Personal Protection During First Aid</span></div>
+    <div class="section-body">
+      <p>OSHA requires adherence to <strong>Universal Precautions</strong> when responding to emergencies. All patients must be treated as potentially infectious for HIV and other bloodborne pathogens.</p>
+      <table class="ppe-table">
+        <thead><tr><th>Situation</th><th>Required PPE</th></tr></thead>
+        <tbody>
+          <tr><td>Minimal bleeding or handling contaminated instruments</td><td><strong>Disposable gloves only</strong></td></tr>
+          <tr><td>Spurting blood / significant blood exposure</td><td><strong>Disposable gloves + gown + mask + protective eye wear</strong></td></tr>
+          <tr><td>Taking temperature or blood pressure</td><td><strong>No protection required</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-orange">
+        <strong>Wash Hands Immediately After</strong>
+        After emergency care, wash hands and all skin surfaces with warm water and soap if contaminated with blood or body fluids. <strong>Always wash hands after removing gloves</strong> — even if the gloves appear to be intact.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6-7 — REPORTING & FIRST AID SUPPLIES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📋</span><span class="section-title">6–7. Reporting Requirements &amp; First Aid Station</span></div>
+    <div class="section-body">
+      <ul class="resp-list">
+        <li>All work-related injuries and illnesses must be reported <strong>immediately</strong> to management and treated as soon as possible.</li>
+        <li>A First Aid Station is located at each work location and jobsite, stocked with specified supplies and First Aid Report forms.</li>
+        <li>Supplies are checked by the appointed supervisor <strong>before each job</strong> and at least <strong>weekly</strong> on each job by the Site Supervisor to ensure expended items are replaced.</li>
+      </ul>
+      <div class="callout callout-blue">
+        <strong>Required First Aid Kit Contents Include:</strong>
+        Protective rubber gloves (2 pair) · CPR mask with one-way valve · Antiseptic soap · Absorbent gauze · Adhesive bandages · Bandage compresses · Eye dressing · Bandage scissors · Tweezers · Antiseptic pads · Burn ointment · Sterile eye wash · Cool packs (2) · Sterile burn sheet · Bio-hazard bags (red) · First Aid Report forms
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8 — HEAT-RELATED ILLNESS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🌡</span><span class="section-title">8. Heat-Related Illnesses — In Order of Severity</span></div>
+    <div class="section-body">
+      <p>Heat is a serious hazard outdoors in hot weather and indoors in high-temperature environments. Too much heat can cause injury and, at its worst, death. Know each stage and what to do.</p>
+
+      <div class="heat-grid">
+        <div class="heat-row mild">
+          <div class="heat-label">Heat Rash</div>
+          <div class="heat-desc"><strong>Signs:</strong> Tiny red blister-like eruptions; prickly, itchy, burning sensation.<br><strong>First Aid:</strong> Bathe skin to prevent infection, put on dry clothes.</div>
+        </div>
+        <div class="heat-row mild">
+          <div class="heat-label">Sunburn</div>
+          <div class="heat-desc"><strong>Signs:</strong> Red, painful skin (1st degree); blistering (2nd degree).<br><strong>First Aid:</strong> Topical anesthetics; move to shaded area.</div>
+        </div>
+        <div class="heat-row mod">
+          <div class="heat-label">Heat Cramps</div>
+          <div class="heat-desc"><strong>Signs:</strong> Painful muscle spasms, may occur even after leaving work.<br><strong>First Aid:</strong> Water and/or electrolyte replacement beverage. Get medical assistance.</div>
+        </div>
+        <div class="heat-row severe">
+          <div class="heat-label">Heat Exhaustion</div>
+          <div class="heat-desc"><strong>Signs:</strong> Cool, moist skin; obvious sweating; rapid pulse (more than 150 BPM); fatigue, nausea, headache, dizziness; possible fainting.<br><strong>First Aid:</strong> Water and/or electrolyte replacement beverage. Rest in cool area.</div>
+        </div>
+        <div class="heat-row critical">
+          <div class="heat-label">🚨 HEAT STROKE</div>
+          <div class="heat-desc">
+            <strong>Signs:</strong> Hot, DRY skin (sweating has stopped); body temperature 105°F or higher; rapid pulse; confusion, delirium, or unconsciousness; possible convulsions.<br><br>
+            <strong>First Aid — LIFE-THREATENING EMERGENCY:</strong><br>
+            1. Remove victim from heat source immediately.<br>
+            2. Lower body temperature as fast as possible — immerse in water (hose, shower, bathtub) or cover with cool wet towels.<br>
+            3. <strong>DO NOT give liquids to an unconscious person.</strong><br>
+            4. <strong>Call for emergency medical assistance immediately.</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 8.6 — PREVENTION -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">💧</span><span class="section-title">8.6. Preventing Heat Stress</span></div>
+    <div class="section-body">
+      <div class="key-fact">
+        <div class="fact-num">15 min</div>
+        <div class="fact-lbl">Drink cool water <strong>every 15 minutes</strong> — approximately <strong>5 to 7 ounces</strong> per cup. <strong>Don't wait until you feel thirsty</strong> — thirst means you're already behind on hydration.</div>
+      </div>
+      <ul class="resp-list">
+        <li>Take rest breaks in a cool, shady spot. Use fans.</li>
+        <li>Wear light-colored cotton clothing.</li>
+        <li>Schedule the heaviest work during the coolest part of the day.</li>
+        <li>Work in the shade whenever possible.</li>
+        <li>For heavy work in hot areas, rotate with other workers so some can rest.</li>
+        <li>If transferring to a warm area for a new job, allow <strong>at least two weeks</strong> for your body to acclimate — be extra careful during that period.</li>
+        <li>Employees working in protective clothing require more rest breaks and may need temperature and heart rate monitoring.</li>
+      </ul>
+      <div class="callout callout-blue">
+        <strong>OSHA General Duty Clause</strong>
+        OSHA does not have a specific heat standard, but heat stress is a recognized serious hazard. Employers are required under the General Duty Clause to provide employment free from recognized hazards causing or likely to cause physical harm.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 Knowledge Check — Module 011</h2>
+      <p>Answer all 10 questions. You need 70% (7/10) or higher to pass.</p>
+    </div>
+    <div class="quiz-body">
+
+      <div class="name-block">
+        <label for="employee-name">Your Full Name (required for records)</label>
+        <input type="text" id="employee-name" placeholder="First Last" autocomplete="name">
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block">
+        <div class="question-num">Question 1 of 10</div>
+        <div class="question-text">Who is responsible for confirming the availability of emergency medical services before work begins at a job site?</div>
+        <div class="options" id="q1">
+          <label class="option-label"><input type="radio" name="q1" value="a"> The Company Safety Director at the corporate office.</label>
+          <label class="option-label"><input type="radio" name="q1" value="b"> The Site Supervisor.</label>
+          <label class="option-label"><input type="radio" name="q1" value="c"> Each individual employee is responsible for their own emergency plans.</label>
+          <label class="option-label"><input type="radio" name="q1" value="d"> The nearest hospital or EMS agency.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q2 -->
+      <div class="question-block">
+        <div class="question-num">Question 2 of 10</div>
+        <div class="question-text">Should an injured person at a worksite be moved from where they fell or were injured?</div>
+        <div class="options" id="q2">
+          <label class="option-label"><input type="radio" name="q2" value="a"> Yes — always move them to a safer location before assessing injuries.</label>
+          <label class="option-label"><input type="radio" name="q2" value="b"> No — the injured person should not be moved except where necessary to prevent further injury.</label>
+          <label class="option-label"><input type="radio" name="q2" value="c"> Yes — move them to the nearest first aid station immediately.</label>
+          <label class="option-label"><input type="radio" name="q2" value="d"> Only if they are conscious and request to be moved.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q3 -->
+      <div class="question-block">
+        <div class="question-num">Question 3 of 10</div>
+        <div class="question-text">When providing first aid for a wound with SPURTING blood, what PPE is required?</div>
+        <div class="options" id="q3">
+          <label class="option-label"><input type="radio" name="q3" value="a"> Disposable gloves only.</label>
+          <label class="option-label"><input type="radio" name="q3" value="b"> No PPE is required for coworkers helping each other.</label>
+          <label class="option-label"><input type="radio" name="q3" value="c"> Disposable gloves, a gown, a mask, and protective eye wear.</label>
+          <label class="option-label"><input type="radio" name="q3" value="d"> A full body suit with SCBA is required for any blood contact.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q4 -->
+      <div class="question-block">
+        <div class="question-num">Question 4 of 10</div>
+        <div class="question-text">If an employee declines first aid or medical treatment recommended by the Site Supervisor, what must happen?</div>
+        <div class="options" id="q4">
+          <label class="option-label"><input type="radio" name="q4" value="a"> The employee may continue working after signing a declination form.</label>
+          <label class="option-label"><input type="radio" name="q4" value="b"> The employee's decision is respected and they return to their duties.</label>
+          <label class="option-label"><input type="radio" name="q4" value="c"> The employee is NOT allowed to continue work until the situation is reviewed with the Safety Representative or Personnel Department.</label>
+          <label class="option-label"><input type="radio" name="q4" value="d"> The employee is immediately terminated for refusing a lawful directive.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q5 -->
+      <div class="question-block">
+        <div class="question-num">Question 5 of 10</div>
+        <div class="question-text">What distinguishes heat stroke from heat exhaustion, making it a life-threatening emergency?</div>
+        <div class="options" id="q5">
+          <label class="option-label"><input type="radio" name="q5" value="a"> The victim has cool, moist, sweaty skin and a rapid pulse above 150 BPM.</label>
+          <label class="option-label"><input type="radio" name="q5" value="b"> The victim has HOT, DRY skin (sweating has stopped), body temperature of 105°F or higher, and possible brain disorders such as confusion, delirium, or unconsciousness.</label>
+          <label class="option-label"><input type="radio" name="q5" value="c"> The victim experiences painful muscle cramps and dehydration.</label>
+          <label class="option-label"><input type="radio" name="q5" value="d"> The victim develops a skin rash and tingling sensation.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q6 -->
+      <div class="question-block">
+        <div class="question-num">Question 6 of 10</div>
+        <div class="question-text">What is the first aid for a heat stroke victim, and what must you NOT do?</div>
+        <div class="options" id="q6">
+          <label class="option-label"><input type="radio" name="q6" value="a"> Give cool sports drinks, have them rest in shade, and monitor for 30 minutes.</label>
+          <label class="option-label"><input type="radio" name="q6" value="b"> Remove from heat, lower body temperature immediately using water or cool wet towels, call 911 — and do NOT give liquids to an unconscious person.</label>
+          <label class="option-label"><input type="radio" name="q6" value="c"> Apply ice packs to the forehead only and transport to a clinic when convenient.</label>
+          <label class="option-label"><input type="radio" name="q6" value="d"> Have the victim drink as much water as possible to replace lost fluids.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q7 -->
+      <div class="question-block">
+        <div class="question-num">Question 7 of 10</div>
+        <div class="question-text">How often should workers drink water when working in hot conditions, and how much?</div>
+        <div class="options" id="q7">
+          <label class="option-label"><input type="radio" name="q7" value="a"> Once every hour, approximately 16 ounces.</label>
+          <label class="option-label"><input type="radio" name="q7" value="b"> Only when thirsty — thirst is the body's reliable indicator of dehydration.</label>
+          <label class="option-label"><input type="radio" name="q7" value="c"> Every 15 minutes, approximately 5 to 7 ounces — before you feel thirsty.</label>
+          <label class="option-label"><input type="radio" name="q7" value="d"> Every 30 minutes, at least 12 ounces per drink.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q8 -->
+      <div class="question-block">
+        <div class="question-num">Question 8 of 10</div>
+        <div class="question-text">Where must the names of CPR-trained employees be posted at the worksite?</div>
+        <div class="options" id="q8">
+          <label class="option-label"><input type="radio" name="q8" value="a"> Only in the Site Supervisor's private records — not public posting.</label>
+          <label class="option-label"><input type="radio" name="q8" value="b"> At the company's corporate office only.</label>
+          <label class="option-label"><input type="radio" name="q8" value="c"> By the telephone or other communication method, or in a prominent location at the worksite.</label>
+          <label class="option-label"><input type="radio" name="q8" value="d"> CPR-trained employees must wear special identification badges only.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q9 -->
+      <div class="question-block">
+        <div class="question-num">Question 9 of 10</div>
+        <div class="question-text">How often must the First Aid Station supplies be inspected and restocked?</div>
+        <div class="options" id="q9">
+          <label class="option-label"><input type="radio" name="q9" value="a"> Monthly, by the company Safety Director.</label>
+          <label class="option-label"><input type="radio" name="q9" value="b"> Before each job by the appointed supervisor, AND at least weekly on each job by the Site Supervisor.</label>
+          <label class="option-label"><input type="radio" name="q9" value="c"> Annually, as part of the company's safety program review.</label>
+          <label class="option-label"><input type="radio" name="q9" value="d"> Only after supplies have been used — restocked on an as-needed basis.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q10 -->
+      <div class="question-block">
+        <div class="question-num">Question 10 of 10</div>
+        <div class="question-text">Why must even minor work-related injuries be reported to a supervisor and recorded on the First Aid Report form?</div>
+        <div class="options" id="q10">
+          <label class="option-label"><input type="radio" name="q10" value="a"> Only to satisfy OSHA's administrative recordkeeping requirements.</label>
+          <label class="option-label"><input type="radio" name="q10" value="b"> A minor injury may indicate a hazardous condition needing correction, and documentation protects the employee if the injury later leads to serious complications.</label>
+          <label class="option-label"><input type="radio" name="q10" value="c"> To determine which employees are eligible for workers' compensation claims.</label>
+          <label class="option-label"><input type="radio" name="q10" value="d"> To track which employees have the most injuries for performance review purposes.</label>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div id="result-card-pass" class="result-card pass" style="display:none">
+      <div class="result-icon">🏆</div><div class="result-title">Training Complete — PASSED!</div>
+      <div class="result-score" id="pass-pct"></div><div class="result-sub" id="pass-sub"></div>
+    </div>
+    <div id="result-card-fail" class="result-card fail" style="display:none">
+      <div class="result-icon">⚠️</div><div class="result-title">Quiz Not Passed</div>
+      <div class="result-score" id="fail-pct"></div><div class="result-sub" id="fail-sub"></div>
+    </div>
+    <div id="firebase-sync-status" style="display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;border:2px solid var(--border);background:#F7F9FC;font-size:14px;font-weight:600;margin-bottom:14px;"></div>
+    <div class="cert-block" id="cert-block" style="display:none">
+      <h3>📄 Training Completion Record</h3>
+      <table class="cert-table">
+        <tr><td>Employee Name</td><td id="cert-name">—</td></tr>
+        <tr><td>Module</td><td>011 — First Aid, CPR &amp; Emergency Medical Response</td></tr>
+        <tr><td>Standard #</td><td>SHP-BBB-011</td></tr>
+        <tr><td>Score</td><td id="cert-score">—</td></tr>
+        <tr><td>Result</td><td id="cert-result">—</td></tr>
+        <tr><td>Date Completed</td><td id="cert-date">—</td></tr>
+        <tr><td>Company</td><td>BBB Tank Services, LLC</td></tr>
+      </table>
+      <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
+    </div>
+    <div class="action-row" id="pass-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
+      <button class="btn btn-green"   onclick="downloadCSV()">⬇ Download CSV</button>
+      <a      class="btn btn-orange"  href="director.html">📊 Director Dashboard</a>
+      <a      class="btn btn-outline" href="index.html">← Back to Modules</a>
+    </div>
+    <button class="retake-btn" id="retake-btn" style="display:none" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+  </div>
+
+</main>
+<footer>BBB Tank Services, LLC · Safety Training Portal · SHP-BBB-011 · Rev. 10/31/2025</footer>
+
+<script>
+  document.addEventListener('scroll',()=>{const el=document.documentElement,h=el.scrollHeight-el.clientHeight,p=h>0?Math.round((el.scrollTop/h)*100):0;document.getElementById('read-fill').style.width=p+'%';document.getElementById('scroll-pct').textContent=p+'%';},{passive:true});
+  const ANSWERS={q1:'b',q2:'b',q3:'c',q4:'c',q5:'b',q6:'b',q7:'c',q8:'c',q9:'b',q10:'b'};
+  const STORAGE_KEY='bbb_training_records',FB_KEY='bbb_firebase_config';
+
+  function submitQuiz(){
+    const name=document.getElementById('employee-name').value.trim();
+    if(!name){document.getElementById('employee-name').classList.add('error');document.getElementById('employee-name').focus();alert('Please enter your full name before submitting.');return;}
+    for(let i=1;i<=10;i++){if(!document.querySelector(`input[name="q${i}"]:checked`)){alert(`Please answer Question ${i} before submitting.`);document.getElementById(`q${i}`).scrollIntoView({behavior:'smooth',block:'center'});return;}}
+    let correct=0;
+    for(const[q,ans]of Object.entries(ANSWERS)){const sel=document.querySelector(`input[name="${q}"]:checked`),val=sel?sel.value:null;document.querySelectorAll(`#${q} .option-label`).forEach(l=>{const r=l.querySelector('input');if(r.value===ans)l.classList.add('correct-ans');else if(r.value===val&&val!==ans)l.classList.add('wrong-ans');r.disabled=true;});if(val===ans)correct++;}
+    const pct=Math.round((correct/10)*100),passed=pct>=70;
+    const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),isoDate=new Date().toISOString().slice(0,10);
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('results-section').style.display='block';
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+    document.getElementById('cert-name').textContent=name;
+    document.getElementById('cert-score').textContent=correct+'/10 ('+pct+'%)';
+    document.getElementById('cert-result').textContent=passed?'✅ PASSED':'❌ DID NOT PASS';
+    document.getElementById('cert-date').textContent=dateStr;
+    document.getElementById('cert-block').style.display='block';
+    if(passed){document.getElementById('result-card-pass').style.display='block';document.getElementById('pass-pct').textContent=pct+'%';document.getElementById('pass-sub').textContent=correct+' out of 10 correct. Record saved.';document.getElementById('pass-actions').style.display='flex';document.getElementById('cert-result').style.color='#1D8348';}
+    else{document.getElementById('result-card-fail').style.display='block';document.getElementById('fail-pct').textContent=pct+'%';document.getElementById('fail-sub').textContent=correct+' out of 10 correct. You need 70% to pass. Review the material and try again.';document.getElementById('retake-btn').style.display='block';document.getElementById('cert-result').style.color='#C0392B';}
+    const record={id:Date.now().toString(),module:'011',moduleName:'First Aid, CPR & Emergency Medical Response',standardNum:'SHP-BBB-011',employeeName:name,score:correct,totalQ:10,percentage:pct,passed,dateISO:isoDate,dateDisplay:dateStr,completedAt:new Date().toISOString()};
+    try{const r=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');r.push(record);localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}
+    syncToFirebase(record);
+  }
+
+  function syncToFirebase(record){
+    const raw=localStorage.getItem(FB_KEY);if(!raw)return;
+    const syncEl=document.getElementById('firebase-sync-status');
+    if(syncEl){syncEl.style.display='flex';syncEl.innerHTML='<span>⏳</span>&nbsp; Sending to Safety Director...';}
+    loadFirebaseSDK().then(()=>{const cfg=JSON.parse(raw),app=firebase.apps.length?firebase.apps[0]:firebase.initializeApp(cfg);return firebase.firestore(app).collection('training_records').add(record);})
+    .then(()=>{if(syncEl){syncEl.innerHTML='✅ Record sent to Safety Director\'s dashboard.';syncEl.style.background='#EDFAF3';syncEl.style.borderColor='#1D8348';syncEl.style.color='#1D8348';}})
+    .catch(()=>{if(syncEl){syncEl.innerHTML='⚠️ Could not sync to Safety Director. Download your CSV as backup.';syncEl.style.background='#FFF8F4';syncEl.style.borderColor='#E8611A';syncEl.style.color='#C9510E';}});
+  }
+
+  function loadFirebaseSDK(){
+    if(window.firebase)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';s2.onload=resolve;s2.onerror=reject;document.head.appendChild(s2);};
+      s1.onerror=reject;document.head.appendChild(s1);
+    });
+  }
+
+  function downloadCSV(){
+    try{const records=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),last=records.filter(r=>r.module==='011').pop();if(!last)return;
+    const csv='Employee Name,Module,Module Name,Standard #,Score,Percentage,Passed,Date Completed\n'+`"${last.employeeName}",${last.module},"${last.moduleName}",${last.standardNum},${last.score}/10,${last.percentage}%,${last.passed?'YES':'NO'},"${last.dateDisplay}"`;
+    const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`BBB_Training_${last.employeeName.replace(/\s+/g,'_')}_Module011_${last.dateISO}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+    catch(e){alert('Could not download CSV. Please print the record instead.');}
+  }
+
+  function retakeQuiz(){
+    for(let i=1;i<=10;i++){document.querySelectorAll(`#q${i} .option-label`).forEach(l=>{l.classList.remove('correct-ans','wrong-ans');const r=l.querySelector('input');r.checked=false;r.disabled=false;});}
+    document.getElementById('employee-name').value='';document.getElementById('submit-btn').disabled=false;
+    ['results-section','result-card-pass','result-card-fail','cert-block','pass-actions','retake-btn'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('quiz-section').style.display='block';document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>

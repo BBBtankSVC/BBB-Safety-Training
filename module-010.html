@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 010 — Fire Watch &amp; Fire Protection Training | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0D1B2A; --navy2:#1A2E4A; --orange:#E8611A; --orange2:#C9510E;
+      --bg:#F0F4F8; --card:#FFFFFF; --text:#1C2B3A; --muted:#6B7E8E;
+      --border:#D3DCE6; --green:#1D8348; --red:#C0392B; --radius:10px;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+    header { background:var(--navy); color:white; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+    .header-inner { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:3px solid var(--orange); }
+    .back-link { color:#8FAEC8; text-decoration:none; font-size:14px; white-space:nowrap; }
+    .back-link:hover { color:white; }
+    .header-title { font-size:15px; font-weight:700; color:white; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-std { font-size:12px; color:var(--orange); font-weight:700; white-space:nowrap; }
+    .read-progress-wrap { background:var(--navy2); padding:8px 20px; display:flex; align-items:center; gap:12px; }
+    .read-progress-label { font-size:12px; color:#8FAEC8; white-space:nowrap; }
+    .read-progress-bg { flex:1; background:rgba(255,255,255,0.15); border-radius:8px; height:6px; }
+    .read-progress-fill { background:var(--orange); height:100%; border-radius:8px; width:0; transition:width 0.3s; }
+    .scroll-pct { font-size:12px; color:#8FAEC8; min-width:36px; text-align:right; }
+    main { max-width:820px; margin:0 auto; padding:28px 16px 80px; }
+    .module-banner { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:white; border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+    .module-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--orange); font-weight:700; margin-bottom:8px; }
+    .module-banner h1 { font-size:clamp(20px,4vw,28px); font-weight:800; margin-bottom:10px; }
+    .module-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#8FAEC8; }
+    .content-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+    .section-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:16px; font-weight:700; }
+    .section-body { padding:20px 22px; }
+    .section-body p { margin-bottom:14px; }
+    .section-body p:last-child { margin-bottom:0; }
+    .callout { border-radius:8px; padding:14px 16px; margin:14px 0; font-size:15px; }
+    .callout-orange { background:#FFF4EE; border-left:4px solid var(--orange); }
+    .callout-blue   { background:#EEF4FF; border-left:4px solid #2E6AE8; }
+    .callout-green  { background:#EDFAF3; border-left:4px solid var(--green); }
+    .callout-red    { background:#FEF0EE; border-left:4px solid var(--red); }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; opacity:0.75; }
+    .resp-list { list-style:none; padding:0; margin:10px 0; }
+    .resp-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; }
+    .resp-list li::before { content:'✓'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+    .no-list { list-style:none; padding:0; margin:10px 0; }
+    .no-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#FEF0EE; border:1px solid #FECACA; position:relative; font-size:15px; }
+    .no-list li::before { content:'✗'; position:absolute; left:12px; color:var(--red); font-weight:800; }
+    .key-fact { display:flex; align-items:center; gap:14px; background:var(--navy); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; }
+    .key-fact .fact-num { font-size:28px; font-weight:800; color:var(--orange); white-space:nowrap; }
+    .key-fact .fact-lbl { font-size:14px; color:#8FAEC8; line-height:1.4; }
+    .section-divider { height:1px; background:var(--border); margin:14px 0; }
+    /* Fire class table */
+    .fire-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin:14px 0; }
+    .fire-card { border-radius:8px; padding:14px; border:2px solid; }
+    .fire-a { background:#EEF4FF; border-color:#2E6AE8; }
+    .fire-b { background:#FFF4EE; border-color:var(--orange); }
+    .fire-c { background:#FEF0EE; border-color:var(--red); }
+    .fire-d { background:#FEFCE8; border-color:#CA8A04; }
+    .fire-letter { font-size:32px; font-weight:800; margin-bottom:4px; }
+    .fire-a .fire-letter { color:#2E6AE8; }
+    .fire-b .fire-letter { color:var(--orange); }
+    .fire-c .fire-letter { color:var(--red); }
+    .fire-d .fire-letter { color:#854D0E; }
+    .fire-name { font-size:13px; font-weight:700; margin-bottom:4px; }
+    .fire-agent { font-size:13px; color:var(--muted); line-height:1.4; }
+    /* PASS steps */
+    .pass-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px; margin:14px 0; }
+    .pass-card { background:#F7F9FC; border:1px solid var(--border); border-radius:8px; padding:14px; text-align:center; }
+    .pass-letter { font-size:32px; font-weight:800; color:var(--orange); margin-bottom:6px; }
+    .pass-word { font-size:14px; font-weight:700; margin-bottom:4px; }
+    .pass-desc { font-size:13px; color:var(--muted); line-height:1.4; }
+    /* quiz */
+    #quiz-section { background:var(--card); border:2px solid var(--orange); border-radius:var(--radius); overflow:hidden; margin-top:32px; }
+    .quiz-header { background:var(--orange); color:white; padding:20px 24px; }
+    .quiz-header h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+    .quiz-header p  { font-size:14px; opacity:0.9; }
+    .quiz-body { padding:24px; }
+    .name-block { margin-bottom:28px; }
+    .name-block label { display:block; font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .name-block input { width:100%; padding:12px 16px; font-size:16px; border:2px solid var(--border); border-radius:8px; background:#F7F9FC; color:var(--text); transition:border-color 0.2s; }
+    .name-block input:focus { outline:none; border-color:var(--orange); background:white; }
+    .name-block input.error { border-color:var(--red); }
+    .question-block { margin-bottom:28px; }
+    .question-num  { font-size:12px; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .question-text { font-size:16px; font-weight:600; margin-bottom:14px; line-height:1.5; }
+    .options { display:flex; flex-direction:column; gap:8px; }
+    .option-label { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:15px; line-height:1.4; }
+    .option-label:hover { border-color:var(--orange); background:#FFF8F4; }
+    .option-label input[type="radio"] { margin-top:3px; accent-color:var(--orange); flex-shrink:0; width:18px; height:18px; }
+    .option-label.correct-ans { border-color:var(--green); background:#EDFAF3; }
+    .option-label.wrong-ans   { border-color:var(--red);   background:#FEF0EE; }
+    .question-divider { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+    .submit-wrap { text-align:center; margin-top:12px; }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:15px 48px; font-size:17px; font-weight:700; border-radius:8px; cursor:pointer; width:100%; max-width:360px; transition:background 0.2s; }
+    .submit-btn:hover { background:var(--orange2); }
+    .submit-btn:disabled { background:var(--muted); cursor:not-allowed; }
+    #results-section { display:none; }
+    .result-card { border-radius:var(--radius); padding:28px; margin-bottom:20px; text-align:center; }
+    .result-card.pass { background:#EDFAF3; border:2px solid var(--green); }
+    .result-card.fail { background:#FEF0EE; border:2px solid var(--red); }
+    .result-icon  { font-size:52px; margin-bottom:12px; }
+    .result-title { font-size:26px; font-weight:800; margin-bottom:6px; }
+    .result-card.pass .result-title { color:var(--green); }
+    .result-card.fail .result-title { color:var(--red); }
+    .result-score { font-size:48px; font-weight:800; margin:12px 0 4px; }
+    .result-card.pass .result-score { color:var(--green); }
+    .result-card.fail .result-score { color:var(--red); }
+    .result-sub { font-size:15px; color:var(--muted); }
+    .cert-block { background:white; border:2px solid var(--navy); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+    .cert-block h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .cert-table { width:100%; border-collapse:collapse; }
+    .cert-table td { padding:9px 0; border-bottom:1px solid var(--border); font-size:15px; }
+    .cert-table td:first-child { color:var(--muted); font-size:13px; width:40%; }
+    .cert-table td:last-child  { font-weight:700; }
+    .cert-company { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+    .action-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .btn { flex:1; min-width:140px; padding:13px 18px; border-radius:8px; font-size:14px; font-weight:700; border:none; cursor:pointer; text-align:center; text-decoration:none; display:inline-block; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.88; }
+    .btn-primary { background:var(--navy);   color:white; }
+    .btn-orange  { background:var(--orange); color:white; }
+    .btn-green   { background:var(--green);  color:white; }
+    .btn-outline { background:white; color:var(--navy); border:2px solid var(--navy); }
+    .retake-btn  { width:100%; padding:13px; font-size:16px; font-weight:700; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer; margin-top:8px; }
+    @media print { header,.read-progress-wrap,.module-banner,.content-card,#quiz-section,.action-row,.retake-btn,footer { display:none !important; } body { background:white; } #results-section { display:block !important; } }
+    footer { background:var(--navy); color:#4A6785; text-align:center; font-size:12px; padding:20px; margin-top:40px; }
+    @media(max-width:600px) { .fire-grid,.pass-grid { grid-template-columns:repeat(2,1fr); } main { padding:20px 12px 60px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← All Modules</a>
+    <span class="header-title">Fire Watch &amp; Fire Protection Training</span>
+    <span class="header-std">SHP-BBB-010</span>
+  </div>
+  <div class="read-progress-wrap">
+    <span class="read-progress-label">Reading progress</span>
+    <div class="read-progress-bg"><div class="read-progress-fill" id="read-fill"></div></div>
+    <span class="scroll-pct" id="scroll-pct">0%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="module-banner">
+    <div class="module-eyebrow">Module 010 · SHP-BBB-010</div>
+    <h1>Fire Watch &amp; Fire Protection Training</h1>
+    <div class="module-meta">
+      <span>📅 Rev. 10/31/2025</span>
+      <span>⚖ OSHA 29 CFR 1910 Subpart L · 1926 Subpart F</span>
+      <span>⏱ ~12 min read</span>
+      <span>📝 10-question quiz</span>
+    </div>
+  </div>
+
+  <!-- SECTIONS 1-3 — PURPOSE & REQUIREMENTS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📋</span><span class="section-title">1–3. Purpose, Scope &amp; Training Requirements</span></div>
+    <div class="section-body">
+      <p>This module establishes methods and guidelines for training personnel in fire watch and fire protection. It applies to all employees and subcontractors at BBB Tank Services-controlled job sites, and is specifically intended for personnel assigned as <strong>Fire Watch</strong> during burning or welding operations.</p>
+      <ul class="resp-list">
+        <li>Fire Watches are trained at the worksite by the Site Supervisor.</li>
+        <li>Training must be <strong>documented</strong> and employee training files updated.</li>
+        <li>Training is conducted when employees are <strong>initially hired</strong> and <strong>annually thereafter</strong>.</li>
+      </ul>
+      <div class="callout callout-blue">
+        <strong>Root Cause of Fires</strong>
+        Fires do not just happen — they are caused by carelessness in operating equipment, handling hazardous materials, or personal habits like smoking. Individual employees can protect themselves and their coworkers by learning how to prevent fires and staying alert to hazards before they become emergencies.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — FIRE CLASSES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🔥</span><span class="section-title">4. Four Classes of Fire — Know Each One</span></div>
+    <div class="section-body">
+      <p>All employees must know the four classes of fire, their burning characteristics, and the correct extinguishing agent for each. Using the wrong agent can make things worse.</p>
+      <div class="fire-grid">
+        <div class="fire-card fire-a">
+          <div class="fire-letter">A</div>
+          <div class="fire-name">Ordinary Combustibles</div>
+          <div class="fire-agent">Wood, paper, cloth, rubber, plastic<br><strong>Use: Water ✓</strong></div>
+        </div>
+        <div class="fire-card fire-b">
+          <div class="fire-letter">B</div>
+          <div class="fire-name">Flammable Liquids &amp; Gases</div>
+          <div class="fire-agent">Oils, gasoline, grease, paint<br><strong>Use: CO₂ or Dry Chemical ✓</strong></div>
+        </div>
+        <div class="fire-card fire-c">
+          <div class="fire-letter">C</div>
+          <div class="fire-name">Electrical Equipment</div>
+          <div class="fire-agent">Energized wiring, panels, motors<br><strong>Use: CO₂ or Dry Chemical ✓<br>NEVER Water ✗</strong></div>
+        </div>
+        <div class="fire-card fire-d">
+          <div class="fire-letter">D</div>
+          <div class="fire-name">Combustible Metals</div>
+          <div class="fire-agent">Magnesium, titanium, potassium<br><strong>Use: Special Approved Agent Only ✓</strong></div>
+        </div>
+      </div>
+      <div class="callout callout-red">
+        <strong>Class C — Never Use Water</strong>
+        Water must <strong>NEVER</strong> be used on fires involving energized electrical equipment. Water conducts electricity and will cause electrical shock AND spread the fire.
+      </div>
+
+      <div class="section-divider"></div>
+      <p><strong>All fires require four components:</strong> Ignition source + Heat + Fuel + Oxygen. Remove any one of these and the fire cannot sustain itself.</p>
+      <p><strong>The #1 cause of workplace fires is electrical equipment</strong> — specifically damaged electrical cords, loose electrical connections, overloaded circuits, and defective power tools. Other common causes include welding and cutting operations, chemical reactions, and heaters.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — GENERAL FIRE PREVENTION RULES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🛡</span><span class="section-title">4. General Fire Prevention Rules</span></div>
+    <div class="section-body">
+      <p><strong>Three main principles of fire prevention:</strong></p>
+      <ul class="resp-list">
+        <li>Be alert to trouble before a fire starts.</li>
+        <li>Eliminate unsafe habits that can lead to fires.</li>
+        <li>Conduct a fire prevention investigation of your work area prior to work start to remove any potential fire hazards.</li>
+      </ul>
+
+      <div class="section-divider"></div>
+      <ul class="resp-list">
+        <li>Never tamper with or move firefighting equipment except for actual firefighting use.</li>
+        <li>Report any equipment defects to your supervisor immediately.</li>
+        <li>Know the location and proper operation of all fire protection equipment in your work area.</li>
+        <li>Used rags must be kept in <strong>metal or metal-lined containers with metal covers</strong>.</li>
+        <li><strong>Never use flammable liquids for cleaning purposes.</strong></li>
+        <li>Before using solvents, discuss needed precautions with your supervisor.</li>
+        <li>Smoking is only allowed in designated smoking areas. Discard butts in approved containers — never on the floor or in trash cans.</li>
+        <li>All chemicals and solvents must be in properly labeled and approved containers.</li>
+      </ul>
+
+      <div class="callout callout-orange">
+        <strong>If Your Clothing Catches Fire</strong>
+        <strong>DROP to the ground and ROLL</strong> to create a smothering effect, or use a fire blanket or other means if available. This is the standard "Stop, Drop, and Roll" response.
+      </div>
+
+      <p>Know your <strong>primary and secondary exit routes</strong> from your work area at all times. When an alarm sounds, <strong>evacuate immediately</strong>. Know site-specific codes for emergency pages before work begins.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — EXTINGUISHER USE & WHEN NOT TO FIGHT -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🧯</span><span class="section-title">5. Fire Extinguisher Rules &amp; When NOT to Fight</span></div>
+    <div class="section-body">
+      <div class="callout callout-red">
+        <strong>⚠ Do NOT Attempt to Fight a Fire If:</strong>
+        <ul style="margin-top:8px;padding-left:18px;line-height:1.8;">
+          <li>You do not know what is burning.</li>
+          <li>The fire is spreading rapidly out of control.</li>
+          <li>The fire is between you and your exit or escape path.</li>
+          <li>You do not have adequate equipment.</li>
+          <li>You might inhale toxic smoke.</li>
+        </ul>
+        Only trained and qualified personnel are permitted to fight fires. Your training covers only small smolders and fires that can be put out with a portable extinguisher.
+      </div>
+
+      <p><strong>General extinguisher rules:</strong></p>
+      <ul class="resp-list">
+        <li>A fire extinguisher must be within <strong>20–30 feet</strong> of any flame or ignition-type operation in progress.</li>
+        <li>Know where the nearest extinguisher is, what type of fire it should be used on, and how to operate it — <strong>before</strong> a fire occurs.</li>
+        <li><strong>All fires, whether ignitions or smolders, must be reported to the Site Supervisor</strong> so an investigation can be initiated to determine root cause.</li>
+        <li>Any extinguisher that has been used or is not fully charged must be returned to the Site Supervisor for replacement immediately.</li>
+        <li>Keep work areas clean and orderly — preventing small fires from becoming major disasters.</li>
+        <li>Equipment must never be refueled while running or when hot.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6 — FIRE WATCH FOR WELDING -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">👁</span><span class="section-title">6. Fire Watch for Welding &amp; Cutting Operations</span></div>
+    <div class="section-body">
+      <div class="key-fact">
+        <div class="fact-num">35 ft</div>
+        <div class="fact-lbl">Welding sparks can travel as far as <strong>35 feet</strong>. Fire watch personnel must account for this full radius when checking the area.</div>
+      </div>
+
+      <p><strong>Safe procedures prior to and during welding operations:</strong></p>
+      <ul class="resp-list">
+        <li>Ensure the area has been checked by an authorized person with a calibrated meter for flammable gases and vapors before work begins.</li>
+        <li>Remove all combustibles such as paper and rags from the area.</li>
+        <li>Have a fire extinguisher and misting hose (if required) on hand and ready before work starts.</li>
+        <li>Ensure proper PPE is on hand and being worn.</li>
+        <li>If the piece to be welded or cut cannot be moved to a fire-hazard-free area, remove the hazards first. If hazards cannot be removed, cover with fire-retardant material or use guarding to confine heat, sparks, and slag.</li>
+      </ul>
+
+      <div class="key-fact">
+        <div class="fact-num">30 min</div>
+        <div class="fact-lbl">Fire watch must <strong>remain on site a minimum of 30 minutes</strong> after grinding and welding operations are complete — to ensure no smoldering or fires break out.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 — PASS METHOD -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🎯</span><span class="section-title">7. How to Use a Fire Extinguisher — The PASS Method</span></div>
+    <div class="section-body">
+      <p>Fire extinguishers are for <strong>incipient stage fires only</strong> — the initial or beginning stage when a fire can be controlled with a portable extinguisher. If the fire has grown beyond that stage, do not fight it.</p>
+
+      <div class="key-fact">
+        <div class="fact-num">8–12 ft</div>
+        <div class="fact-lbl">Stand <strong>8 to 12 feet away</strong> from the fire when using an extinguisher — far enough that sparks, embers, and burning residue won't blow back at you from the pressure stream.</div>
+      </div>
+
+      <p>Remember the word <strong>PASS</strong>:</p>
+      <div class="pass-grid">
+        <div class="pass-card">
+          <div class="pass-letter">P</div>
+          <div class="pass-word">Pull the Pin</div>
+          <div class="pass-desc">This allows you to discharge the extinguisher. Without pulling the pin, the handle will not work.</div>
+        </div>
+        <div class="pass-card">
+          <div class="pass-letter">A</div>
+          <div class="pass-word">Aim at the Base</div>
+          <div class="pass-desc">Aim the nozzle at the BASE of the fire — not the flames. To extinguish, you must attack the fuel source, not the visible flames above it.</div>
+        </div>
+        <div class="pass-card">
+          <div class="pass-letter">S</div>
+          <div class="pass-word">Squeeze the Handle</div>
+          <div class="pass-desc">Squeeze the top handle or lever to release the pressurized extinguishing agent.</div>
+        </div>
+        <div class="pass-card">
+          <div class="pass-letter">S</div>
+          <div class="pass-word">Sweep Side to Side</div>
+          <div class="pass-desc">Sweep from side to side — NOT up and down — until the fire is completely out. Then move away and ensure the fire does not re-ignite.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <strong>First Rule — Don't Panic</strong>
+        Keep your calm and wits about you. Do not let an adrenaline rush cause you to lose control of the situation. A calm, practiced approach is far more effective.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 Knowledge Check — Module 010</h2>
+      <p>Answer all 10 questions. You need 70% (7/10) or higher to pass.</p>
+    </div>
+    <div class="quiz-body">
+
+      <div class="name-block">
+        <label for="employee-name">Your Full Name (required for records)</label>
+        <input type="text" id="employee-name" placeholder="First Last" autocomplete="name">
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block">
+        <div class="question-num">Question 1 of 10</div>
+        <div class="question-text">What is the correct extinguishing agent for a Class B fire involving oils and flammable liquids?</div>
+        <div class="options" id="q1">
+          <label class="option-label"><input type="radio" name="q1" value="a"> Water — the same as a Class A fire.</label>
+          <label class="option-label"><input type="radio" name="q1" value="b"> CO₂ or dry chemical agents.</label>
+          <label class="option-label"><input type="radio" name="q1" value="c"> Special approved extinguishing agents only.</label>
+          <label class="option-label"><input type="radio" name="q1" value="d"> Foam only — CO₂ is not effective on flammable liquids.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q2 -->
+      <div class="question-block">
+        <div class="question-num">Question 2 of 10</div>
+        <div class="question-text">Why should water NEVER be used on a Class C fire involving energized electrical equipment?</div>
+        <div class="options" id="q2">
+          <label class="option-label"><input type="radio" name="q2" value="a"> Water evaporates too quickly on electrical fires to be effective.</label>
+          <label class="option-label"><input type="radio" name="q2" value="b"> Water will cause electrical shock to the person using it AND can spread the fire.</label>
+          <label class="option-label"><input type="radio" name="q2" value="c"> Water damages electrical equipment beyond repair.</label>
+          <label class="option-label"><input type="radio" name="q2" value="d"> Water reacts chemically with energized circuits and creates toxic gases.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q3 -->
+      <div class="question-block">
+        <div class="question-num">Question 3 of 10</div>
+        <div class="question-text">What does the acronym PASS stand for when using a fire extinguisher?</div>
+        <div class="options" id="q3">
+          <label class="option-label"><input type="radio" name="q3" value="a"> Prepare, Approach, Spray, Secure.</label>
+          <label class="option-label"><input type="radio" name="q3" value="b"> Position, Activate, Spray, Step Back.</label>
+          <label class="option-label"><input type="radio" name="q3" value="c"> Pull, Aim, Squeeze, Sweep.</label>
+          <label class="option-label"><input type="radio" name="q3" value="d"> Pull, Aim, Spray, Stop.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q4 -->
+      <div class="question-block">
+        <div class="question-num">Question 4 of 10</div>
+        <div class="question-text">When using a fire extinguisher, where should you aim the nozzle?</div>
+        <div class="options" id="q4">
+          <label class="option-label"><input type="radio" name="q4" value="a"> At the top of the flames to smother them from above.</label>
+          <label class="option-label"><input type="radio" name="q4" value="b"> At the center of the visible fire for maximum coverage.</label>
+          <label class="option-label"><input type="radio" name="q4" value="c"> At the BASE of the fire — where the fuel source is.</label>
+          <label class="option-label"><input type="radio" name="q4" value="d"> Sweep up and down across the entire fire area.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q5 -->
+      <div class="question-block">
+        <div class="question-num">Question 5 of 10</div>
+        <div class="question-text">How far can welding sparks travel from the point of origin?</div>
+        <div class="options" id="q5">
+          <label class="option-label"><input type="radio" name="q5" value="a"> Up to 10 feet.</label>
+          <label class="option-label"><input type="radio" name="q5" value="b"> Up to 20 feet.</label>
+          <label class="option-label"><input type="radio" name="q5" value="c"> Up to 35 feet.</label>
+          <label class="option-label"><input type="radio" name="q5" value="d"> Up to 50 feet.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q6 -->
+      <div class="question-block">
+        <div class="question-num">Question 6 of 10</div>
+        <div class="question-text">How long must a fire watch remain on site after welding or grinding operations are complete?</div>
+        <div class="options" id="q6">
+          <label class="option-label"><input type="radio" name="q6" value="a"> 10 minutes after operations are complete.</label>
+          <label class="option-label"><input type="radio" name="q6" value="b"> 15 minutes after operations are complete.</label>
+          <label class="option-label"><input type="radio" name="q6" value="c"> 30 minutes after operations are complete.</label>
+          <label class="option-label"><input type="radio" name="q6" value="d"> 1 hour after operations are complete.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q7 -->
+      <div class="question-block">
+        <div class="question-num">Question 7 of 10</div>
+        <div class="question-text">In which situation should you NOT attempt to fight a fire and instead evacuate immediately?</div>
+        <div class="options" id="q7">
+          <label class="option-label"><input type="radio" name="q7" value="a"> The fire is small and has just started — a smolder only.</label>
+          <label class="option-label"><input type="radio" name="q7" value="b"> You have a fire extinguisher that is rated for the fire class.</label>
+          <label class="option-label"><input type="radio" name="q7" value="c"> The fire is between you and your exit or escape path.</label>
+          <label class="option-label"><input type="radio" name="q7" value="d"> The fire involves ordinary combustibles like paper or wood only.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q8 -->
+      <div class="question-block">
+        <div class="question-num">Question 8 of 10</div>
+        <div class="question-text">What is the number one cause of workplace fires?</div>
+        <div class="options" id="q8">
+          <label class="option-label"><input type="radio" name="q8" value="a"> Smoking in non-designated areas.</label>
+          <label class="option-label"><input type="radio" name="q8" value="b"> Improperly stored flammable liquids.</label>
+          <label class="option-label"><input type="radio" name="q8" value="c"> Electrical equipment — including damaged cords, loose connections, overloaded circuits, and defective tools.</label>
+          <label class="option-label"><input type="radio" name="q8" value="d"> Welding and cutting operations.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q9 -->
+      <div class="question-block">
+        <div class="question-num">Question 9 of 10</div>
+        <div class="question-text">All fires — whether ignitions or smolders — must be reported to whom?</div>
+        <div class="options" id="q9">
+          <label class="option-label"><input type="radio" name="q9" value="a"> Directly to the local fire department before notifying anyone on site.</label>
+          <label class="option-label"><input type="radio" name="q9" value="b"> The Site Supervisor, so that a root cause investigation can be initiated.</label>
+          <label class="option-label"><input type="radio" name="q9" value="c"> The Company Safety Director only, by end of business that day.</label>
+          <label class="option-label"><input type="radio" name="q9" value="d"> Only fires that required extinguisher use need to be reported.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q10 -->
+      <div class="question-block">
+        <div class="question-num">Question 10 of 10</div>
+        <div class="question-text">What is the correct response if your clothing catches on fire?</div>
+        <div class="options" id="q10">
+          <label class="option-label"><input type="radio" name="q10" value="a"> Run to the nearest water source as quickly as possible.</label>
+          <label class="option-label"><input type="radio" name="q10" value="b"> Remove the clothing immediately before the fire spreads to your skin.</label>
+          <label class="option-label"><input type="radio" name="q10" value="c"> DROP to the ground and ROLL to create a smothering effect, or use a fire blanket if available.</label>
+          <label class="option-label"><input type="radio" name="q10" value="d"> Stand still and call for help — movement can spread the fire.</label>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div id="result-card-pass" class="result-card pass" style="display:none">
+      <div class="result-icon">🏆</div><div class="result-title">Training Complete — PASSED!</div>
+      <div class="result-score" id="pass-pct"></div><div class="result-sub" id="pass-sub"></div>
+    </div>
+    <div id="result-card-fail" class="result-card fail" style="display:none">
+      <div class="result-icon">⚠️</div><div class="result-title">Quiz Not Passed</div>
+      <div class="result-score" id="fail-pct"></div><div class="result-sub" id="fail-sub"></div>
+    </div>
+    <div id="firebase-sync-status" style="display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;border:2px solid var(--border);background:#F7F9FC;font-size:14px;font-weight:600;margin-bottom:14px;"></div>
+    <div class="cert-block" id="cert-block" style="display:none">
+      <h3>📄 Training Completion Record</h3>
+      <table class="cert-table">
+        <tr><td>Employee Name</td><td id="cert-name">—</td></tr>
+        <tr><td>Module</td><td>010 — Fire Watch &amp; Fire Protection Training</td></tr>
+        <tr><td>Standard #</td><td>SHP-BBB-010</td></tr>
+        <tr><td>Score</td><td id="cert-score">—</td></tr>
+        <tr><td>Result</td><td id="cert-result">—</td></tr>
+        <tr><td>Date Completed</td><td id="cert-date">—</td></tr>
+        <tr><td>Company</td><td>BBB Tank Services, LLC</td></tr>
+      </table>
+      <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
+    </div>
+    <div class="action-row" id="pass-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
+      <button class="btn btn-green"   onclick="downloadCSV()">⬇ Download CSV</button>
+      <a      class="btn btn-orange"  href="director.html">📊 Director Dashboard</a>
+      <a      class="btn btn-outline" href="index.html">← Back to Modules</a>
+    </div>
+    <button class="retake-btn" id="retake-btn" style="display:none" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+  </div>
+
+</main>
+<footer>BBB Tank Services, LLC · Safety Training Portal · SHP-BBB-010 · Rev. 10/31/2025</footer>
+
+<script>
+  document.addEventListener('scroll',()=>{const el=document.documentElement,h=el.scrollHeight-el.clientHeight,p=h>0?Math.round((el.scrollTop/h)*100):0;document.getElementById('read-fill').style.width=p+'%';document.getElementById('scroll-pct').textContent=p+'%';},{passive:true});
+  const ANSWERS={q1:'b',q2:'b',q3:'c',q4:'c',q5:'c',q6:'c',q7:'c',q8:'c',q9:'b',q10:'c'};
+  const STORAGE_KEY='bbb_training_records',FB_KEY='bbb_firebase_config';
+
+  function submitQuiz(){
+    const name=document.getElementById('employee-name').value.trim();
+    if(!name){document.getElementById('employee-name').classList.add('error');document.getElementById('employee-name').focus();alert('Please enter your full name before submitting.');return;}
+    for(let i=1;i<=10;i++){if(!document.querySelector(`input[name="q${i}"]:checked`)){alert(`Please answer Question ${i} before submitting.`);document.getElementById(`q${i}`).scrollIntoView({behavior:'smooth',block:'center'});return;}}
+    let correct=0;
+    for(const[q,ans]of Object.entries(ANSWERS)){const sel=document.querySelector(`input[name="${q}"]:checked`),val=sel?sel.value:null;document.querySelectorAll(`#${q} .option-label`).forEach(l=>{const r=l.querySelector('input');if(r.value===ans)l.classList.add('correct-ans');else if(r.value===val&&val!==ans)l.classList.add('wrong-ans');r.disabled=true;});if(val===ans)correct++;}
+    const pct=Math.round((correct/10)*100),passed=pct>=70;
+    const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),isoDate=new Date().toISOString().slice(0,10);
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('results-section').style.display='block';
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+    document.getElementById('cert-name').textContent=name;
+    document.getElementById('cert-score').textContent=correct+'/10 ('+pct+'%)';
+    document.getElementById('cert-result').textContent=passed?'✅ PASSED':'❌ DID NOT PASS';
+    document.getElementById('cert-date').textContent=dateStr;
+    document.getElementById('cert-block').style.display='block';
+    if(passed){document.getElementById('result-card-pass').style.display='block';document.getElementById('pass-pct').textContent=pct+'%';document.getElementById('pass-sub').textContent=correct+' out of 10 correct. Record saved.';document.getElementById('pass-actions').style.display='flex';document.getElementById('cert-result').style.color='#1D8348';}
+    else{document.getElementById('result-card-fail').style.display='block';document.getElementById('fail-pct').textContent=pct+'%';document.getElementById('fail-sub').textContent=correct+' out of 10 correct. You need 70% to pass. Review the material and try again.';document.getElementById('retake-btn').style.display='block';document.getElementById('cert-result').style.color='#C0392B';}
+    const record={id:Date.now().toString(),module:'010',moduleName:'Fire Watch & Fire Protection Training',standardNum:'SHP-BBB-010',employeeName:name,score:correct,totalQ:10,percentage:pct,passed,dateISO:isoDate,dateDisplay:dateStr,completedAt:new Date().toISOString()};
+    try{const r=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');r.push(record);localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}
+    syncToFirebase(record);
+  }
+
+  function syncToFirebase(record){
+    const raw=localStorage.getItem(FB_KEY);if(!raw)return;
+    const syncEl=document.getElementById('firebase-sync-status');
+    if(syncEl){syncEl.style.display='flex';syncEl.innerHTML='<span>⏳</span>&nbsp; Sending to Safety Director...';}
+    loadFirebaseSDK().then(()=>{const cfg=JSON.parse(raw),app=firebase.apps.length?firebase.apps[0]:firebase.initializeApp(cfg);return firebase.firestore(app).collection('training_records').add(record);})
+    .then(()=>{if(syncEl){syncEl.innerHTML='✅ Record sent to Safety Director\'s dashboard.';syncEl.style.background='#EDFAF3';syncEl.style.borderColor='#1D8348';syncEl.style.color='#1D8348';}})
+    .catch(()=>{if(syncEl){syncEl.innerHTML='⚠️ Could not sync to Safety Director. Download your CSV as backup.';syncEl.style.background='#FFF8F4';syncEl.style.borderColor='#E8611A';syncEl.style.color='#C9510E';}});
+  }
+
+  function loadFirebaseSDK(){
+    if(window.firebase)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';s2.onload=resolve;s2.onerror=reject;document.head.appendChild(s2);};
+      s1.onerror=reject;document.head.appendChild(s1);
+    });
+  }
+
+  function downloadCSV(){
+    try{const records=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),last=records.filter(r=>r.module==='010').pop();if(!last)return;
+    const csv='Employee Name,Module,Module Name,Standard #,Score,Percentage,Passed,Date Completed\n'+`"${last.employeeName}",${last.module},"${last.moduleName}",${last.standardNum},${last.score}/10,${last.percentage}%,${last.passed?'YES':'NO'},"${last.dateDisplay}"`;
+    const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`BBB_Training_${last.employeeName.replace(/\s+/g,'_')}_Module010_${last.dateISO}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+    catch(e){alert('Could not download CSV. Please print the record instead.');}
+  }
+
+  function retakeQuiz(){
+    for(let i=1;i<=10;i++){document.querySelectorAll(`#q${i} .option-label`).forEach(l=>{l.classList.remove('correct-ans','wrong-ans');const r=l.querySelector('input');r.checked=false;r.disabled=false;});}
+    document.getElementById('employee-name').value='';document.getElementById('submit-btn').disabled=false;
+    ['results-section','result-card-pass','result-card-fail','cert-block','pass-actions','retake-btn'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('quiz-section').style.display='block';document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 015 &ndash; Hazard Communication Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    /* TOP NAV */
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    /* PROGRESS */
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    /* HERO */
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 620px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    /* PAGE WRAP */
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    /* OBJECTIVES */
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    /* SECTION ACCORDION */
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p  { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    /* CALLOUT BOXES */
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong  { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong    { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    /* TWO-COL / THREE-COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    /* TABLE */
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* GHS PICTOGRAM GRID */
+    .pictogram-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+    .pictogram-card { background: var(--card); border: 2px solid var(--border); border-radius: 8px; padding: 14px 10px; text-align: center; }
+    .pictogram-card .symbol { font-size: 2.2rem; display: block; margin-bottom: 6px; }
+    .pictogram-card .pic-name { font-size: .78rem; font-weight: 700; color: var(--navy); display: block; margin-bottom: 3px; }
+    .pictogram-card .pic-desc { font-size: .72rem; color: var(--muted); line-height: 1.3; }
+
+    /* SDS SECTION GRID */
+    .sds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 14px 0; }
+    .sds-item { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 13px; display: flex; gap: 10px; align-items: flex-start; }
+    .sds-num { flex-shrink: 0; background: var(--navy); color: var(--orange); font-weight: 800; font-size: .8rem; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .sds-text strong { display: block; font-size: .85rem; color: var(--navy); }
+    .sds-text span { font-size: .78rem; color: var(--muted); }
+
+    /* LABEL DIAGRAM */
+    .label-demo { border: 3px solid var(--navy); border-radius: 10px; padding: 20px; margin: 16px 0; background: #fff; }
+    .label-demo .label-title { text-align: center; font-weight: 800; font-size: 1.1rem; color: var(--navy); margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+    .label-elements { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media(max-width:500px){ .label-elements { grid-template-columns: 1fr; } }
+    .label-el { background: var(--bg); border-radius: 6px; padding: 10px 13px; font-size: .85rem; }
+    .label-el .el-num { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--orange2); margin-bottom: 3px; }
+    .label-el strong { display: block; color: var(--navy); font-size: .88rem; margin-bottom: 2px; }
+
+    /* SIGNAL WORD BADGES */
+    .signal-wrap { display: flex; gap: 14px; flex-wrap: wrap; margin: 14px 0; }
+    .signal-badge { padding: 12px 22px; border-radius: 8px; font-weight: 800; font-size: 1rem; text-align: center; flex: 1; min-width: 140px; }
+    .signal-danger  { background: #C0392B; color: #fff; }
+    .signal-warning { background: #F39C12; color: #fff; }
+    .signal-desc { font-size: .78rem; font-weight: 400; display: block; margin-top: 4px; opacity: .9; }
+
+    /* STEPS */
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    /* SCENARIO */
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p  { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    /* QUIZ */
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    /* MODULE NAV */
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    /* FOOTER */
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-014.html">&larr; Mod 14</a>
+    <a href="module-015.html" class="active">Mod 15</a>
+    <a href="module-016.html">Mod 16 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 15 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 015 &middot; SHP-BBB-015</div>
+  <h1>Hazard Communication Program</h1>
+  <p class="subtitle">Understanding GHS labels, Safety Data Sheets, and the right-to-know requirements that protect BBB Tank Services employees from chemical hazards every day.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 35 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>State the purpose of OSHA&rsquo;s Hazard Communication Standard (HCS)</li>
+      <li>Identify the six required elements on a GHS-compliant chemical label</li>
+      <li>Recognize all nine GHS pictograms and their associated hazards</li>
+      <li>Distinguish between DANGER and WARNING signal words</li>
+      <li>Locate and navigate a Safety Data Sheet (SDS) using all 16 sections</li>
+      <li>Identify key SDS sections for first aid, PPE, and spill response</li>
+      <li>Apply HazCom knowledge to chemicals commonly used in tank services work</li>
+      <li>Exercise your right to access SDS information before working with any chemical</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is HazCom &amp; Why It Matters</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>OSHA&rsquo;s <strong>Hazard Communication Standard (HCS)</strong>, found at 29 CFR 1910.1200 (General Industry) and 29 CFR 1926.59 (Construction), is commonly known as &ldquo;HazCom&rdquo; or the &ldquo;Right-to-Know Law.&rdquo; It requires chemical manufacturers and employers to communicate chemical hazard information clearly so that workers can protect themselves before, during, and after chemical exposure.</p>
+
+      <p>In 2012, OSHA aligned the HCS with the <strong>Globally Harmonized System of Classification and Labelling of Chemicals (GHS)</strong> &mdash; an international standard that standardizes how hazards are communicated using consistent labels and Safety Data Sheets worldwide. This means a BBB Tank Services employee who can read a GHS label can understand the hazards of a chemical regardless of where it was manufactured.</p>
+
+      <div class="box box-info">
+        <strong>The Three Pillars of HazCom:</strong>
+        <ul style="margin-top:8px;">
+          <li><strong>Labels</strong> &mdash; on every container of hazardous chemical in the workplace</li>
+          <li><strong>Safety Data Sheets (SDS)</strong> &mdash; detailed technical documents for every hazardous chemical</li>
+          <li><strong>Training</strong> &mdash; employees trained to understand labels and SDS before working with chemicals</li>
+        </ul>
+      </div>
+
+      <h3>Chemicals at BBB Tank Services Job Sites</h3>
+      <p>BBB Tank Services employees are regularly exposed to a wide range of chemical hazards during tank cleaning, inspection, and maintenance. These include:</p>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Residual Tank Substances</h4>
+          <ul>
+            <li>Crude oil and petroleum products</li>
+            <li>Gasoline, diesel, jet fuel</li>
+            <li>Asphalt and heavy fuel oils</li>
+            <li>Produced water and brine</li>
+            <li>Hydrogen sulfide (H&sub2;S) in vapor</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Cleaning &amp; Treatment Chemicals</h4>
+          <ul>
+            <li>Caustic soda (sodium hydroxide)</li>
+            <li>Acid cleaners (hydrochloric, citric)</li>
+            <li>Degreasers and solvents</li>
+            <li>Chemical neutralizers</li>
+            <li>Rust inhibitors and coatings</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Operational Products</h4>
+          <ul>
+            <li>Lubricants and hydraulic fluids</li>
+            <li>Welding gases (oxygen, acetylene, argon)</li>
+            <li>Battery acid</li>
+            <li>Paints, primers, and coatings</li>
+            <li>Adhesives and sealants</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-success">
+        <strong>&#10003; Your Rights Under HazCom:</strong> You have the legal right to know the identity and hazards of every chemical you work with. You have the right to access the SDS for any chemical at your job site before you work with it &mdash; at any time, on any shift. You cannot be disciplined for requesting this information. If you cannot locate an SDS, stop work and notify your supervisor.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> GHS Chemical Labels</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Every container of hazardous chemical &mdash; from the original manufacturer&rsquo;s container to a smaller transferred container &mdash; must bear a GHS-compliant label. GHS labels must contain exactly <strong>six required elements</strong>. Knowing these elements lets you quickly assess any chemical hazard before you open the container.</p>
+
+      <div class="label-demo">
+        <div class="label-title">The 6 Required GHS Label Elements</div>
+        <div class="label-elements">
+          <div class="label-el">
+            <div class="el-num">Element 1</div>
+            <strong>Product Identifier</strong>
+            The chemical name, code, or batch number that matches the SDS. Must be the same identifier used on the SDS.
+          </div>
+          <div class="label-el">
+            <div class="el-num">Element 2</div>
+            <strong>Signal Word</strong>
+            Either DANGER (more severe hazard) or WARNING (less severe hazard). Only one signal word appears per label.
+          </div>
+          <div class="label-el">
+            <div class="el-num">Element 3</div>
+            <strong>Hazard Statements</strong>
+            Standard phrases describing the nature and degree of the hazard. Example: &ldquo;Causes serious eye damage.&rdquo; or &ldquo;May cause cancer.&rdquo;
+          </div>
+          <div class="label-el">
+            <div class="el-num">Element 4</div>
+            <strong>Precautionary Statements</strong>
+            Recommended measures to minimize or prevent adverse effects. Covers: Prevention, Response, Storage, and Disposal.
+          </div>
+          <div class="label-el">
+            <div class="el-num">Element 5</div>
+            <strong>Pictogram(s)</strong>
+            One or more GHS hazard pictograms &mdash; black symbols in a red diamond border &mdash; that visually communicate the type of hazard.
+          </div>
+          <div class="label-el">
+            <div class="el-num">Element 6</div>
+            <strong>Supplier Information</strong>
+            Name, address, and phone number of the chemical manufacturer, importer, or distributor. This is where you call in an emergency.
+          </div>
+        </div>
+      </div>
+
+      <h3>Signal Words</h3>
+      <div class="signal-wrap">
+        <div class="signal-badge signal-danger">
+          DANGER
+          <span class="signal-desc">More severe hazard category<br>Used for the highest hazard levels<br>Take all precautions immediately</span>
+        </div>
+        <div class="signal-badge signal-warning">
+          WARNING
+          <span class="signal-desc">Less severe hazard category<br>Used for moderate hazard levels<br>Precautions still required</span>
+        </div>
+      </div>
+
+      <h3>Workplace Labels &amp; Secondary Containers</h3>
+      <p>When a chemical is transferred from its original container into a smaller container for use (a spray bottle, a bucket, a drum), that secondary container must also be labeled. The label must include at minimum:</p>
+      <ul>
+        <li>The product identifier (chemical name)</li>
+        <li>The hazard information (at minimum: signal word and hazard statements, or the full label)</li>
+      </ul>
+      <div class="box box-warning">
+        <strong>&#9888; Never Transfer to an Unlabeled Container.</strong> Unlabeled containers are an OSHA violation and a serious hazard. Coworkers on the next shift may not know what is in an unlabeled container. Never use food or drink containers to store chemicals &mdash; even temporarily.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> GHS Pictograms</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>GHS pictograms are standardized symbols printed inside a red diamond border. There are <strong>nine GHS pictograms</strong>. You must be able to recognize each one and understand what hazard it communicates. A single chemical may display multiple pictograms if it presents multiple hazard types.</p>
+
+      <div class="pictogram-grid">
+        <div class="pictogram-card">
+          <span class="symbol">&#128293;</span>
+          <span class="pic-name">Flame</span>
+          <span class="pic-desc">Flammable, self-reactive, pyrophoric, self-heating, emits flammable gas, organic peroxides</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#128308;</span>
+          <span class="pic-name">Flame Over Circle</span>
+          <span class="pic-desc">Oxidizers &mdash; substances that intensify fire; do not store near flammables</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#128165;</span>
+          <span class="pic-name">Exploding Bomb</span>
+          <span class="pic-desc">Explosives, self-reactive substances, organic peroxides that can detonate or deflagrate</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#9762;&#65039;</span>
+          <span class="pic-name">Skull &amp; Crossbones</span>
+          <span class="pic-desc">Acute toxicity (fatal or toxic) &mdash; can cause death or serious injury from a single exposure</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#9763;&#65039;</span>
+          <span class="pic-name">Corrosion</span>
+          <span class="pic-desc">Corrosive to skin, eyes, or metals &mdash; causes irreversible tissue destruction on contact</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#9888;&#65039;</span>
+          <span class="pic-name">Exclamation Mark</span>
+          <span class="pic-desc">Irritant, skin sensitizer, harmful, narcotic effects, respiratory irritant, hazardous to ozone layer</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#127973;</span>
+          <span class="pic-name">Health Hazard</span>
+          <span class="pic-desc">Carcinogen, respiratory sensitizer, reproductive toxin, target organ toxin, aspiration hazard</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#9928;&#65039;</span>
+          <span class="pic-name">Environment</span>
+          <span class="pic-desc">Aquatic toxicity (acute or chronic) &mdash; harmful to fish, invertebrates, or aquatic ecosystems</span>
+        </div>
+        <div class="pictogram-card">
+          <span class="symbol">&#128167;</span>
+          <span class="pic-name">Gas Cylinder</span>
+          <span class="pic-desc">Gases under pressure &mdash; compressed, liquefied, dissolved, or refrigerated liquefied gases</span>
+        </div>
+      </div>
+
+      <div class="box box-info">
+        <strong>Memorization Tip:</strong> Group the pictograms by hazard type: <strong>Physical hazards</strong> (Flame, Flame over Circle, Exploding Bomb, Gas Cylinder) &mdash; <strong>Health hazards</strong> (Skull &amp; Crossbones, Health Hazard, Exclamation Mark) &mdash; <strong>Reactive/Corrosive hazards</strong> (Corrosion) &mdash; <strong>Environmental hazards</strong> (Environment).
+      </div>
+
+      <h3>Pictograms Common in Tank Services Work</h3>
+      <p>Given the nature of BBB Tank Services operations, the pictograms you will encounter most often are:</p>
+      <ul>
+        <li><strong>Flame</strong> &mdash; on petroleum products, solvents, and flammable cleaning chemicals</li>
+        <li><strong>Skull &amp; Crossbones</strong> &mdash; on concentrated acids and caustics; certain industrial solvents</li>
+        <li><strong>Corrosion</strong> &mdash; on caustic soda (NaOH), hydrochloric acid, and battery acid</li>
+        <li><strong>Health Hazard</strong> &mdash; on petroleum distillates (benzene content), many solvents and coatings</li>
+        <li><strong>Exclamation Mark</strong> &mdash; on degreasers, lubricants, and mild irritants</li>
+        <li><strong>Gas Cylinder</strong> &mdash; on compressed gas cylinders (oxygen, acetylene, argon, nitrogen)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Safety Data Sheets (SDS)</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>A <strong>Safety Data Sheet (SDS)</strong> is a standardized technical document that provides comprehensive information about a hazardous chemical. Under GHS, all SDS are organized into exactly <strong>16 sections</strong> in the same order, regardless of manufacturer. This standardization means that once you know the 16-section format, you can find critical information on any SDS quickly &mdash; even in an emergency.</p>
+
+      <div class="box box-success">
+        <strong>&#10003; Where to Find SDS at BBB Tank Services:</strong> SDS must be accessible to all employees on every shift without having to ask a supervisor. BBB Tank Services maintains SDS in both digital format (accessible on company tablets/laptops at the job site) and in a physical binder kept in the crew truck or job site trailer. Know where the binder is before you start work.
+      </div>
+
+      <h3>The 16 SDS Sections</h3>
+      <div class="sds-grid">
+        <div class="sds-item"><div class="sds-num">1</div><div class="sds-text"><strong>Identification</strong><span>Product name, uses, manufacturer contact info</span></div></div>
+        <div class="sds-item"><div class="sds-num">2</div><div class="sds-text"><strong>Hazard(s) Identification</strong><span>GHS classification, signal word, pictograms, hazard &amp; precautionary statements</span></div></div>
+        <div class="sds-item"><div class="sds-num">3</div><div class="sds-text"><strong>Composition / Ingredients</strong><span>Chemical identity, CAS numbers, concentration ranges</span></div></div>
+        <div class="sds-item"><div class="sds-item sds-num">4</div><div class="sds-text"><strong>First-Aid Measures</strong><span>Symptoms and treatment by route of exposure (skin, eyes, inhalation, ingestion)</span></div></div>
+        <div class="sds-item"><div class="sds-num">5</div><div class="sds-text"><strong>Fire-Fighting Measures</strong><span>Suitable extinguishants, special hazards, protective equipment for firefighters</span></div></div>
+        <div class="sds-item"><div class="sds-num">6</div><div class="sds-text"><strong>Accidental Release Measures</strong><span>Spill containment, cleanup procedures, environmental precautions</span></div></div>
+        <div class="sds-item"><div class="sds-num">7</div><div class="sds-text"><strong>Handling &amp; Storage</strong><span>Safe use precautions, incompatible materials, storage conditions</span></div></div>
+        <div class="sds-item"><div class="sds-num">8</div><div class="sds-text"><strong>Exposure Controls / PPE</strong><span>OSHA PEL, NIOSH REL, ACGIH TLV, required PPE, ventilation needs</span></div></div>
+        <div class="sds-item"><div class="sds-num">9</div><div class="sds-text"><strong>Physical &amp; Chemical Properties</strong><span>Appearance, odor, pH, boiling point, flash point, flammability limits</span></div></div>
+        <div class="sds-item"><div class="sds-num">10</div><div class="sds-text"><strong>Stability &amp; Reactivity</strong><span>Conditions to avoid, incompatible materials, hazardous decomposition products</span></div></div>
+        <div class="sds-item"><div class="sds-num">11</div><div class="sds-text"><strong>Toxicological Information</strong><span>Routes of exposure, acute &amp; chronic health effects, carcinogenicity, LD50/LC50</span></div></div>
+        <div class="sds-item"><div class="sds-num">12</div><div class="sds-text"><strong>Ecological Information</strong><span>Environmental fate, aquatic toxicity, persistence and biodegradability</span></div></div>
+        <div class="sds-item"><div class="sds-num">13</div><div class="sds-text"><strong>Disposal Considerations</strong><span>Waste disposal methods, regulatory classification</span></div></div>
+        <div class="sds-item"><div class="sds-num">14</div><div class="sds-text"><strong>Transport Information</strong><span>UN number, proper shipping name, hazard class, packing group</span></div></div>
+        <div class="sds-item"><div class="sds-num">15</div><div class="sds-text"><strong>Regulatory Information</strong><span>SARA, CERCLA, state regulations, inventory listings</span></div></div>
+        <div class="sds-item"><div class="sds-num">16</div><div class="sds-text"><strong>Other Information</strong><span>Revision date, changes from previous version, preparer information</span></div></div>
+      </div>
+
+      <h3>The Four Sections You Must Know Cold</h3>
+      <p>In an emergency or before starting a job, four SDS sections give you the most critical information:</p>
+      <table class="std-table">
+        <thead><tr><th>Section</th><th>When You Use It</th><th>What You Need From It</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Section 2 &mdash; Hazard Identification</strong></td><td>Before any chemical work begins</td><td>The GHS hazard class, signal word, and all hazard &amp; precautionary statements. Tells you what can happen and what to do to prevent it.</td></tr>
+          <tr><td><strong>Section 4 &mdash; First Aid</strong></td><td>Immediately after an exposure</td><td>Specific first-aid steps for each route of exposure: skin contact, eye contact, inhalation, and ingestion. Share with emergency responders.</td></tr>
+          <tr><td><strong>Section 6 &mdash; Accidental Release</strong></td><td>During a spill or leak</td><td>How to contain and clean up the spill, personal protective precautions during cleanup, and environmental notifications required.</td></tr>
+          <tr><td><strong>Section 8 &mdash; Exposure Controls / PPE</strong></td><td>Before starting work with the chemical</td><td>What PPE is required (gloves, respirator, eye protection), exposure limits (OSHA PEL, NIOSH REL), and ventilation requirements.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Using an SDS in the Field</div>
+        <h4>Chemical Spill During Tank Cleaning</h4>
+        <p>Your crew is using a caustic degreaser to clean the interior of a fuel storage tank. A hose fitting fails and approximately 5 gallons of concentrate spills on the tank floor. A crew member&rsquo;s arms and legs are splashed. What do you do?</p>
+        <p><strong>Step 1:</strong> Have the exposed worker move to fresh air and begin flushing the affected skin with large amounts of water immediately &mdash; do not wait to read the SDS first for skin/eye contact. <strong>Step 2:</strong> Retrieve the SDS for the degreaser. Go to Section 4 (First Aid) for specific decontamination instructions and Section 6 (Accidental Release) for spill cleanup steps. <strong>Step 3:</strong> Call 911 if Section 4 indicates medical attention is needed for caustic exposure &mdash; concentrated caustic soda can cause serious chemical burns that may not be immediately painful. Section 8 tells the cleanup crew what PPE they need before entering the spill area.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Chemical Hazard Classification</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Under GHS, chemicals are classified into <strong>hazard classes</strong> (the type of hazard) and <strong>hazard categories</strong> (the severity within that class). Category 1 is always the <em>most severe</em>; higher category numbers indicate lower severity. This is the opposite of some older rating systems &mdash; be careful not to confuse them.</p>
+
+      <h3>Major Hazard Classes</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Physical Hazards</h4>
+          <ul>
+            <li>Flammable liquids (Cat. 1&ndash;4 by flash point)</li>
+            <li>Flammable gases</li>
+            <li>Oxidizing liquids and solids</li>
+            <li>Explosives</li>
+            <li>Compressed gases</li>
+            <li>Self-reactive substances</li>
+            <li>Pyrophoric liquids and solids</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Health Hazards</h4>
+          <ul>
+            <li>Acute toxicity (oral, dermal, inhalation)</li>
+            <li>Skin corrosion/irritation</li>
+            <li>Serious eye damage/irritation</li>
+            <li>Respiratory or skin sensitization</li>
+            <li>Germ cell mutagenicity</li>
+            <li>Carcinogenicity</li>
+            <li>Reproductive toxicity</li>
+            <li>Target organ toxicity (single/repeated)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Flammable Liquid Categories &mdash; Relevant to Tank Work</h3>
+      <table class="std-table">
+        <thead><tr><th>Category</th><th>Flash Point</th><th>Signal Word</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cat. 1</strong></td><td>&lt;23&deg;C (&lt;73&deg;F) and initial boiling point &le;35&deg;C</td><td>DANGER</td><td>Diethyl ether, pentane, carbon disulfide</td></tr>
+          <tr><td><strong>Cat. 2</strong></td><td>&lt;23&deg;C (&lt;73&deg;F)</td><td>DANGER</td><td>Gasoline, acetone, hexane</td></tr>
+          <tr><td><strong>Cat. 3</strong></td><td>23&ndash;60&deg;C (73&ndash;140&deg;F)</td><td>DANGER</td><td>Diesel fuel, kerosene, xylene</td></tr>
+          <tr><td><strong>Cat. 4</strong></td><td>60&ndash;93&deg;C (140&ndash;200&deg;F)</td><td>WARNING</td><td>Fuel oil No. 4, some lubricating oils</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-warning">
+        <strong>&#9888; GHS vs. HMIS/NFPA:</strong> Older chemical labeling systems like HMIS (Hazardous Materials Identification System) and NFPA 704 &ldquo;Fire Diamond&rdquo; use a 0&ndash;4 numerical scale where <strong>4 = most hazardous</strong>. GHS uses Category 1 = most hazardous. You may encounter both systems at customer facilities. Know the difference so you do not misread a hazard level.
+      </div>
+
+      <h3>Exposure Routes &mdash; How Chemicals Enter the Body</h3>
+      <p>Understanding how a chemical can enter the body helps you select the right protective equipment:</p>
+      <ul>
+        <li><strong>Inhalation</strong> &mdash; breathing vapors, gases, mists, fumes, or dusts. The most common route of occupational exposure. Respiratory protection addresses this route.</li>
+        <li><strong>Skin absorption</strong> &mdash; some chemicals (e.g., benzene, many pesticides) pass through intact skin. Gloves and coveralls address this route.</li>
+        <li><strong>Skin/eye contact</strong> &mdash; corrosives, irritants, and sensitizers cause local damage on contact. Chemical splash goggles and face shields address this route.</li>
+        <li><strong>Ingestion</strong> &mdash; swallowing chemicals, often from contaminated hands. Prevented by washing hands before eating, drinking, or using tobacco, and by not eating in chemical work areas.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Your Responsibilities &amp; BBB Tank Services HazCom Program</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>What BBB Tank Services Is Required to Provide</h3>
+      <ul>
+        <li>A written HazCom program available for review by any employee at any time</li>
+        <li>An up-to-date chemical inventory listing all hazardous chemicals in the workplace</li>
+        <li>An SDS for every hazardous chemical on the inventory, accessible on all shifts</li>
+        <li>GHS-compliant labels on all containers of hazardous chemicals</li>
+        <li>HazCom training at the time of initial assignment and when new chemical hazards are introduced</li>
+      </ul>
+
+      <h3>What You Are Required to Do</h3>
+      <ul>
+        <li><strong>Read the label</strong> on every chemical container before opening or using it. Do not skip this step even for chemicals you use regularly &mdash; formulations change.</li>
+        <li><strong>Locate and review the SDS</strong> before working with any chemical you are unfamiliar with, or before any task with significant exposure potential.</li>
+        <li><strong>Use the required PPE</strong> specified in Section 8 of the SDS and on the label precautionary statements.</li>
+        <li><strong>Never remove or deface a label</strong> from any chemical container. Unlabeled containers are a hazard and an OSHA violation.</li>
+        <li><strong>Label all secondary containers</strong> when transferring chemicals from original containers.</li>
+        <li><strong>Report missing or damaged labels</strong> and missing SDS to your supervisor immediately.</li>
+        <li><strong>Report any chemical exposure</strong> &mdash; skin contact, splash, or inhalation &mdash; to your supervisor and seek first aid or medical attention per the SDS.</li>
+      </ul>
+
+      <h3>Before Starting Any Chemical Task &mdash; Pre-Job Steps</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Identify the chemical.</strong> Read the product identifier on the label. Make sure you have the right product for the job and confirm you understand what it is.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Review the label.</strong> Note the signal word, pictograms, hazard statements, and precautionary statements. What hazards are present? What should you avoid?</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Locate and review the SDS.</strong> Focus on Sections 2, 4, 6, and 8. Confirm you know: what PPE is required, what to do if exposed, and how to respond to a spill.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Don required PPE</strong> before opening or handling the chemical. PPE goes on before exposure occurs &mdash; not after.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Verify ventilation and emergency equipment.</strong> Confirm there is adequate ventilation. Know where the nearest eyewash station, safety shower, and fire extinguisher are located before starting.</div></li>
+      </ol>
+
+      <div class="box box-danger">
+        <strong>&#9888; Non-Routine Tasks and New Chemicals:</strong> If you are asked to work with a chemical you have never used before, or to perform a non-routine task involving chemical exposure, you have the right &mdash; and the responsibility &mdash; to review the SDS and receive adequate training before beginning work. Do not allow time pressure to bypass this step. A chemical exposure that causes injury or illness cannot be undone after the fact.
+      </div>
+
+      <h3>Chemical Exposure &mdash; Immediate Actions</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Skin or Eye Contact</h4>
+          <ul>
+            <li>Remove contaminated clothing immediately</li>
+            <li>Flush with large amounts of water for 15&ndash;20 minutes</li>
+            <li>For eye contact: use the eyewash station; hold eyelids open and flush continuously</li>
+            <li>Do not rub eyes or skin</li>
+            <li>Notify supervisor and refer to SDS Section 4</li>
+            <li>Seek medical evaluation for any corrosive or sensitizer exposure</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Inhalation Exposure</h4>
+          <ul>
+            <li>Remove to fresh air immediately</li>
+            <li>Position conscious victim sitting upright</li>
+            <li>Loosen tight clothing around the chest</li>
+            <li>Call 911 for significant exposures or any loss of consciousness</li>
+            <li>Provide SDS to emergency responders</li>
+            <li>Do not re-enter the area without proper respiratory protection</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. OSHA&rsquo;s Hazard Communication Standard requires three things from employers. Which answer correctly identifies all three?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> Chemical inventories, fire extinguishers, and annual safety audits</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> Labels on all hazardous chemical containers, Safety Data Sheets accessible on all shifts, and employee training</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> Labels, monthly SDS reviews signed by employees, and supervisor approval before chemical use</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> HMIS color coding, SDS binders in the main office, and annual refresher training</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. How many required elements must appear on a GHS-compliant chemical label?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> Four &mdash; product name, pictogram, signal word, and manufacturer name</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Eight &mdash; including the full SDS reference number and batch code</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Six &mdash; product identifier, signal word, hazard statements, precautionary statements, pictogram(s), and supplier information</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> Three &mdash; chemical name, hazard class, and emergency contact number</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. A chemical label displays the signal word DANGER. What does this tell you compared to a label that reads WARNING?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> DANGER means the chemical is explosive; WARNING means it is only flammable</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> DANGER indicates a more severe hazard category; WARNING indicates a less severe hazard category within the same hazard class</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> DANGER is for liquids; WARNING is for solids and gases</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Both words mean the same thing &mdash; they are used interchangeably by manufacturers</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. Which GHS pictogram indicates that a chemical is acutely toxic and can cause death or serious harm from a single exposure?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> The Exclamation Mark</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> The Health Hazard (person with starburst chest)</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> The Skull and Crossbones</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> The Corrosion symbol</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. Under GHS, which hazard category number represents the MOST severe level of a hazard?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Category 4 &mdash; the highest number is the most hazardous</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Category 1 &mdash; the lowest number is the most hazardous under GHS</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Category numbers have no relationship to severity under GHS</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Both Category 1 and Category 4 can be the most severe depending on the hazard class</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. You need to quickly find what PPE is required before handling a chemical. Which SDS section do you go to first?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Section 2 &mdash; Hazard Identification</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Section 11 &mdash; Toxicological Information</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Section 8 &mdash; Exposure Controls / PPE</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Section 7 &mdash; Handling and Storage</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A crew member transfers caustic degreaser concentrate from a large drum into a smaller spray bottle for use inside a tank. What must happen to the spray bottle?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Nothing &mdash; secondary containers used within the same shift do not require labels</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> It must be labeled with at minimum the product identifier and hazard information</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> It only needs a label if it will be taken off-site</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> The crew member&rsquo;s name and the date are sufficient labeling for a secondary container</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. A worker gets chemical splash in his eyes while cleaning a tank. What is the correct immediate action?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Go to the SDS Section 4, read all instructions, then begin flushing eyes</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Cover the eyes with a clean cloth and wait for the supervisor to arrive</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Immediately flush both eyes at the eyewash station with large amounts of water for 15&ndash;20 minutes; then consult the SDS Section 4 and notify the supervisor</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Rinse briefly with water for 1&ndash;2 minutes, then drive to urgent care</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. Which SDS section tells you how to safely contain and clean up a chemical spill?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Section 9 &mdash; Physical and Chemical Properties</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Section 13 &mdash; Disposal Considerations</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Section 6 &mdash; Accidental Release Measures</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Section 10 &mdash; Stability and Reactivity</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. You are assigned to use a chemical you have never worked with before. Your supervisor says there is no time to read the SDS &mdash; just get started and read it later. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Begin work as instructed &mdash; the supervisor has assessed the risk and it is their responsibility, not yours</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Work carefully and review the SDS at lunch when time allows</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Politely decline to begin until you have reviewed the SDS. Under OSHA&rsquo;s HazCom Standard, you have the right to this information before working with an unfamiliar chemical.</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Ask a coworker who has used the chemical before to give you a quick verbal summary instead</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-014.html" class="nav-btn prev">&larr; Module 14</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-016.html" class="nav-btn next">Module 16 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-015 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  /* ── Accordion ─────────────────────────────────────────────── */
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+
+    if (!wasOpen) {
+      header.classList.add('open');
+      body.classList.add('open');
+      openedSections.add(idx);
+    }
+    updateProgress();
+  }
+
+  /* ── Progress ──────────────────────────────────────────────── */
+  function updateProgress() {
+    setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80));
+  }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  /* ── Quiz ──────────────────────────────────────────────────── */
+  const ANSWERS = {
+    q1:'b', q2:'c', q3:'b', q4:'c', q5:'b',
+    q6:'c', q7:'b', q8:'c', q9:'c', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'HazCom\'s three requirements are: GHS-compliant labels on all hazardous chemical containers, Safety Data Sheets accessible to employees on all shifts, and training for employees on how to understand labels and SDS before they work with chemicals.',
+    q2:  'GHS labels must have exactly six elements: product identifier, signal word, hazard statements, precautionary statements, pictogram(s), and supplier information. All six must be present for the label to be GHS-compliant under OSHA\'s HCS.',
+    q3:  'Signal words communicate relative severity within GHS. DANGER is used for the more severe hazard categories (e.g., Flammable Liquid Category 1–3); WARNING is used for less severe categories (e.g., Category 4). Only one signal word appears per label.',
+    q4:  'The Skull and Crossbones pictogram indicates acute toxicity — a substance that can cause death or serious injury from a single exposure by inhalation, skin contact, or ingestion. The Exclamation Mark indicates lesser acute toxicity or irritation, and the Health Hazard indicates chronic health effects.',
+    q5:  'Under GHS, Category 1 is always the most severe classification within a hazard class. This is the opposite of NFPA and HMIS systems where 4 = most hazardous. Knowing this distinction prevents dangerous misreading of hazard severity.',
+    q6:  'Section 8 (Exposure Controls / PPE) provides the OSHA PEL, NIOSH REL, ACGIH TLV, specific PPE requirements including glove material, respirator type, eye and face protection, and ventilation requirements. This is the section to consult before starting work.',
+    q7:  'All secondary containers must be labeled with at minimum the product identifier and hazard information. An unlabeled secondary container is both an OSHA violation and a safety hazard — other workers have no way to know what is inside or how to protect themselves.',
+    q8:  'Eye flushing must begin immediately — do not delay to read the SDS for a splash exposure. Move to the eyewash station and flush continuously for 15–20 minutes. Time is critical: flushing within seconds of a caustic splash can prevent permanent eye damage. Consult SDS Section 4 and notify your supervisor while or after flushing.',
+    q9:  'Section 6 (Accidental Release Measures) provides specific spill containment and cleanup procedures, required PPE for the cleanup crew, methods for preventing the spill from spreading to drains or waterways, and any required environmental notifications.',
+    q10: 'Under OSHA\'s HazCom Standard, you have the legal right to know the hazards of chemicals you work with before you work with them. You cannot be disciplined for exercising this right. Working with an unfamiliar chemical without reading the SDS is both a safety risk and a violation of the company\'s HazCom program.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+
+      allOpts.forEach(r => {
+        if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct');
+      });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+
+    try {
+      const STORAGE_KEY = 'bbb_training_records';
+      const records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      records.push({ module:'015', title:'Hazard Communication Program', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 015 complete! Your record has been saved. Proceed to Module 016.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

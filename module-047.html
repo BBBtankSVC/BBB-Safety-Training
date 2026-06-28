@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 047 &ndash; Hexavalent Chromium | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* HEALTH EFFECTS TIMELINE */
+    .health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+    .health-card { border-radius: 8px; padding: 16px; border-left: 5px solid; }
+    .hc-lung   { background: #FEF0EE; border-color: #C0392B; } .hc-lung h4   { color: #C0392B; }
+    .hc-nasal  { background: #FEF9EE; border-color: #e67e22; } .hc-nasal h4  { color: #9a5000; }
+    .hc-skin   { background: #FFFBEA; border-color: #D4AC0D; } .hc-skin h4   { color: #7a5000; }
+    .hc-eye    { background: #EEF4FF; border-color: var(--navy2); } .hc-eye h4 { color: var(--navy2); }
+    .health-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 7px; }
+    .health-card p  { font-size: .82rem; color: #444; margin: 0; line-height: 1.5; }
+
+    /* EXPOSURE LIMITS BOX */
+    .limits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 14px 0; }
+    .limit-card { background: var(--card); border: 2px solid; border-radius: 8px; padding: 16px; text-align: center; }
+    .limit-card .lc-val { font-size: 1.5rem; font-weight: 800; }
+    .limit-card .lc-name { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin: 4px 0; }
+    .limit-card .lc-desc { font-size: .74rem; color: var(--muted); line-height: 1.4; }
+    .lc-al   { border-color: #D4AC0D; } .lc-al .lc-val, .lc-al .lc-name { color: #9a7000; }
+    .lc-pel  { border-color: var(--orange); } .lc-pel .lc-val, .lc-pel .lc-name { color: var(--orange2); }
+    .lc-niosh{ border-color: var(--red); } .lc-niosh .lc-val, .lc-niosh .lc-name { color: var(--red); }
+
+    /* OPERATION CARDS */
+    .op-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 14px 0; }
+    .op-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; border-top: 4px solid var(--orange); }
+    .op-card h4 { font-size: .88rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .op-card .op-risk { font-size: .72rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+    .risk-very-high { background: #FEF0EE; color: var(--red); }
+    .risk-high-lev  { background: #FEF9EE; color: #9a5000; }
+    .risk-mod       { background: #FFFBEA; color: #7a5000; }
+    .op-card p { font-size: .8rem; color: #444; margin: 0; }
+
+    /* HIERARCHY VISUAL */
+    .control-stack { margin: 14px 0; }
+    .ctrl-level { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; }
+    .ctrl-badge { flex-shrink: 0; width: 90px; padding: 5px 8px; border-radius: 6px; text-align: center; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; }
+    .cb-elim  { background: #EDFAF2; color: var(--green); border: 1px solid #a9dfbf; }
+    .cb-sub   { background: #EEF4FF; color: #1a5278; border: 1px solid #aed6f1; }
+    .cb-eng   { background: #FEF9EE; color: #9a5000; border: 1px solid #f0c27a; }
+    .cb-admin { background: #FFFBEA; color: #7a5000; border: 1px solid #f7dc6f; }
+    .cb-ppe   { background: #FEF0EE; color: #7a1000; border: 1px solid #f0a899; }
+    .ctrl-content { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 11px 14px; font-size: .87rem; }
+    .ctrl-content strong { display: block; color: var(--navy); margin-bottom: 3px; font-size: .9rem; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-043.html">&larr; Mod 43</a>
+    <a href="module-047.html" class="active">Mod 47</a>
+    <a href="module-048.html">Mod 48 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 47 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 047 &middot; SHP-BBB-047</div>
+  <h1>Hexavalent Chromium</h1>
+  <p class="subtitle">A confirmed human carcinogen generated during stainless steel welding and cutting at petroleum facilities &mdash; invisible, odorless, and requiring specific controls that go beyond standard welding PPE.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 35 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Define hexavalent chromium and identify how it differs from other chromium forms</li>
+      <li>List the diseases caused by Cr VI exposure and their mechanisms</li>
+      <li>State the OSHA PEL and Action Level for hexavalent chromium</li>
+      <li>Identify the operations at BBB Tank Services that generate Cr VI</li>
+      <li>Apply engineering controls in the correct hierarchy for Cr VI work</li>
+      <li>Select appropriate respiratory protection for Cr VI-generating tasks</li>
+      <li>Describe the housekeeping and personal hygiene requirements specific to Cr VI</li>
+      <li>Explain medical surveillance and recordkeeping requirements for Cr VI workers</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is Hexavalent Chromium &amp; How Is It Generated</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Chromium is a metallic element that exists in several different oxidation states. Most naturally occurring chromium is in its trivalent form (Cr III), which is relatively stable and considered non-hazardous at typical exposure levels. <strong>Hexavalent chromium (Cr VI or Cr&sup6;&sup;&#x207a;)</strong> is a highly reactive, strongly oxidizing form of chromium that is a confirmed human carcinogen. The &ldquo;hexavalent&rdquo; refers to the +6 oxidation state &mdash; what makes this form of chromium uniquely dangerous compared to trivalent chromium.</p>
+
+      <p>Cr VI is not mined or purchased as a raw material at BBB Tank Services job sites &mdash; <strong>it is generated as a byproduct of high-heat operations on chromium-containing metals.</strong> Every time a BBB welder or cutter applies a flame or arc to stainless steel or chrome alloy, Cr VI is formed in the fume. This makes Cr VI awareness a daily concern for any crew performing welding or cutting on stainless steel components at refineries and petrochemical facilities.</p>
+
+      <h3>How Cr VI Is Generated at BBB Tank Services</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>The Welding Arc &amp; Oxidation Process</h4>
+          <ul>
+            <li>Stainless steel contains 10.5&ndash;26% chromium by weight. When the welding arc or cutting flame heats this metal above its melting point, the chromium oxidizes in the presence of atmospheric oxygen.</li>
+            <li>At these temperatures, a fraction of the chromium forms hexavalent chromium compounds (primarily chromium trioxide, CrO&sub3;, and chromates) rather than the trivalent form.</li>
+            <li>These Cr VI compounds volatilize into the welding fume as submicron particles &mdash; small enough to penetrate deep into the lung and bypass the body&rsquo;s upper respiratory filtration mechanisms.</li>
+            <li>The amount of Cr VI generated per unit of weld varies by process: FCAW and SMAW generate more fume than GTAW; cutting generates higher concentrations than welding.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Why Cr VI Particles Are Especially Hazardous</h4>
+          <ul>
+            <li><strong>Submicron particle size:</strong> Cr VI particles in welding fume are typically 0.1&ndash;1.0 microns &mdash; far below the size that can be seen, tasted, or smelled. They are invisible and odorless.</li>
+            <li><strong>Deep lung deposition:</strong> Particles this small are not filtered by the nose and upper airways; they deposit directly in the alveoli (gas-exchange surfaces) of the lungs where clearance is slow and absorption is high.</li>
+            <li><strong>High solubility of some forms:</strong> Certain Cr VI compounds are soluble in the lung environment, allowing them to migrate to distant tissues and organs.</li>
+            <li><strong>No exposure &ldquo;threshold&rdquo;:</strong> Like other carcinogens, no scientifically established concentration below which Cr VI causes no increased cancer risk.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Cr VI Is Classified as a Group 1 Human Carcinogen.</strong> The International Agency for Research on Cancer (IARC), the National Toxicology Program (NTP), and OSHA all classify Cr VI as a confirmed human carcinogen. This means the scientific evidence that Cr VI causes cancer in humans &mdash; specifically lung cancer, and nasal and sinus cancers &mdash; is definitive. There is no &ldquo;safe&rdquo; exposure level. OSHA sets a PEL to define the maximum legally permissible exposure, not a safe one.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Health Effects &amp; Exposure Limits</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Health Effects of Cr VI Exposure</h3>
+      <div class="health-grid">
+        <div class="health-card hc-lung">
+          <h4>&#129740; Lung Cancer</h4>
+          <p>The primary and most serious Cr VI health effect. Studies of chromate workers show elevated lung cancer rates of 2&ndash;30 times the general population depending on exposure level and duration. Latency period typically 15&ndash;30 years after first significant exposure. Indistinguishable from other causes of lung cancer at time of diagnosis.</p>
+        </div>
+        <div class="health-card hc-nasal">
+          <h4>&#128168; Nasal &amp; Sinus Cancer</h4>
+          <p>Cr VI is causally linked to cancers of the nasal cavity and paranasal sinuses. Nasal septum perforation (a hole in the cartilage dividing the nasal passages) occurs from chronic exposure &mdash; a painless but permanent injury that serves as a marker of significant past Cr VI exposure.</p>
+        </div>
+        <div class="health-card hc-skin">
+          <h4>&#129752; Skin Effects</h4>
+          <p>Cr VI can penetrate intact skin. Repeated skin contact causes chrome ulcers &mdash; painless, slow-healing lesions called &ldquo;chrome holes&rdquo; that develop at cut or abraded skin. Chrome allergy (contact dermatitis) causes severe itching, redness, and blistering on subsequent exposures even at low concentrations.</p>
+        </div>
+        <div class="health-card hc-eye">
+          <h4>&#128065; Eye Irritation &amp; Damage</h4>
+          <p>Cr VI in welding fume causes eye irritation, conjunctivitis, and tearing. Direct contact with Cr VI solutions (chromate paints, chromic acid) causes severe chemical burns to the eyes. Splash from chromic acid can cause permanent damage or blindness.</p>
+        </div>
+      </div>
+
+      <h3>OSHA Exposure Limits for Hexavalent Chromium</h3>
+      <p>OSHA published dedicated hexavalent chromium standards in 2006 &mdash; 29 CFR 1910.1026 (General Industry) and 29 CFR 1926.1126 (Construction) &mdash; dramatically reducing the PEL from the previous 100 &mu;g/m&sup3; to the current limit:</p>
+
+      <div class="limits-grid">
+        <div class="limit-card lc-al">
+          <div class="lc-val">2.5</div>
+          <div class="lc-name">&#956;g/m&sup3; &mdash; Action Level (AL)</div>
+          <div class="lc-desc">8-hr TWA. At or above this level: air monitoring, medical surveillance, and Cr VI training required. Triggers OSHA 1910.1026 requirements.</div>
+        </div>
+        <div class="limit-card lc-pel">
+          <div class="lc-val">5</div>
+          <div class="lc-name">&#956;g/m&sup3; &mdash; OSHA PEL</div>
+          <div class="lc-desc">8-hr TWA. Maximum legally permissible 8-hour average exposure. Above this level: immediate engineering controls, respiratory protection, and regulated area required.</div>
+        </div>
+        <div class="limit-card lc-niosh">
+          <div class="lc-val">0.2</div>
+          <div class="lc-name">&#956;g/m&sup3; &mdash; NIOSH REL</div>
+          <div class="lc-desc">8-hr TWA. NIOSH&rsquo;s more protective recommendation — 25&times; lower than the OSHA PEL — reflecting the view that even the PEL poses a significant residual cancer risk.</div>
+        </div>
+      </div>
+
+      <div class="box box-warning">
+        <strong>&#9888; What 5 &mu;g/m&sup3; Means in Practice.</strong> Five micrograms per cubic meter is a vanishingly small quantity &mdash; 5 millionths of a gram in 1,000 liters of air. You cannot see it, smell it, or taste it. The only reliable way to know whether Cr VI is within acceptable limits during welding operations is air monitoring with proper analytical methods. Workers who judge Cr VI exposure by visible fume, their own perception, or general gut feel are guessing. Engineers confirm.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Operations That Generate Cr VI at BBB Tank Services</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>BBB Tank Services personnel perform a range of tasks that may generate Cr VI, primarily centered on welding, cutting, and grinding operations on stainless steel or chrome-containing alloy components at refineries and petrochemical facilities. Understanding which specific operations generate the highest exposures allows the correct controls to be applied at the right level of protection.</p>
+
+      <div class="op-grid">
+        <div class="op-card">
+          <h4>&#128293; Stainless Steel Arc Welding</h4>
+          <span class="op-risk risk-very-high">Very High Cr VI</span>
+          <p>SMAW, GMAW (MIG), and FCAW on stainless steel generate the highest Cr VI concentrations of any common BBB task. FCAW generates more fume per unit of weld than GMAW; both exceed OSHA PEL without controls at typical welding amperages.</p>
+        </div>
+        <div class="op-card">
+          <h4>&#128167; Stainless Steel TIG Welding</h4>
+          <span class="op-risk risk-high-lev">High Cr VI</span>
+          <p>GTAW (TIG) generates less fume than SMAW or GMAW but still produces significant Cr VI in confined or semi-enclosed conditions. At lower fume volumes, the Cr VI percentage by mass is higher than in MIG fume.</p>
+        </div>
+        <div class="op-card">
+          <h4>&#9889; Plasma Cutting Stainless</h4>
+          <span class="op-risk risk-very-high">Very High Cr VI</span>
+          <p>Plasma cutting stainless steel generates extremely high Cr VI concentrations &mdash; potentially orders of magnitude above the PEL without LEV controls. The cutting process vaporizes large quantities of base metal rapidly.</p>
+        </div>
+        <div class="op-card">
+          <h4>&#128296; Grinding Stainless Steel</h4>
+          <span class="op-risk risk-high-lev">High Cr VI</span>
+          <p>Grinding and disc-cutting stainless generates Cr VI particles from friction heating of the base metal. Smaller particle sizes from grinding may penetrate deeper into the lung than welding fume particles.</p>
+        </div>
+        <div class="op-card">
+          <h4>&#127381; Disturbing Chrome-Containing Coatings</h4>
+          <span class="op-risk risk-high-lev">High Cr VI</span>
+          <p>Sanding, blasting, or burning through chromate-containing primers and anti-corrosion coatings on older tank structures generates Cr VI dust. Chromate pigments (zinc chromate, strontium chromate) in industrial primers are a direct Cr VI source.</p>
+        </div>
+        <div class="op-card">
+          <h4>&#9881; Oxy-Fuel Cutting Stainless</h4>
+          <span class="op-risk risk-mod">Moderate Cr VI</span>
+          <p>Oxy-fuel cutting is less effective on stainless steel than plasma or laser cutting; the lower efficiency means less Cr VI fume per minute than plasma cutting, but exposures above the PEL are common without controls.</p>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Underestimating the Hazard</div>
+        <h4>The &ldquo;Quick Grind&rdquo; on a Stainless Nozzle</h4>
+        <p>A BBB crew is completing a nozzle repair on a stainless steel heat exchanger. The final step is a 10-minute grinding pass to dress the weld profile. The crew lead says &ldquo;it&rsquo;s just a quick grind, we don&rsquo;t need LEV for that.&rdquo; No local exhaust ventilation is set up. The grinder is wearing a P100 half-face respirator and FRC. The air concentration during that 10-minute grind is later measured at 35 &mu;g/m&sup3;.</p>
+        <p><strong>What was wrong:</strong> At 35 &mu;g/m&sup3;, the Cr VI concentration was 7&times; the OSHA PEL during those 10 minutes. Even a short-duration, high-concentration exposure contributes to cumulative cancer risk. The 10-minute assessment would yield an 8-hr TWA contribution that likely exceeded the AL. LEV is required for stainless steel grinding and must be positioned within 6&ndash;12 inches of the grinding point before the operation begins &mdash; the duration of the task does not reduce the obligation to control the hazard.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Engineering Controls &amp; Work Practices</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>OSHA 1910.1026 requires engineering and work practice controls as the primary means of reducing Cr VI exposure &mdash; not relying on PPE as the first line of defense. Engineering controls must be implemented to the extent feasible before respirators are used to address the remaining exposure.</p>
+
+      <div class="control-stack">
+        <div class="ctrl-level">
+          <div class="ctrl-badge cb-elim">Eliminate</div>
+          <div class="ctrl-content">
+            <strong>Redesign or Substitute the Material</strong>
+            Specify lower-chromium alloys for repairs where stainless steel&rsquo;s corrosion resistance is not strictly necessary. Use mechanical joining (flanging, bolting) instead of welding where feasible. Discuss material substitution with the engineering team during the planning phase.
+          </div>
+        </div>
+        <div class="ctrl-level">
+          <div class="ctrl-badge cb-sub">Substitute</div>
+          <div class="ctrl-content">
+            <strong>Change the Welding Process</strong>
+            Switch from SMAW or FCAW (high fume generation) to GTAW (TIG welding, lower fume) where the application permits. Use automated or robotic welding systems for repetitive stainless welds when available. Lower-fume processes reduce total Cr VI generated even if LEV is still required.
+          </div>
+        </div>
+        <div class="ctrl-level">
+          <div class="ctrl-badge cb-eng">Engineering</div>
+          <div class="ctrl-content">
+            <strong>Local Exhaust Ventilation (LEV) &mdash; Required for All Cr VI Operations</strong>
+            Position the LEV capture hood 6&ndash;12 inches from the arc or grinding point, directed to capture the fume plume before it reaches the worker&rsquo;s breathing zone. Use backdraft hoods, side-draft tables, or flexible arm LEV systems. For confined or semi-enclosed work, combine LEV with forced-air supply ventilation. At minimum 10,000 CFM general ventilation if LEV is not achievable; LEV is always preferred.
+          </div>
+        </div>
+        <div class="ctrl-level">
+          <div class="ctrl-badge cb-admin">Admin</div>
+          <div class="ctrl-content">
+            <strong>Work Practice Controls</strong>
+            Position the welder upwind or with LEV capturing the fume; never weld with the face downwind into the fume plume. Rotate workers to reduce individual exposure duration. Schedule Cr VI work in isolated areas to prevent exposing non-welding crew members. Wet methods or HEPA vacuum for all Cr VI waste and surface cleanup &mdash; no dry sweeping of Cr VI-contaminated areas.
+          </div>
+        </div>
+        <div class="ctrl-level">
+          <div class="ctrl-badge cb-ppe">PPE</div>
+          <div class="ctrl-content">
+            <strong>Respiratory Protection &mdash; Required in Addition to Engineering Controls</strong>
+            A P100 (HEPA) particulate filter is the minimum for Cr VI work with LEV in place. Full-face APR with OV+P100 when Cr VI work involves other chemical hazards. Supplied-air respirator when concentrations exceed 25&times; the PEL (125 &mu;g/m&sup3;) or in oxygen-deficient conditions. Fit-tested, NIOSH-approved respirator required &mdash; no exceptions.
+          </div>
+        </div>
+      </div>
+
+      <h3>Housekeeping &mdash; A Critical Cr VI Control</h3>
+      <p>OSHA 1910.1026 includes specific housekeeping requirements for Cr VI work that go beyond general workplace cleanliness. These requirements exist because Cr VI-contaminated surfaces and settled fume particles continue to be an exposure pathway long after the welding operation is complete:</p>
+      <ul>
+        <li><strong>HEPA vacuum all Cr VI-contaminated surfaces</strong> before any cleanup. Standard vacuums pass Cr VI particles through their exhaust &mdash; only HEPA-rated vacuums capture particles at the size of Cr VI welding fume.</li>
+        <li><strong>Wet wiping of surfaces</strong> after HEPA vacuuming to remove residual Cr VI particles. Never dry sweep or use compressed air to blow down Cr VI-contaminated surfaces &mdash; this re-suspends settled Cr VI particles into the breathing zone.</li>
+        <li><strong>Dispose of Cr VI-contaminated waste</strong> (wipes, filters, PPE) as hazardous waste per the facility&rsquo;s waste management procedures. Cr VI is a regulated hazardous substance.</li>
+        <li><strong>Label waste containers</strong> with the Cr VI hazard warning; bag and seal contaminated PPE before removal from the work area.</li>
+      </ul>
+
+      <h3>Personal Hygiene Requirements</h3>
+      <ul>
+        <li><strong>Wash hands and face thoroughly</strong> before eating, drinking, smoking, or applying cosmetics in any area where Cr VI work is performed or has been performed. Cr VI on the hands is easily ingested during eating.</li>
+        <li><strong>Change into clean clothing</strong> before leaving the job site if Cr VI-contaminated fume has settled on work clothing. Do not launder Cr VI-contaminated clothing at home &mdash; it may contaminate household laundry and family members.</li>
+        <li><strong>Shower</strong> before leaving the site when Cr VI exposure has been significant and Cr VI contamination of clothing or skin is likely.</li>
+        <li><strong>No food, drink, or tobacco</strong> in Cr VI work areas. Ingested Cr VI is absorbed through the gastrointestinal tract and increases systemic exposure.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> PPE Selection &amp; Respiratory Protection</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Respiratory Protection Selection for Cr VI</h3>
+      <table class="std-table">
+        <thead><tr><th>Air Concentration of Cr VI</th><th>Minimum Respirator</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>&lt;2.5 &mu;g/m&sup3; (below AL)</td>
+            <td>No respirator required by OSHA</td>
+            <td>BBB Tank Services still recommends P100 APR for all stainless welding; confirmed only by air monitoring</td>
+          </tr>
+          <tr>
+            <td>2.5&ndash;25 &mu;g/m&sup3; (AL to 5&times; PEL)</td>
+            <td>Half-face APR with P100 particulate filter (APF 10)</td>
+            <td>Fit test required; ensure P100 filter, not N95 or P95 &mdash; only P100 meets the Cr VI particulate requirement</td>
+          </tr>
+          <tr>
+            <td>25&ndash;125 &mu;g/m&sup3; (5&times;&ndash;25&times; PEL)</td>
+            <td>Full-face APR with P100 filter (APF 50) or PAPR with P100 hood</td>
+            <td>Full face also protects eyes from Cr VI particulate; PAPR provides higher APF if needed</td>
+          </tr>
+          <tr>
+            <td>&gt;125 &mu;g/m&sup3; (&gt;25&times; PEL) or unknown concentration</td>
+            <td>Pressure-demand supplied-air respirator (APF 1,000+) or SCBA</td>
+            <td>Air-purifying respirators inadequate at these levels; not typical for standard welding ops with LEV in place</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>P100 Only for Cr VI &mdash; Not N95, Not P95.</strong> OSHA&rsquo;s Cr VI standard requires a P100 (HEPA) particulate filter rated at 99.97% efficiency for airborne particles. N95 and P95 filters are rated at 95% efficiency &mdash; insufficient for a confirmed carcinogen where every particle that reaches the lung adds to cumulative risk. When welding stainless steel, ensure your cartridges are the orange-coded P100 filters, not the standard N95 dust masks sometimes issued for general nuisance dust.
+      </div>
+
+      <h3>Additional PPE for Cr VI Work</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Skin Protection</h4>
+          <ul>
+            <li><strong>Gloves:</strong> Leather welding gloves for arc protection; nitrile or neoprene chemical gloves underneath or as outer layer when handling Cr VI-containing solutions or concentrates</li>
+            <li>Ensure no skin on the wrists or forearms is exposed between glove cuff and sleeve &mdash; this is a common skin contact point for welding fume deposition</li>
+            <li>Change gloves when Cr VI-contaminated and before touching face or eating</li>
+            <li>For chrome ulcer prevention: cover any cut or abraded skin before working in Cr VI environments</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Eye &amp; Face Protection</h4>
+          <ul>
+            <li>Standard welding helmet protects the face during welding; safety glasses underneath are mandatory</li>
+            <li>Full-face APR (required at higher concentrations) also provides eye protection from Cr VI fume</li>
+            <li>Chemical splash goggles when handling chromate solutions, chromic acid, or chromate-containing paints</li>
+            <li>Face shield over goggles when splash risk from chromate solutions is high</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Decontamination Sequence After Cr VI Work</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>HEPA vacuum outer PPE</strong> (coveralls, jacket, boots) before removing to prevent Cr VI dust from becoming airborne during doffing.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Remove outer PPE in the designated decontamination area.</strong> Fold items inward so the contaminated outer surface is contained. Place in labeled bags for laundry or disposal as appropriate.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Remove gloves last</strong> before removing the respirator, using inside-out technique to avoid skin contact with the contaminated outer surface.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Remove the respirator last</strong> &mdash; the same rule as for all toxic exposures. Wash hands before touching the respirator face seal area to avoid contaminating the inside of the facepiece.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Wash hands and face thoroughly</strong> with soap and water. Do not use solvents or abrasive cleaners on skin. Proceed to shower if significant contamination occurred.</div></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Medical Surveillance, Recordkeeping &amp; Worker Rights</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Medical Surveillance Requirements</h3>
+      <p>OSHA 1910.1026 requires medical surveillance for workers who perform Cr VI work at or above the Action Level (2.5 &mu;g/m&sup3;) for 30 or more days per year. Given that stainless steel welding routinely generates Cr VI well above the AL without controls, BBB Tank Services workers who regularly weld, cut, or grind stainless steel are typically covered.</p>
+
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Initial Medical Examination</h4>
+          <ul>
+            <li>Medical and occupational history with emphasis on prior Cr VI, chromate, or stainless steel welding exposure</li>
+            <li>Respiratory symptoms questionnaire</li>
+            <li>Pulmonary function tests (spirometry)</li>
+            <li>Skin examination &mdash; looking for chrome ulcers, sensitization, or dermatitis</li>
+            <li>Nasal septum examination for perforation or mucosal damage</li>
+            <li>Baseline chest X-ray (at physician&rsquo;s recommendation)</li>
+            <li>Completed prior to first assignment to Cr VI work above the AL</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Periodic &amp; Follow-Up Exams</h4>
+          <ul>
+            <li>Annual exam for all workers covered under the medical surveillance requirement</li>
+            <li>Medical removal protection if a physician recommends removal from Cr VI exposure &mdash; the worker must be moved to a comparable job without loss of pay, seniority, or benefits while under the MRP provision</li>
+            <li>Exit examination when leaving employment if covered under medical surveillance; record transfer required</li>
+            <li>Nasal septum examination at every annual visit &mdash; a perforation is a permanent indicator of past Cr VI overexposure</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Exposure Records &amp; Recordkeeping</h3>
+      <ul>
+        <li><strong>Air monitoring records</strong> must be maintained for 30 years from the date of measurement</li>
+        <li><strong>Medical records</strong> must be maintained for the duration of employment plus 30 years</li>
+        <li><strong>Objective data</strong> (published industry data, exposure assessments) used to demonstrate exposure levels must be maintained for 30 years</li>
+        <li>Workers and former workers must be given access to their own exposure and medical records upon request &mdash; OSHA 29 CFR 1910.1020 right of access</li>
+      </ul>
+
+      <h3>Employee Rights Under OSHA 1910.1026</h3>
+      <ul>
+        <li><strong>Right to be informed</strong> of the presence of Cr VI in the work area and the results of air monitoring within 15 working days of the monitoring being completed</li>
+        <li><strong>Right to medical surveillance</strong> at no cost to the worker, performed at a reasonable time and place</li>
+        <li><strong>Right to a written medical opinion</strong> following each medical examination</li>
+        <li><strong>Right to medical removal protection</strong> &mdash; if removed from Cr VI work on a physician&rsquo;s recommendation, the worker retains their pay rate, seniority, and benefits</li>
+        <li><strong>Right to refuse unsafe work</strong> &mdash; a worker who is assigned to stainless steel welding without LEV, proper respiratory protection, or appropriate controls can exercise Stop Work Authority (Module 026)</li>
+      </ul>
+
+      <div class="box box-success">
+        <strong>&#10003; BBB Tank Services Cr VI Requirements Summary:</strong>
+        <ul style="margin-top:8px;">
+          <li>All stainless steel welding, cutting, and grinding requires LEV positioned 6&ndash;12 inches from the work point before starting</li>
+          <li>P100 (HEPA) filters required for all Cr VI operations &mdash; N95 and P95 are not acceptable</li>
+          <li>No dry sweeping or compressed air blowdown of Cr VI-contaminated areas &mdash; HEPA vacuum only</li>
+          <li>Wash hands and face before eating, drinking, or leaving the work area; do not launder Cr VI-contaminated clothing at home</li>
+          <li>Medical surveillance required for workers exposed above 2.5 &mu;g/m&sup3; for 30 or more days per year</li>
+          <li>Exposure and medical records maintained 30 years after end of employment</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is the primary health concern from occupational hexavalent chromium exposure?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> Acute liver damage from systemic Cr VI absorption</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> Lung cancer &mdash; Cr VI is a confirmed Group 1 human carcinogen with well-established evidence of causing lung and nasal cancers</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> Allergic asthma that develops immediately upon first stainless steel welding exposure</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> Acute respiratory distress syndrome within hours of welding stainless steel without controls</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. What is the OSHA PEL for hexavalent chromium as an 8-hour TWA?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> 100 &mu;g/m&sup3; &mdash; the original PEL established in the 1970s</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> 0.2 &mu;g/m&sup3; &mdash; the NIOSH recommended exposure limit</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> 5 &mu;g/m&sup3; &mdash; the current OSHA PEL established in 2006</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> 50 &mu;g/m&sup3; &mdash; the OSHA PEL for general industry metalworking operations</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. Which of the following stainless steel operations generates the highest Cr VI fume concentration?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> GTAW (TIG) welding at low amperage</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> GMAW (MIG) welding at standard settings</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Plasma cutting stainless steel</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Grinding a stainless steel weld bead with an angle grinder</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. Where must the LEV (local exhaust ventilation) capture hood be positioned during stainless steel welding?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Within 3 feet of the arc, on the upwind side of the work</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> 6&ndash;12 inches from the arc or grinding point, positioned to capture the fume plume before it reaches the breathing zone</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> At the edge of the work area to create general dilution ventilation</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Directly overhead at ceiling level, since welding fume rises naturally</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. What is the minimum particulate filter rating required for respiratory protection during Cr VI-generating operations?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> N95 &mdash; 95% efficiency is adequate for most industrial carcinogens</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> P95 &mdash; the oil-resistant 95% filter used for welding fume in general</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> P100 (HEPA) &mdash; 99.97% efficiency; the minimum required by OSHA&rsquo;s Cr VI standard</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Any NIOSH-approved dust mask since the PEL is set at a level achievable with standard particulate protection</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. After stainless steel welding, Cr VI-contaminated fume has settled on the surrounding floor and surfaces. What is the correct cleanup method?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Dry sweep with a push broom to collect the debris efficiently before final cleanup</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Use compressed air to blow the area clean before the next shift begins</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> HEPA vacuum all surfaces, then wet wipe; dispose of all materials as Cr VI hazardous waste</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Mop with a damp mop and dispose of the wash water in the facility floor drain</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A welder notices a small painless sore on his hand that is slow to heal, at a location that was abraded a few weeks ago when working in a stainless steel welding environment. What might this indicate?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Normal healing from a minor abrasion; no connection to Cr VI exposure</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> A chrome ulcer &mdash; a skin lesion associated with Cr VI contact at broken skin; should be reported and evaluated as part of medical surveillance</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> An infected cut that requires antibiotic treatment but has no occupational cause</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> A friction blister from welding gloves that is not related to Cr VI exposure</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. Why is it prohibited to launder Cr VI-contaminated work clothing at home?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Home washing machines cannot achieve the water temperature needed to neutralize Cr VI compounds</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Cr VI-contaminated clothing laundered at home can contaminate household laundry and expose family members to a confirmed carcinogen</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Home detergents react with Cr VI to form more toxic compounds in the wastewater</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> OSHA prohibits home laundering of any work clothing as a general rule regardless of contamination type</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. How long must Cr VI air monitoring records be maintained?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> 5 years from the date of measurement</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Until the employee leaves the company</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> 30 years from the date of measurement</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> 10 years, consistent with OSHA&rsquo;s general recordkeeping requirements</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. A BBB welder is assigned to weld stainless steel pipe in a partially enclosed equipment room. He has a P100 half-face APR but no LEV has been set up. Under OSHA 1910.1026, what is the correct response?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Proceed with the weld &mdash; a P100 respirator provides adequate protection without LEV for short-duration tasks</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Proceed but increase the welding ventilation fan speed to compensate for the missing LEV</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Stop work and exercise Stop Work Authority; OSHA requires engineering controls (LEV) as the primary exposure control for Cr VI &mdash; PPE alone does not satisfy the standard</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Welding a short run of stainless steel pipe is exempt from Cr VI controls if the task takes less than 30 minutes</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-043.html" class="nav-btn prev">&larr; Module 43</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-048.html" class="nav-btn next">Module 48 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-047 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+  function toggleSection(header) {
+    const body=header.nextElementSibling,aH=document.querySelectorAll('.sec-header'),aB=document.querySelectorAll('.sec-body'),idx=[...aH].indexOf(header),was=body.classList.contains('open');
+    aH.forEach(h=>h.classList.remove('open'));aB.forEach(b=>b.classList.remove('open'));
+    if(!was){header.classList.add('open');body.classList.add('open');openedSections.add(idx);}updateProgress();
+  }
+  function updateProgress(){setProgress(Math.round(Math.min(openedSections.size/6,1)*80));}
+  function setProgress(p){document.getElementById('progFill').style.width=p+'%';document.getElementById('progPct').textContent=p+'%';}
+  updateProgress();
+
+  const ANSWERS={q1:'b',q2:'c',q3:'c',q4:'b',q5:'c',q6:'c',q7:'b',q8:'b',q9:'c',q10:'c'};
+  const EXPLANATIONS={
+    q1:'Lung cancer is the primary and most serious health effect of Cr VI exposure. Cr VI is classified as a Group 1 confirmed human carcinogen by IARC, NIOSH, and OSHA. Studies of chromate production workers and stainless steel welders consistently show 2–30x elevated lung cancer rates. Nasal and sinus cancers are also causally linked. The latency period of 15–30 years means workers exposed today may not develop cancer for decades.',
+    q2:'The current OSHA PEL for Cr VI is 5 μg/m³ as an 8-hour TWA, established by the 2006 Hexavalent Chromium Standard (1910.1026 and 1926.1126). This replaced the previous 100 μg/m³ PEL. The NIOSH REL of 0.2 μg/m³ is 25 times more protective and reflects NIOSH\'s view that the current PEL still poses a significant residual cancer risk.',
+    q3:'Plasma cutting stainless steel generates the highest Cr VI fume concentrations of any common welding or cutting operation, potentially orders of magnitude above the PEL without controls. The process rapidly vaporizes large quantities of base metal. FCAW and SMAW welding are next highest; GMAW (MIG) is somewhat lower; TIG welding generates the least fume per unit of weld.',
+    q4:'LEV capture hoods must be positioned 6–12 inches from the arc or grinding point to capture fume before it rises into the welder\'s breathing zone. Beyond 12 inches, capture efficiency drops dramatically because welding fume rises in a turbulent plume that rapidly disperses beyond the suction range of the capture hood.',
+    q5:'OSHA 1910.1026 requires a P100 (HEPA) filter rated at 99.97% efficiency for Cr VI airborne particles. N95 (95% efficiency) and P95 (95% oil-resistant) filters are not acceptable because the 5% of particles that pass through the filter includes Cr VI particles that contribute to cumulative carcinogen exposure. For a confirmed carcinogen with no established safe level, maximum feasible filter efficiency is required.',
+    q6:'Dry sweeping and compressed air are prohibited for Cr VI cleanup because they re-suspend settled Cr VI particles into the air, creating an inhalation hazard for everyone in the area. The correct method is HEPA vacuum (captures particles at the source), followed by wet wiping of remaining residue. All cleanup materials must be disposed of as Cr VI hazardous waste.',
+    q7:'A painless, slow-healing lesion at a site of prior skin abrasion in a Cr VI work environment is the classic presentation of a chrome ulcer (also called a chrome hole). Cr VI penetrates abraded or cut skin and causes localized chemical injury that resists normal healing. Chrome ulcers are both a marker of skin contact with Cr VI and an ongoing entry route for continued Cr VI absorption. They must be reported and assessed by the occupational physician.',
+    q8:'Cr VI welding fume that has settled on work clothing can transfer to household laundry in the wash cycle, contaminating family members\' clothing with a confirmed carcinogen. Children and other household members who never work at the facility can thus be exposed to Cr VI. OSHA 1910.1026 requires that Cr VI-contaminated work clothing not be laundered at home; it must be handled as potentially Cr VI-contaminated material by industrial laundering services or disposed of as appropriate.',
+    q9:'OSHA 1910.1026 requires air monitoring records to be maintained for 30 years from the date of measurement. Medical records must also be maintained for 30 years after employment ends. These long retention periods reflect the 15–30 year latency of Cr VI-induced lung cancer — a worker may not develop cancer until decades after the exposure that caused it, and the historical monitoring records become critical evidence for diagnosis and compensation.',
+    q10:'OSHA 1910.1026 requires engineering and work practice controls — specifically LEV for welding operations — as the primary means of reducing Cr VI exposure. Respirators are a supplemental control used in addition to LEV, not as a substitute for it. The standard is explicit: engineering controls must be implemented to the extent feasible before relying on respirators. Stop Work Authority applies here: the worker is correct to refuse to weld without LEV being in place first.'
+  };
+
+  function submitQuiz(){
+    let score=0;const total=Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(q=>{
+      const sel=document.querySelector(`input[name="${q}"]:checked`),fb=document.getElementById('fb'+q.slice(1)),opts=document.querySelectorAll(`input[name="${q}"]`);
+      opts.forEach(r=>r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if(!sel){if(fb){fb.textContent='⚠ No answer selected.';fb.className='feedback show incorrect';}return;}
+      const ok=sel.value===ANSWERS[q];if(ok)score++;
+      opts.forEach(r=>{if(r.value===ANSWERS[q])r.closest('.opt-label').classList.add('correct');});
+      if(!ok)sel.closest('.opt-label').classList.add('incorrect');
+      if(fb){fb.textContent=(ok?'✅ ':'❌ Review: ')+EXPLANATIONS[q];fb.className='feedback show '+(ok?'correct':'incorrect');}
+    });
+    const pct=Math.round((score/total)*100),passed=pct>=70;
+    try{const rec=JSON.parse(localStorage.getItem('bbb_training_records')||'[]');rec.push({module:'047',title:'Hexavalent Chromium',score,total,percentage:pct,passed,date:new Date().toISOString()});localStorage.setItem('bbb_training_records',JSON.stringify(rec));}catch(e){}
+    document.getElementById('scoreBig').textContent=score+'/'+total;
+    document.getElementById('scoreLabel').textContent=pct+'% \u2014 '+(passed?'PASS \u2713':'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent=passed?'\u2705 Module 047 complete! Your record has been saved. Proceed to Module 048.':'\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz.';
+    const r=document.getElementById('quizResult');r.classList.add('show');r.scrollIntoView({behavior:'smooth',block:'center'});setProgress(100);
+  }
+  function retakeQuiz(){
+    document.querySelectorAll('.opt-label').forEach(l=>l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+    document.querySelectorAll('.feedback').forEach(f=>{f.textContent='';f.className='feedback';});
+    document.getElementById('quizResult').classList.remove('show');updateProgress();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 043 &ndash; Ammonia Awareness | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* EXPOSURE LEVEL BARS */
+    .exposure-levels { margin: 14px 0; }
+    .exp-level { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+    .exp-ppm { flex-shrink: 0; width: 90px; font-weight: 800; font-size: .88rem; text-align: right; }
+    .exp-bar-wrap { flex: 1; position: relative; }
+    .exp-bar { height: 28px; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; font-size: .78rem; font-weight: 700; color: #fff; }
+    .exp-label { flex-shrink: 0; width: 160px; font-size: .8rem; color: #444; }
+    .el-1 { background: #27ae60; width: 8%; }
+    .el-2 { background: #f39c12; width: 20%; }
+    .el-3 { background: #e67e22; width: 35%; }
+    .el-4 { background: #c0392b; width: 55%; }
+    .el-5 { background: #7D1A1A; width: 75%; }
+    .el-6 { background: #3D0A0A; width: 100%; }
+
+    /* PROP CARDS */
+    .prop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 14px 0; }
+    .prop-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 13px; text-align: center; }
+    .prop-card .prop-val { font-size: 1.1rem; font-weight: 800; color: var(--navy); }
+    .prop-card .prop-label { font-size: .74rem; color: var(--muted); margin-top: 3px; }
+
+    /* LOCATION CARDS */
+    .loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 11px; margin: 14px 0; }
+    .loc-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; border-left: 4px solid var(--orange); }
+    .loc-card h4 { font-size: .88rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .loc-card p { font-size: .81rem; color: #444; margin: 0; }
+
+    /* RESPONSE STEPS */
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-035.html">&larr; Mod 35</a>
+    <a href="module-043.html" class="active">Mod 43</a>
+    <a href="module-044.html">Mod 44 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 43 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 043 &middot; SHP-BBB-043</div>
+  <h1>Ammonia Awareness</h1>
+  <p class="subtitle">Recognizing, avoiding, and responding to ammonia releases at petroleum facilities &mdash; a colorless, pungent gas that can incapacitate and kill at concentrations that accumulate rapidly in equipment rooms and low-lying areas.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 35 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Identify the physical and chemical properties of ammonia relevant to safety</li>
+      <li>State the OSHA PEL, NIOSH STEL, and IDLH for ammonia</li>
+      <li>Describe the health effects of ammonia at each concentration range</li>
+      <li>Identify where ammonia is found at petroleum tank and processing facilities</li>
+      <li>Explain why ammonia can accumulate in enclosed spaces despite being lighter than air</li>
+      <li>Describe the immediate response when an ammonia release is detected</li>
+      <li>Select appropriate respiratory protection for ammonia exposure scenarios</li>
+      <li>Explain the first aid treatment for ammonia exposure to eyes, skin, and respiratory tract</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Ammonia Properties &amp; Where It Is Found</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Ammonia (NH&sub3;) is a colorless gas with a sharp, pungent odor detectable by most people at concentrations as low as 5 parts per million (ppm). It is one of the most widely produced industrial chemicals in the world and is present at many petroleum and petrochemical facilities in quantities sufficient to create life-threatening exposure if released. BBB Tank Services workers may encounter ammonia in refrigeration systems, water treatment operations, and certain processing facilities.</p>
+
+      <h3>Key Physical &amp; Chemical Properties</h3>
+      <div class="prop-grid">
+        <div class="prop-card"><div class="prop-val">Colorless</div><div class="prop-label">Color (invisible gas)</div></div>
+        <div class="prop-card"><div class="prop-val">Pungent</div><div class="prop-label">Odor &mdash; detectable at ~5 ppm</div></div>
+        <div class="prop-card"><div class="prop-val">0.59</div><div class="prop-label">Vapor density (lighter than air = 1.0)</div></div>
+        <div class="prop-card"><div class="prop-val">-28°F</div><div class="prop-label">Boiling point (-33°C)</div></div>
+        <div class="prop-card"><div class="prop-val">15–28%</div><div class="prop-label">Flammable range in air (% by vol.)</div></div>
+        <div class="prop-card"><div class="prop-val">651°F</div><div class="prop-label">Auto-ignition temperature (343°C)</div></div>
+        <div class="prop-card"><div class="prop-val">PSM Listed</div><div class="prop-label">TQ: 10,000 lbs under OSHA 1910.119</div></div>
+        <div class="prop-card"><div class="prop-val">Alkaline</div><div class="prop-label">pH 11-12 in water; highly corrosive to tissue</div></div>
+      </div>
+
+      <div class="box box-info">
+        <strong>Lighter Than Air &mdash; But Not Always Safe Up High.</strong> Ammonia vapor (density 0.59) is lighter than air and tends to rise and disperse in open outdoor environments. However, in enclosed or semi-enclosed spaces &mdash; compressor rooms, refrigeration equipment rooms, trenches, and pits &mdash; ammonia can accumulate to dangerous concentrations even before it rises to exit points. Near the point of release, concentrations can reach lethal levels regardless of the gas's overall tendency to rise. Never assume an area is safe simply because the leak is at a lower level.
+      </div>
+
+      <h3>Where Ammonia Is Found at Petroleum &amp; Industrial Facilities</h3>
+      <div class="loc-grid">
+        <div class="loc-card">
+          <h4>&#9731; Refrigeration Systems</h4>
+          <p>The most common source. Large industrial refrigeration systems using anhydrous ammonia as refrigerant are found at LNG/LPG terminals, natural gas processing plants, and some refineries for process cooling. Often PSM-covered (TQ 10,000 lbs).</p>
+        </div>
+        <div class="loc-card">
+          <h4>&#128167; Water Treatment</h4>
+          <p>Ammonia or ammonium hydroxide (aqueous ammonia) used in cooling tower biocide programs, boiler water treatment, and industrial wastewater pH adjustment at refineries and petrochemical plants.</p>
+        </div>
+        <div class="loc-card">
+          <h4>&#9881; Gas Processing</h4>
+          <p>Nitrogen compounds in crude oil and natural gas feedstocks can produce ammonia as a process byproduct. Found in amine treating units, hydrotreaters, and sour water strippers at refineries.</p>
+        </div>
+        <div class="loc-card">
+          <h4>&#128295; Chemical Storage</h4>
+          <p>Concentrated ammonium hydroxide solution (aqua ammonia) stored in drums or totes for chemical injection. Tank pressures can build if containers are exposed to heat, leading to ruptured seals or relief valve venting.</p>
+        </div>
+        <div class="loc-card">
+          <h4>&#127981; Fertilizer Facilities</h4>
+          <p>Anhydrous ammonia storage tanks and distribution systems at agricultural or fertilizer facilities adjacent to petroleum terminals. Catastrophic tank failures have killed dozens of workers and bystanders at such facilities.</p>
+        </div>
+        <div class="loc-card">
+          <h4>&#128292; Emissions &amp; Vents</h4>
+          <p>Low-level ammonia emissions from sour water strippers, amine units, and some tanks can create localized concentrations in prevailing wind shadow areas or in equipment pits below grade level at the work area.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Health Effects &amp; Exposure Limits</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Ammonia is a severe irritant to the eyes, nose, throat, and respiratory tract. Its corrosive alkaline nature causes chemical burns to moist tissue on contact. The progression of health effects with increasing concentration is rapid &mdash; the difference between uncomfortable irritation and life-threatening injury can occur across a concentration change of just a few hundred ppm that develops in seconds during a catastrophic release.</p>
+
+      <h3>Ammonia Exposure Effects by Concentration</h3>
+      <div class="exposure-levels">
+        <div class="exp-level">
+          <div class="exp-ppm" style="color:var(--green)">5 ppm</div>
+          <div class="exp-bar-wrap"><div class="exp-bar el-1">Odor threshold</div></div>
+          <div class="exp-label">Detectable by smell; no health effects at this level</div>
+        </div>
+        <div class="exp-level">
+          <div class="exp-ppm" style="color:#27ae60">25 ppm</div>
+          <div class="exp-bar-wrap"><div class="exp-bar el-2">NIOSH STEL</div></div>
+          <div class="exp-label">Eye, nose, and throat irritation; short-term exposure limit (15 min)</div>
+        </div>
+        <div class="exp-level">
+          <div class="exp-ppm" style="color:#e67e22">50 ppm</div>
+          <div class="exp-bar-wrap"><div class="exp-bar el-3">OSHA PEL</div></div>
+          <div class="exp-label">Noticeable irritation; 8-hour TWA limit; eyes begin to water</div>
+        </div>
+        <div class="exp-level">
+          <div class="exp-ppm" style="color:#c0392b">300 ppm</div>
+          <div class="exp-bar-wrap"><div class="exp-bar el-4">IDLH</div></div>
+          <div class="exp-label">Immediately Dangerous to Life or Health; immediate eye and lung injury; escape may be impaired</div>
+        </div>
+        <div class="exp-level">
+          <div class="exp-ppm" style="color:#7D1A1A">1,000 ppm</div>
+          <div class="exp-bar-wrap"><div class="exp-bar el-5">Severe injury</div></div>
+          <div class="exp-label">Severe laryngospasm, pulmonary edema, chemical burns to airways; potentially fatal within minutes</div>
+        </div>
+        <div class="exp-level">
+          <div class="exp-ppm" style="color:#3D0A0A">5,000+ ppm</div>
+          <div class="exp-bar-wrap"><div class="exp-bar el-6">Fatal</div></div>
+          <div class="exp-label">Rapidly fatal; possible near a large liquid anhydrous ammonia release</div>
+        </div>
+      </div>
+
+      <h3>OSHA &amp; NIOSH Exposure Limits</h3>
+      <table class="std-table">
+        <thead><tr><th>Limit</th><th>Value</th><th>Significance</th></tr></thead>
+        <tbody>
+          <tr><td><strong>OSHA PEL</strong></td><td>50 ppm (8-hr TWA)</td><td>Maximum legal 8-hour average concentration; above this requires engineering controls and respiratory protection</td></tr>
+          <tr><td><strong>NIOSH REL</strong></td><td>25 ppm (8-hr TWA)</td><td>More protective recommendation; BBB Tank Services uses this as the action level for additional controls</td></tr>
+          <tr><td><strong>NIOSH STEL</strong></td><td>35 ppm (15-min)</td><td>Short-term ceiling; any reading above 35 ppm requires immediate action regardless of time duration</td></tr>
+          <tr><td><strong>IDLH</strong></td><td>300 ppm</td><td>Immediately Dangerous to Life or Health; SCBA required; evacuate immediately</td></tr>
+          <tr><td><strong>Olfactory fatigue threshold</strong></td><td>&gt;100 ppm</td><td>Above this level, the sense of smell may become rapidly fatigued &mdash; the odor decreases even as concentration rises. This makes odor an unreliable warning at concentrations approaching IDLH.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-danger">
+        <strong>&#9888; Olfactory Fatigue &mdash; Why &ldquo;I Can&rsquo;t Smell It Anymore&rdquo; Is the Most Dangerous Sign.</strong> Ammonia initially announces itself with a powerful, unmistakable odor. But above approximately 100 ppm, the olfactory nerves become fatigued and the perceived odor diminishes even as the actual concentration continues to rise. A worker who enters an ammonia-contaminated space, notices the strong smell briefly, and then thinks &ldquo;it doesn&rsquo;t smell as bad now&rdquo; is potentially at IDLH or above. Never rely on odor as your primary ammonia detection method at any concentration that has caused fatigue.
+      </div>
+
+      <h3>Specific Health Effects</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Eyes (Most Sensitive Organ)</h4>
+          <ul>
+            <li>Immediate tearing and redness at low concentrations</li>
+            <li>Severe chemical burns at moderate concentrations</li>
+            <li>Permanent vision damage or blindness possible from liquid ammonia contact or high vapor concentrations</li>
+            <li>Aqueous ammonia splash is an ocular emergency &mdash; irrigate with water immediately for a minimum of 15&ndash;20 minutes</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Respiratory Tract</h4>
+          <ul>
+            <li>Upper airway: burning, coughing, choking at moderate concentrations</li>
+            <li>Laryngospasm (throat spasm closing the airway) at high concentrations</li>
+            <li>Pulmonary edema (fluid in the lungs) from severe exposure &mdash; may be delayed 24&ndash;48 hours after the exposure event</li>
+            <li>Symptoms that resolve after leaving the exposure area can return hours later as pulmonary edema develops</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Regulatory Framework &amp; Site Awareness</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>OSHA Standards Applicable to Ammonia</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>How It Applies</th></tr></thead>
+        <tbody>
+          <tr><td><strong>29 CFR 1910.119 (PSM)</strong></td><td>Anhydrous ammonia at or above 10,000 lbs is a listed PSM chemical. Facilities with PSM-covered ammonia systems have specific contractor obligations &mdash; see Module 023.</td></tr>
+          <tr><td><strong>29 CFR 1910.1000 Table Z-1</strong></td><td>OSHA PEL: 50 ppm 8-hr TWA. Exposure at or above this level requires controls and documentation.</td></tr>
+          <tr><td><strong>29 CFR 1910.134</strong></td><td>Respiratory protection requirements for ammonia work &mdash; see Module 024. Green-coded acid gas cartridges are required for ammonia; check cartridge ratings since standard OV/acid gas cartridges have limited ammonia capacity.</td></tr>
+          <tr><td><strong>40 CFR Part 68 (EPA RMP)</strong></td><td>Anhydrous ammonia above 10,000 lbs threshold also triggers EPA Risk Management Program requirements. Many facilities with ammonia refrigeration are covered under both PSM and RMP.</td></tr>
+          <tr><td><strong>IIAR Standards</strong></td><td>International Institute of Ammonia Refrigeration standards (IIAR 2, IIAR 6) govern the design, installation, and maintenance of industrial ammonia refrigeration systems. Facility-specific standards you may encounter at customer sites.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Recognizing Ammonia Hazard Indicators on a Job Site</h3>
+      <p>Before and during work at any facility that may have ammonia, be alert to:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Visual Indicators</h4>
+          <ul>
+            <li>NFPA 704 diamond with white &ldquo;SA&rdquo; (simple asphyxiant) or blue health hazard rating of 3 on ammonia storage or piping</li>
+            <li>Yellow or white-painted refrigerant piping (ammonia refrigerant lines are often color-coded yellow)</li>
+            <li>Frost or ice formation on pipes or fittings (indicates a liquid ammonia line; also a sign of a potential leak point)</li>
+            <li>White mist or visible cloud near equipment (liquid ammonia flashing to vapor in humid air)</li>
+            <li>Corrosion staining near pipe fittings, valve stems, or relief valve discharge points</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Sensory Indicators</h4>
+          <ul>
+            <li>The sharp, pungent &ldquo;cleaning products&rdquo; smell at any detectable level in a work area warrants investigation and monitoring</li>
+            <li>Eye irritation or tearing without obvious cause &mdash; ammonia may be present at low concentration</li>
+            <li>Throat or nasal irritation when moving through an area</li>
+            <li>A previously strong ammonia smell that suddenly seems to fade may indicate olfactory fatigue at increasing concentration &mdash; this is dangerous, not reassuring</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Ammonia vs. H&sub2;S &mdash; Key Differences at Tank Sites</h3>
+      <p>Both ammonia and hydrogen sulfide are toxic gases encountered at petroleum facilities, but they behave very differently and require different responses:</p>
+      <table class="std-table">
+        <thead><tr><th>Property</th><th>Ammonia (NH&sub3;)</th><th>Hydrogen Sulfide (H&sub2;S)</th></tr></thead>
+        <tbody>
+          <tr><td>Vapor density</td><td>0.59 (lighter than air &mdash; rises)</td><td>1.19 (heavier than air &mdash; sinks to low points)</td></tr>
+          <tr><td>IDLH</td><td>300 ppm</td><td>100 ppm</td></tr>
+          <tr><td>Odor</td><td>Pungent ammonia smell; detectable at 5 ppm</td><td>Rotten eggs at low concentration; odorless at IDLH due to olfactory paralysis</td></tr>
+          <tr><td>Olfactory fatigue</td><td>Gradual above ~100 ppm</td><td>Rapid and complete; can occur at IDLH</td></tr>
+          <tr><td>Primary hazard</td><td>Corrosive tissue burns; respiratory damage</td><td>Cellular asphyxiation; CNS depression</td></tr>
+          <tr><td>Where it accumulates</td><td>Elevated enclosed spaces; near release point</td><td>Tank bottoms, pits, trenches, low-lying areas</td></tr>
+          <tr><td>Flammability</td><td>Flammable 15&ndash;28% in air (requires high concentration)</td><td>Highly flammable 4&ndash;44% in air (wide flammable range)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Detection &amp; Monitoring</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Ammonia Detection Methods</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Personal Multi-Gas Monitors</h4>
+          <ul>
+            <li>Standard 4-gas monitors (LEL, O&sub2;, CO, H&sub2;S) do NOT detect ammonia &mdash; a separate ammonia-specific sensor or 5-gas monitor with an NH&sub3; sensor is required</li>
+            <li>At facilities known to have ammonia systems, BBB Tank Services requires a calibrated ammonia sensor on or near the work area</li>
+            <li>Confirm the sensor has been calibrated for ammonia &mdash; cross-sensitivity to other gases can produce false readings; check the sensor's cross-interference chart</li>
+            <li>Set the alarm at 25 ppm (NIOSH STEL) as the first alarm and 50 ppm (OSHA PEL) as the evacuation alarm</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Fixed Detection Systems</h4>
+          <ul>
+            <li>PSM-covered ammonia facilities are required to have fixed ammonia detection systems in refrigeration equipment rooms and other areas of high ammonia inventory</li>
+            <li>Fixed systems alarm at multiple levels &mdash; confirm alarm setpoints and response procedures during site orientation</li>
+            <li>If a fixed ammonia alarm activates, treat it as a real release immediately &mdash; do not enter the alarmed area without appropriate respiratory protection</li>
+            <li>Know the location of the facility&rsquo;s ammonia detector display panel so you can see current readings without entering a potentially contaminated area</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Ammonia Detector Tube Testing</h3>
+      <p>Colorimetric detector tubes (Draeger, Gastec) are a simple and reliable method for confirming ammonia presence and estimating concentration during routine assessment. Tubes are specific to ammonia (not cross-sensitive to H&sub2;S), require no electronics, and provide results in minutes. Limitations:</p>
+      <ul>
+        <li>Single-use; results are a snapshot, not continuous monitoring</li>
+        <li>Accuracy is typically &plusmn;25% of reading &mdash; adequate for screening but not for precise exposure assessment</li>
+        <li>Temperature and humidity affect accuracy; check correction factors</li>
+        <li>Detector tubes require the worker to approach the sampling area &mdash; do not use in areas of suspected high concentration without respiratory protection</li>
+      </ul>
+
+      <h3>Where to Monitor at Facilities with Ammonia Systems</h3>
+      <ul>
+        <li><strong>Before entering any enclosed space</strong> that may contain ammonia refrigerant or ammonia process equipment</li>
+        <li><strong>Near relief valve discharge stacks</strong> &mdash; these open to atmosphere and can discharge during high-pressure events</li>
+        <li><strong>Downwind of suspected leak sources</strong> &mdash; while ammonia is lighter than air, wind-driven ammonia vapor can accumulate at lower levels in the prevailing wind direction from an elevated leak</li>
+        <li><strong>At the work boundary</strong> before entering any area flagged by the facility as containing ammonia systems</li>
+        <li><strong>Continuously during work</strong> when adjacent ammonia systems are in service</li>
+      </ul>
+
+      <div class="box box-warning">
+        <strong>&#9888; Your 4-Gas Monitor Does Not Detect Ammonia.</strong> The standard personal multi-gas monitor issued to BBB Tank Services workers detects LEL, O&sub2;, CO, and H&sub2;S. It does not have an ammonia sensor. If you are working at a facility with ammonia refrigeration or ammonia water treatment systems and your monitor is not configured with an NH&sub3; sensor, you are working without ammonia detection. Confirm sensor configuration before entering any work area at an ammonia-handling facility.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Emergency Response to Ammonia Release</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Immediate Response &mdash; All Personnel</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Evacuate immediately and move upwind.</strong> Do not attempt to locate the source, assess the severity, or rescue others without SCBA. Move crosswind or upwind and to higher ground where possible. Ammonia is lighter than air but near the release point concentrations may be lethal at any elevation.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Do not re-enter the area for any reason without SCBA.</strong> Air-purifying respirators with ammonia cartridges are inadequate for IDLH atmospheres or unknown concentrations. Only positive-pressure SCBA provides reliable protection for rescue or emergency response entry.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Activate the facility emergency alarm.</strong> Pull the nearest manual alarm station or call the facility emergency number. Ammonia releases at PSM facilities require immediate activation of the facility&rsquo;s emergency response plan.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Call 911.</strong> A significant ammonia release is a hazmat emergency. Local emergency responders have specialized equipment and SCBA for ammonia releases. Provide the facility address, the nature of the release (ammonia), and the estimated number of people potentially exposed.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Report to the assembly point and account for all crew.</strong> Follow the facility EAP (see Module 028). Report any crew member who is missing or symptomatic to the facility emergency coordinator immediately.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Provide first aid to exposed workers while awaiting EMS.</strong> For anyone who was in the release area, immediately irrigate eyes and skin with large amounts of water. Remove contaminated clothing. Keep the exposed person calm and warm; monitor for delayed respiratory symptoms.</div></li>
+      </ol>
+
+      <h3>Shelter-in-Place vs. Evacuation for Ammonia Releases</h3>
+      <p>Because ammonia is lighter than air, it tends to rise and disperse in open environments. The decision between evacuation and shelter-in-place depends on:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Evacuate When</h4>
+          <ul>
+            <li>The release is outdoors and you can move upwind and uphill away from the cloud</li>
+            <li>The facility emergency coordinator directs evacuation</li>
+            <li>You are in an enclosed space where ammonia is accumulating</li>
+            <li>Any personal monitor alarms for ammonia</li>
+            <li>You can smell ammonia and cannot immediately identify a route that takes you away from the source</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Shelter-in-Place When</h4>
+          <ul>
+            <li>A large outdoor ammonia cloud covers the evacuation route and moving into it would increase exposure</li>
+            <li>The facility emergency coordinator specifically directs shelter-in-place</li>
+            <li>When sheltering, seal the building, shut off HVAC, and remain inside until the all-clear is given</li>
+            <li>Ammonia can infiltrate a building over time &mdash; SIP is a temporary measure while awaiting emergency responders, not an indefinite solution</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Unexpected Release</div>
+        <h4>The Refrigeration Room</h4>
+        <p>A BBB crew is performing mechanical work on a pump in a compressor building adjacent to an ammonia refrigeration equipment room. The fixed ammonia alarm activates. One crew member notices the sharp ammonia smell and his eyes begin to water. Another crew member says &ldquo;it&rsquo;s probably just a small leak, let&rsquo;s give it a minute.&rdquo;</p>
+        <p><strong>Correct response:</strong> Evacuate immediately &mdash; do not &ldquo;give it a minute.&rdquo; The time between detecting an ammonia release and reaching a dangerous concentration can be seconds in an enclosed space. All crew evacuates upwind. The worker who is already symptomatic (watering eyes) receives water irrigation to his eyes immediately upon exiting. 911 is called. No one re-enters without SCBA. The BBB supervisor accounts for all crew at the assembly point and reports to the facility emergency coordinator. Even the crew member who had no immediate symptoms is evaluated by EMS, because delayed pulmonary edema is a documented risk from ammonia exposure even at concentrations that initially cause only mild irritation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> PPE, First Aid &amp; Medical Surveillance</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Respiratory Protection for Ammonia</h3>
+      <table class="std-table">
+        <thead><tr><th>Scenario</th><th>Minimum Respirator</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Routine work near intact ammonia systems; ammonia &lt;25 ppm</td>
+            <td>None required; 4-gas + NH&sub3; monitor required</td>
+            <td>Continuous monitoring; stop work if reading approaches 25 ppm</td>
+          </tr>
+          <tr>
+            <td>Work expected to generate ammonia exposure 25&ndash;50 ppm</td>
+            <td>Half-face APR with green-coded ammonia/acid gas cartridges (APF 10)</td>
+            <td>Confirm cartridge rating for ammonia; some OV cartridges have poor ammonia capacity</td>
+          </tr>
+          <tr>
+            <td>Work with ammonia concentrations 50&ndash;300 ppm</td>
+            <td>Full-face APR with ammonia/acid gas cartridges (APF 50)</td>
+            <td>Full face protects eyes from vapor irritation; fit test required</td>
+          </tr>
+          <tr>
+            <td>Ammonia at or above IDLH (300 ppm) or unknown concentration</td>
+            <td>Pressure-demand SCBA (APF 10,000) &mdash; no air-purifying respirator is acceptable</td>
+            <td>Emergency responders only; BBB workers must not enter IDLH atmospheres for any task</td>
+          </tr>
+          <tr>
+            <td>Ammonia rescue or emergency entry</td>
+            <td>Pressure-demand SCBA with full body encapsulating Level B suit</td>
+            <td>Emergency responders only; beyond BBB Tank Services scope</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Skin &amp; Eye Protection</h3>
+      <ul>
+        <li><strong>Eye protection:</strong> Chemical splash goggles with indirect vent whenever working with aqueous ammonia or in areas where liquid ammonia spills are possible. Safety glasses alone are inadequate &mdash; ammonia vapor irritates eyes even from airborne exposure, and splash from liquid sources causes severe injury.</li>
+        <li><strong>Skin protection:</strong> Nitrile or neoprene chemical-resistant gloves; chemical-resistant apron for liquid ammonia handling. Aqueous ammonia is caustic and causes chemical burns on skin contact.</li>
+        <li><strong>Body protection:</strong> FRC with long sleeves and full coverage; chemical splash suit (Tyvek C or higher) for work involving potential liquid ammonia contact or known release scenarios.</li>
+        <li><strong>No cotton for liquid ammonia contact:</strong> Liquid anhydrous ammonia at -28&deg;F causes severe cryogenic burns on contact. Any clothing saturated with liquid anhydrous ammonia can cause massive freeze burns. Remove contaminated clothing immediately.</li>
+      </ul>
+
+      <h3>First Aid for Ammonia Exposure</h3>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Eye Exposure</h4>
+          <ul>
+            <li>Irrigate immediately with large amounts of tepid water for a minimum of <strong>15&ndash;20 minutes</strong></li>
+            <li>Remove contact lenses if present and easily removed without additional trauma</li>
+            <li>Hold eyelids open during irrigation &mdash; the natural instinct to close them traps ammonia against the cornea</li>
+            <li>Seek emergency medical evaluation immediately &mdash; even mild-appearing eye exposure warrants ophthalmology assessment</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Skin Exposure</h4>
+          <ul>
+            <li>Remove contaminated clothing immediately while flushing with water</li>
+            <li>Flush affected skin with large amounts of water for at least 15 minutes</li>
+            <li>Do not apply creams, oils, or chemical neutralizers</li>
+            <li>For liquid anhydrous ammonia contact, treat as both a chemical burn AND a cryogenic injury &mdash; seek emergency medical care</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Inhalation Exposure</h4>
+          <ul>
+            <li>Move to fresh air immediately; keep the person calm and at rest</li>
+            <li>If breathing is difficult, administer oxygen if trained and available</li>
+            <li>Seek emergency medical evaluation for all inhalation exposures, even if symptoms seem mild</li>
+            <li><strong>Delayed pulmonary edema can develop 4&ndash;48 hours after exposure &mdash; any worker who inhaled ammonia must be monitored by medical personnel, not cleared at the scene</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-success">
+        <strong>&#10003; BBB Tank Services Ammonia Awareness Summary:</strong>
+        <ul style="margin-top:8px;">
+          <li>Standard 4-gas monitors do NOT detect ammonia &mdash; confirm an NH&sub3; sensor is present before working at ammonia facilities</li>
+          <li>Set ammonia alarm at 25 ppm (NIOSH STEL); evacuate at 50 ppm (PEL)</li>
+          <li>Olfactory fatigue is a danger sign, not a sign that conditions improved &mdash; if the smell fades, the concentration may be increasing</li>
+          <li>Never re-enter an ammonia release area without positive-pressure SCBA</li>
+          <li>Irrigate eyes and skin immediately with water for 15&ndash;20 minutes after any exposure</li>
+          <li>Seek medical evaluation for all inhalation exposures &mdash; delayed pulmonary edema is a documented risk</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is the IDLH (Immediately Dangerous to Life or Health) concentration for ammonia?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> 50 ppm &mdash; the OSHA PEL</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> 100 ppm &mdash; same as hydrogen sulfide</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> 300 ppm &mdash; the concentration that is immediately dangerous to life or health</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> 1,000 ppm &mdash; the level at which pulmonary edema develops</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. A worker enters a compressor room and notices a strong ammonia smell. After about two minutes, the smell seems to fade and become less noticeable. What does this most likely mean?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> The ammonia concentration has decreased as the leak is self-sealing</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> The worker&rsquo;s olfactory nerves are fatiguing &mdash; the actual concentration may be increasing even though the smell appears to diminish</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> The ventilation system has kicked in and is removing the ammonia</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> The worker has adapted to the smell; continued work is safe</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. Does ammonia appear in a standard 4-gas personal monitor configured for LEL, O&sub2;, CO, and H&sub2;S?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Yes &mdash; the H&sub2;S sensor also detects ammonia as they are both toxic gases</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Yes &mdash; the LEL sensor detects all flammable gases including ammonia at dangerous concentrations</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> No &mdash; a standard 4-gas monitor does not have an ammonia sensor; a separate NH&sub3; sensor or 5-gas monitor is required</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Only partially &mdash; the CO sensor provides a rough indication of ammonia when cross-sensitivity is high</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. You are working outdoors near a refrigeration equipment room when the facility ammonia alarm activates. Wind is blowing from the east. What is the correct initial response?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Put on your half-face APR with OV cartridges and continue working briefly while assessing the situation</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Evacuate immediately, moving upwind to the west; do not re-enter without SCBA; activate the facility emergency alarm and call 911</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Wait at your current position for 5 minutes to see if the alarm clears before deciding whether to evacuate</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Shelter in place in the nearest building regardless of wind direction</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. What is the minimum eye irrigation time required immediately after ammonia contacts the eyes?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> 5 minutes &mdash; standard first aid eye wash duration</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> 10 minutes &mdash; OSHA&rsquo;s minimum for corrosive chemical eye exposure</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> 15&ndash;20 minutes &mdash; the minimum required for ammonia/caustic chemical eye exposure</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Until the pain stops, which typically indicates the ammonia has been fully removed</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. Why is ammonia considered a PSM-listed chemical under OSHA 1910.119?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Because it is a carcinogen regulated separately from other toxic materials</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Because anhydrous ammonia at or above 10,000 lbs is a Highly Hazardous Chemical with the potential for catastrophic release, triggering all 14 PSM elements at covered facilities</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Because ammonia is flammable and all flammable gases above 5,000 lbs are PSM-listed</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> PSM does not cover ammonia &mdash; it is regulated separately under EPA OSHA standards for refrigerants</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A worker was briefly exposed to ammonia vapor and says he feels fine now, with only mild eye irritation that has resolved. Should he be evaluated by medical personnel?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> No &mdash; if symptoms have resolved within 30 minutes of leaving the exposure area, no medical follow-up is needed</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Only if symptoms return within the next 2 hours</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> Yes &mdash; delayed pulmonary edema can develop 4&ndash;48 hours after ammonia inhalation even when initial symptoms appear mild; all inhalation exposures require medical evaluation</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Only if he develops a cough or breathing difficulty; visual improvement suggests no respiratory involvement</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. What type of respirator is required for entry into an atmosphere at or above the ammonia IDLH of 300 ppm?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> Full-face APR with green-coded ammonia cartridges (APF 50)</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Full-face PAPR with acid gas hood (APF 1,000)</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Pressure-demand SCBA (APF 10,000) &mdash; air-purifying respirators are not acceptable at IDLH</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Any NIOSH-approved respirator since the IDLH calculation already includes a safety margin</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. How does ammonia&rsquo;s behavior in enclosed spaces differ from its general behavior as a gas lighter than air?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> In enclosed spaces ammonia behaves identically to outdoors &mdash; it always rises to ceiling level and disperses upward through any opening</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> In enclosed or semi-enclosed spaces, ammonia can accumulate to dangerous concentrations near the release point before it can disperse, even though it eventually rises in open air</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Ammonia is actually heavier than air in enclosed spaces due to temperature changes; it sinks to floor level just like H&sub2;S</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Enclosed spaces have no effect on ammonia behavior &mdash; the gas always disperses at the same rate regardless of space geometry</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. Frost or ice forming on a section of ammonia refrigerant piping is a sign of what potential hazard?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Normal operation &mdash; frost on refrigerant lines is expected and indicates the system is working properly</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> A potential leak point where liquid ammonia is escaping and flashing to vapor, combined with a cryogenic burn hazard from direct contact with the cold pipe or liquid</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Ice formation indicates water contamination of the refrigerant, not an ammonia leak</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> The insulation on the pipe has failed; contact the facility maintenance team but no immediate hazard exists</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-035.html" class="nav-btn prev">&larr; Module 35</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-044.html" class="nav-btn next">Module 44 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-043 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+  function toggleSection(header) {
+    const body=header.nextElementSibling,allH=document.querySelectorAll('.sec-header'),allB=document.querySelectorAll('.sec-body'),idx=[...allH].indexOf(header),was=body.classList.contains('open');
+    allH.forEach(h=>h.classList.remove('open'));allB.forEach(b=>b.classList.remove('open'));
+    if(!was){header.classList.add('open');body.classList.add('open');openedSections.add(idx);}updateProgress();
+  }
+  function updateProgress(){setProgress(Math.round(Math.min(openedSections.size/6,1)*80));}
+  function setProgress(p){document.getElementById('progFill').style.width=p+'%';document.getElementById('progPct').textContent=p+'%';}
+  updateProgress();
+
+  const ANSWERS={q1:'c',q2:'b',q3:'c',q4:'b',q5:'c',q6:'b',q7:'c',q8:'c',q9:'b',q10:'b'};
+  const EXPLANATIONS={
+    q1:'The IDLH for ammonia is 300 ppm — the concentration that poses an immediate threat to life or health and from which escape may be impaired. The OSHA PEL is 50 ppm (8-hr TWA); H2S has a lower IDLH of 100 ppm.',
+    q2:'Olfactory fatigue above approximately 100 ppm causes the perceived intensity of ammonia odor to diminish even as actual concentration continues to rise. A worker who notices the smell fading is potentially at increasing risk, not decreasing risk. This is why odor alone cannot be relied upon as the primary ammonia detection method.',
+    q3:'Standard 4-gas monitors (LEL, O2, CO, H2S) do not have an ammonia sensor. Ammonia requires a dedicated NH3 electrochemical sensor or a 5-gas monitor configured with that sensor. The H2S sensor does not detect ammonia, and the LEL sensor may show ammonia at very high concentrations (above 15% LEL = ~15,000 ppm) — far above any safe working level.',
+    q4:'When an ammonia alarm activates, evacuate immediately upwind (west, away from the east wind carrying ammonia toward you). Do not put on a cartridge respirator and stay — ammonia concentrations may be at or above IDLH, rendering air-purifying respirators inadequate. Activate the facility alarm and call 911. Only emergency responders with SCBA should approach the release.',
+    q5:'The minimum eye irrigation time for ammonia (a caustic alkali) is 15–20 minutes with large amounts of water. The natural instinct to close the eyes must be overcome — hold eyelids open during irrigation. Even after thorough irrigation, all ammonia eye exposures require emergency ophthalmological evaluation.',
+    q6:'Anhydrous ammonia is listed in Appendix A of OSHA 29 CFR 1910.119 with a Threshold Quantity (TQ) of 10,000 lbs. Facilities storing or using anhydrous ammonia at or above this quantity must comply with all 14 elements of PSM, including contractor safety requirements, PHA, MOC, and incident investigation.',
+    q7:'Delayed pulmonary edema (fluid accumulation in the lungs) is a well-documented consequence of ammonia inhalation that may not manifest until 4–48 hours after the exposure. A worker who feels fine immediately after exposure may develop life-threatening respiratory distress hours later. All inhalation exposures — even those with minimal immediate symptoms — require medical evaluation and monitoring.',
+    q8:'At or above the IDLH of 300 ppm, only pressure-demand SCBA (APF 10,000) provides adequate protection. Air-purifying respirators, including full-face APRs with ammonia cartridges, cannot be used in IDLH atmospheres because cartridge capacity is finite and the protection factor may not be sufficient at IDLH concentrations. BBB Tank Services workers do not enter IDLH ammonia atmospheres.',
+    q9:'Although ammonia is lighter than air (vapor density 0.59) and rises in open outdoor environments, in enclosed or semi-enclosed spaces it can accumulate to dangerous concentrations near the point of release before it has time to rise and exit through openings. Equipment rooms, pits, trenches, and spaces with restricted ventilation can trap ammonia at dangerous levels regardless of the gas\'s general upward tendency.',
+    q10:'Frost or ice formation on ammonia refrigerant piping is a potential indicator of a leak point where liquid ammonia is escaping and flashing to vapor. Liquid anhydrous ammonia at -28°F is both cryogenically hazardous (severe freeze burns on contact) and produces a dense vapor cloud as it flashes to gas. Frost/ice on a normally insulated pipe may also indicate insulation failure exposing workers to cryogenic surface temperatures. Both scenarios require reporting to the facility maintenance team and staying clear of the area.'
+  };
+
+  function submitQuiz(){
+    let score=0;const total=Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(q=>{
+      const sel=document.querySelector(`input[name="${q}"]:checked`),fb=document.getElementById('fb'+q.slice(1)),opts=document.querySelectorAll(`input[name="${q}"]`);
+      opts.forEach(r=>r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if(!sel){if(fb){fb.textContent='⚠ No answer selected.';fb.className='feedback show incorrect';}return;}
+      const ok=sel.value===ANSWERS[q];if(ok)score++;
+      opts.forEach(r=>{if(r.value===ANSWERS[q])r.closest('.opt-label').classList.add('correct');});
+      if(!ok)sel.closest('.opt-label').classList.add('incorrect');
+      if(fb){fb.textContent=(ok?'✅ ':'❌ Review: ')+EXPLANATIONS[q];fb.className='feedback show '+(ok?'correct':'incorrect');}
+    });
+    const pct=Math.round((score/total)*100),passed=pct>=70;
+    try{const rec=JSON.parse(localStorage.getItem('bbb_training_records')||'[]');rec.push({module:'043',title:'Ammonia Awareness',score,total,percentage:pct,passed,date:new Date().toISOString()});localStorage.setItem('bbb_training_records',JSON.stringify(rec));}catch(e){}
+    document.getElementById('scoreBig').textContent=score+'/'+total;
+    document.getElementById('scoreLabel').textContent=pct+'% \u2014 '+(passed?'PASS \u2713':'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent=passed?'\u2705 Module 043 complete! Your record has been saved. Proceed to Module 044.':'\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz.';
+    const r=document.getElementById('quizResult');r.classList.add('show');r.scrollIntoView({behavior:'smooth',block:'center'});setProgress(100);
+  }
+  function retakeQuiz(){
+    document.querySelectorAll('.opt-label').forEach(l=>l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+    document.querySelectorAll('.feedback').forEach(f=>{f.textContent='';f.className='feedback';});
+    document.getElementById('quizResult').classList.remove('show');updateProgress();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 035 &ndash; Risk Assessment | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* RISK MATRIX */
+    .matrix-wrap { overflow-x: auto; margin: 16px 0; }
+    .risk-matrix { border-collapse: collapse; min-width: 500px; width: 100%; font-size: .82rem; }
+    .risk-matrix th { background: var(--navy); color: #fff; padding: 9px 12px; text-align: center; font-weight: 700; }
+    .risk-matrix th.corner { background: var(--navy2); }
+    .risk-matrix td { padding: 10px 12px; text-align: center; font-weight: 700; border: 2px solid #fff; }
+    .risk-matrix .row-label { background: var(--navy); color: #fff; text-align: left; padding: 9px 13px; font-weight: 600; }
+    .r-low      { background: #EDFAF2; color: #0a3a1e; }
+    .r-medium   { background: #FFFBEA; color: #5a4000; }
+    .r-high     { background: #FEF0EE; color: #5a0000; }
+    .r-extreme  { background: #C0392B; color: #fff; }
+
+    /* HAZARD CATEGORY CARDS */
+    .haz-type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin: 14px 0; }
+    .haz-type { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 12px 14px; border-left: 4px solid; }
+    .haz-type h4 { font-size: .84rem; font-weight: 700; margin-bottom: 5px; }
+    .haz-type ul { padding-left: 14px; font-size: .78rem; }
+    .haz-type li { margin-bottom: 3px; }
+    .ht-phys { border-color: #C0392B; } .ht-phys h4 { color: #C0392B; }
+    .ht-chem { border-color: #7D3C98; } .ht-chem h4 { color: #6A1B9A; }
+    .ht-ergo { border-color: #2471A3; } .ht-ergo h4 { color: #1a5278; }
+    .ht-bio  { border-color: var(--green); } .ht-bio h4  { color: var(--green); }
+    .ht-env  { border-color: #e67e22; } .ht-env h4  { color: #9a5000; }
+    .ht-psy  { border-color: var(--muted); } .ht-psy h4 { color: var(--navy2); }
+
+    /* JSA TABLE */
+    .jsa-table { width: 100%; border-collapse: collapse; font-size: .84rem; margin: 14px 0; }
+    .jsa-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .jsa-table td { padding: 9px 13px; border: 1px solid var(--border); vertical-align: top; }
+    .jsa-table tr:nth-child(even) td { background: #F7F9FD; }
+    .jsa-table .step-col { background: #EEF4FF; font-weight: 700; color: var(--navy2); }
+
+    /* PROCESS FLOW */
+    .ra-process { display: flex; flex-wrap: wrap; gap: 0; margin: 16px 0; align-items: stretch; }
+    .ra-step { flex: 1; min-width: 120px; background: var(--bg); border: 1px solid var(--border); padding: 14px 12px; text-align: center; position: relative; }
+    .ra-step:not(:last-child)::after { content: '›'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; color: var(--orange); z-index: 1; }
+    .ra-step .ra-num { font-size: .7rem; font-weight: 800; color: var(--orange); text-transform: uppercase; letter-spacing: .8px; display: block; margin-bottom: 5px; }
+    .ra-step .ra-label { font-size: .82rem; font-weight: 700; color: var(--navy); }
+    .ra-step .ra-sub { font-size: .74rem; color: var(--muted); margin-top: 4px; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-030.html">&larr; Mod 30</a>
+    <a href="module-035.html" class="active">Mod 35</a>
+    <a href="module-036.html">Mod 36 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 35 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 035 &middot; SHP-BBB-035</div>
+  <h1>Risk Assessment</h1>
+  <p class="subtitle">Identifying hazards, evaluating risk, and selecting controls before work begins &mdash; the systematic thinking process that prevents incidents at BBB Tank Services job sites.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 40 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Define risk assessment and explain its role in preventing workplace incidents</li>
+      <li>Distinguish between a hazard and a risk</li>
+      <li>Identify the six categories of workplace hazards</li>
+      <li>Apply a risk matrix to evaluate likelihood and consequence</li>
+      <li>Select appropriate controls using the hierarchy of controls</li>
+      <li>Complete a Job Safety Analysis (JSA) for a common BBB Tank Services task</li>
+      <li>Explain the difference between pre-task and dynamic risk assessment</li>
+      <li>Describe when a formal risk assessment must be reviewed or restarted</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is Risk Assessment &amp; Why It Matters</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>A <strong>risk assessment</strong> is a systematic process of identifying hazards in a task or work environment, evaluating the likelihood and severity of harm those hazards could cause, and determining what controls are needed to reduce that risk to an acceptable level. It is the foundational thinking process behind every safe work permit, Job Safety Analysis, toolbox talk, and pre-task briefing.</p>
+
+      <p>Risk assessment is not paperwork. It is not a form filled out to satisfy a supervisor. It is the deliberate mental process of asking: <em>&ldquo;What could go wrong here, how bad could it be, and what do we do about it before we start?&rdquo;</em> Workers who perform this thinking before every task &mdash; not just for major lifts or confined space entries, but for every task &mdash; are the ones who go home uninjured.</p>
+
+      <h3>Hazard vs. Risk &mdash; An Important Distinction</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Hazard</h4>
+          <ul>
+            <li>A hazard is any <strong>source</strong> of potential harm &mdash; a condition, substance, object, or situation that has the potential to cause injury, illness, or damage</li>
+            <li>A hazard exists independently of whether anyone is present</li>
+            <li><strong>Examples:</strong> an open tank hatch, pressurized piping, H&sub2;S in a tank, a wet metal surface, a suspended load</li>
+            <li>Hazards cannot always be eliminated; they must be identified and controlled</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Risk</h4>
+          <ul>
+            <li>Risk is the <strong>combination of likelihood and consequence</strong> &mdash; how probable it is that the hazard will cause harm, and how serious that harm would be if it occurred</li>
+            <li>Risk depends on who is exposed, how often, and with what controls in place</li>
+            <li><strong>Example:</strong> An open tank hatch (hazard) + a worker who frequently crosses the tank top without a guardrail (high likelihood) + a 20-foot fall to the tank bottom (serious consequence) = HIGH RISK</li>
+            <li>Risk is what we measure and control</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>The Risk Assessment Process</h3>
+      <div class="ra-process">
+        <div class="ra-step"><span class="ra-num">Step 1</span><div class="ra-label">Identify Hazards</div><div class="ra-sub">What could cause harm?</div></div>
+        <div class="ra-step"><span class="ra-num">Step 2</span><div class="ra-label">Evaluate Risk</div><div class="ra-sub">Likelihood &times; Consequence</div></div>
+        <div class="ra-step"><span class="ra-num">Step 3</span><div class="ra-label">Select Controls</div><div class="ra-sub">Hierarchy of controls</div></div>
+        <div class="ra-step"><span class="ra-num">Step 4</span><div class="ra-label">Implement</div><div class="ra-sub">Put controls in place</div></div>
+        <div class="ra-step"><span class="ra-num">Step 5</span><div class="ra-label">Review</div><div class="ra-sub">Monitor &amp; update</div></div>
+      </div>
+
+      <div class="box box-info">
+        <strong>Why Risk Assessment Is Required at BBB Tank Services:</strong> OSHA standards including the PSM standard (1910.119), the Confined Space standard (1910.146), and the Permit-Required Confined Space standard all require formal hazard analysis before specific high-risk work. Many customer facilities require contractor risk assessments or JSAs before permitting any maintenance work. Beyond compliance, risk assessment is the primary tool that separates workers who identify hazards before they cause harm from workers who discover hazards the hard way.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Hazard Identification</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>You cannot control a hazard you have not identified. Hazard identification is the most critical step in risk assessment &mdash; and the one most frequently done poorly. Workers who rush through a hazard identification scan and say &ldquo;it looks fine&rdquo; miss the hazards that are not immediately obvious: the valve that could be energized from a remote control panel, the insulation that might contain asbestos, the gas that accumulated in the low point while the work permit was being signed.</p>
+
+      <h3>Six Categories of Workplace Hazards</h3>
+      <div class="haz-type-grid">
+        <div class="haz-type ht-phys">
+          <h4>&#9889; Physical</h4>
+          <ul>
+            <li>Struck-by objects</li>
+            <li>Falls from height</li>
+            <li>Noise and vibration</li>
+            <li>Extreme temperatures</li>
+            <li>Radiation (UV, IR)</li>
+            <li>Pressure hazards</li>
+          </ul>
+        </div>
+        <div class="haz-type ht-chem">
+          <h4>&#9879;&#65039; Chemical</h4>
+          <ul>
+            <li>Toxic gases (H&sub2;S, CO)</li>
+            <li>Flammable vapors</li>
+            <li>Corrosives (acids, caustics)</li>
+            <li>Carcinogens (benzene, Cr VI)</li>
+            <li>Asphyxiants (O&sub2; deficiency)</li>
+            <li>Reactive chemicals</li>
+          </ul>
+        </div>
+        <div class="haz-type ht-ergo">
+          <h4>&#128119; Ergonomic</h4>
+          <ul>
+            <li>Manual handling / lifting</li>
+            <li>Awkward postures in confined spaces</li>
+            <li>Repetitive motion</li>
+            <li>Vibration from power tools</li>
+            <li>Sustained force or exertion</li>
+          </ul>
+        </div>
+        <div class="haz-type ht-bio">
+          <h4>&#129440; Biological</h4>
+          <ul>
+            <li>Venomous snakes and insects at tank sites</li>
+            <li>Legionella in cooling towers</li>
+            <li>Bloodborne pathogens (first aid)</li>
+            <li>Bacteria in process water</li>
+            <li>Mold in confined structures</li>
+          </ul>
+        </div>
+        <div class="haz-type ht-env">
+          <h4>&#127753; Environmental</h4>
+          <ul>
+            <li>Extreme heat (Texas summers)</li>
+            <li>Lightning and severe weather</li>
+            <li>High winds on elevated work</li>
+            <li>Sun exposure / UV radiation</li>
+            <li>Slippery surfaces from rain or dew</li>
+          </ul>
+        </div>
+        <div class="haz-type ht-psy">
+          <h4>&#129504; Psychosocial</h4>
+          <ul>
+            <li>Production pressure leading to shortcuts</li>
+            <li>Fatigue from extended hours</li>
+            <li>Complacency on familiar tasks</li>
+            <li>Communication failures</li>
+            <li>Normalization of deviance</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Hazard Identification Techniques</h3>
+      <p>Effective hazard identification uses multiple techniques rather than a single scan:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Pre-Task Walkdown</h4>
+          <ul>
+            <li>Physically walk through the entire work area before starting, not from memory or from a drawing</li>
+            <li>Look up (overhead hazards), down (surface conditions), and around (adjacent operations that could affect the work area)</li>
+            <li>Test assumptions: confirm that valves described as &ldquo;closed&rdquo; are actually closed; confirm gauge readings match expected conditions; confirm atmospheric readings match the permit</li>
+            <li>Ask: &ldquo;What has changed since the last time this task was done or since the permit was written?&rdquo;</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>WHAT IF? Questioning</h4>
+          <ul>
+            <li>&ldquo;What if the atmospheric monitor alarms during this task?&rdquo;</li>
+            <li>&ldquo;What if the crane load shifts during the lift?&rdquo;</li>
+            <li>&ldquo;What if we need to evacuate quickly &mdash; is the egress route clear?&rdquo;</li>
+            <li>&ldquo;What if a worker is injured in this location &mdash; how does EMS reach them?&rdquo;</li>
+            <li>&ldquo;What if this task takes twice as long as planned &mdash; does that create a shift-change hazard?&rdquo;</li>
+            <li>There are no wrong What If questions</li>
+          </ul>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Past Incident Review</h4>
+          <ul>
+            <li>Check incident logs and near-miss reports for this type of task at this facility or similar ones</li>
+            <li>Incidents and near-misses are the industry&rsquo;s compiled experience with hazards you have not yet encountered personally</li>
+            <li>OSHA investigation reports for similar tasks are publicly available and valuable references</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Crew Knowledge</h4>
+          <ul>
+            <li>Ask the entire crew during the toolbox talk: &ldquo;What hazards do you see with this task?&rdquo;</li>
+            <li>Workers performing the task often see hazards that supervisors planning it miss</li>
+            <li>Experienced workers have encountered hazards in similar tasks that are worth sharing; newer workers often ask the most useful &ldquo;What if&rdquo; questions because they don&rsquo;t assume they already know the answer</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Risk Evaluation &mdash; The Risk Matrix</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Once hazards are identified, each one must be evaluated to determine its <strong>risk level</strong>. Risk is a function of two factors: <strong>Likelihood</strong> (how probable is it that this hazard will cause harm?) and <strong>Consequence</strong> (how severe would the harm be if it occurred?). The Risk Matrix combines these two dimensions into a single risk rating that guides decision-making about controls.</p>
+
+      <h3>BBB Tank Services Risk Matrix</h3>
+      <div class="matrix-wrap">
+        <table class="risk-matrix">
+          <thead>
+            <tr>
+              <th class="corner" rowspan="2">RISK = Likelihood &times; Consequence</th>
+              <th colspan="4">CONSEQUENCE</th>
+            </tr>
+            <tr>
+              <th>Minor (1)<br><small>First aid only; no lost time</small></th>
+              <th>Moderate (2)<br><small>Medical treatment; restricted duty</small></th>
+              <th>Serious (3)<br><small>Lost-time injury; hospitalization</small></th>
+              <th>Catastrophic (4)<br><small>Fatality or permanent disability</small></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">Almost Certain (4)<br><small>Will happen without controls</small></td>
+              <td class="r-medium">Medium (4)</td>
+              <td class="r-high">High (8)</td>
+              <td class="r-extreme">EXTREME (12)</td>
+              <td class="r-extreme">EXTREME (16)</td>
+            </tr>
+            <tr>
+              <td class="row-label">Likely (3)<br><small>Has happened at similar sites</small></td>
+              <td class="r-medium">Medium (3)</td>
+              <td class="r-high">High (6)</td>
+              <td class="r-high">High (9)</td>
+              <td class="r-extreme">EXTREME (12)</td>
+            </tr>
+            <tr>
+              <td class="row-label">Possible (2)<br><small>Could happen under certain conditions</small></td>
+              <td class="r-low">Low (2)</td>
+              <td class="r-medium">Medium (4)</td>
+              <td class="r-high">High (6)</td>
+              <td class="r-high">High (8)</td>
+            </tr>
+            <tr>
+              <td class="row-label">Unlikely (1)<br><small>Highly improbable; rare occurrence</small></td>
+              <td class="r-low">Low (1)</td>
+              <td class="r-low">Low (2)</td>
+              <td class="r-medium">Medium (3)</td>
+              <td class="r-medium">Medium (4)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>What Each Risk Level Requires</h3>
+      <table class="std-table">
+        <thead><tr><th>Risk Level</th><th>Score</th><th>Required Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--green)">&#9632; Low</strong></td>
+            <td>1&ndash;2</td>
+            <td>Proceed with standard precautions. Document the assessment. Monitor conditions.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#9a7000">&#9632; Medium</strong></td>
+            <td>3&ndash;4</td>
+            <td>Implement additional controls to reduce risk before starting. Supervisor reviews the assessment. Work may proceed once controls are confirmed.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--red)">&#9632; High</strong></td>
+            <td>6&ndash;9</td>
+            <td>Significant controls required. Engineering controls preferred over PPE. Work requires supervisor authorization. Reassess risk after controls are in place to confirm reduction.</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff; background:var(--red); padding:2px 6px; border-radius:3px">EXTREME</strong></td>
+            <td>12&ndash;16</td>
+            <td>Work must NOT proceed without eliminating or substantially reducing the risk. Requires management authorization. Consider whether the task can be done differently or not at all.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box box-warning">
+        <strong>&#9888; Evaluate Risk BEFORE Controls, Then Recalculate AFTER.</strong> The Risk Matrix must be applied twice: first with <em>no controls in place</em> (the &ldquo;inherent risk&rdquo;) to understand the true hazard level, and then again with the planned controls in place (the &ldquo;residual risk&rdquo;) to confirm the controls are adequate. A task with an inherent risk of Extreme that is reduced to Medium through engineering controls is acceptable. A task where the residual risk remains High or Extreme even with controls applied should be escalated or reconsidered.
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Risk Scoring</div>
+        <h4>Replacing a Flange Gasket on a Crude Oil Line</h4>
+        <p><strong>Hazards identified:</strong> (1) Asbestos-containing gasket in a pre-1980 line; (2) Residual crude oil in the isolated section; (3) H&sub2;S in the crude oil; (4) Slip hazard from crude oil on metal grating.</p>
+        <p><strong>Without controls:</strong> Asbestos exposure during gasket removal = Likely (3) &times; Serious (3) = High (9). H&sub2;S exposure if residual crude releases = Possible (2) &times; Catastrophic (4) = High (8).</p>
+        <p><strong>Controls applied:</strong> Wet methods + supplied-air respirator for asbestos; confirmed double-block-and-bleed with pressure gauge verification + 4-gas monitor for H&sub2;S. <strong>After controls:</strong> Asbestos = Unlikely (1) &times; Minor (1) = Low (1). H&sub2;S = Unlikely (1) &times; Serious (3) = Medium (3). Residual risk is acceptable; work may proceed with controls verified in place.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Risk Controls &amp; the Hierarchy</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Once the risk level is established, controls must be selected and implemented to reduce that risk to an acceptable level. The <strong>Hierarchy of Controls</strong> provides the framework for selecting the most effective controls. Controls higher in the hierarchy are more reliable because they do not depend on consistent human behavior. Controls lower in the hierarchy (PPE) are less reliable because their effectiveness depends entirely on correct selection, use, and maintenance every time.</p>
+
+      <p>The goal is always to select controls as high in the hierarchy as feasible. PPE is the last resort &mdash; added on top of higher-level controls, not substituted for them.</p>
+
+      <h3>Applying the Hierarchy to Common BBB Hazards</h3>
+      <table class="std-table">
+        <thead><tr><th>Hazard</th><th>Elimination</th><th>Substitution</th><th>Engineering</th><th>Administrative</th><th>PPE</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>H&sub2;S in tank</strong></td>
+            <td>Use a non-H&sub2;S-containing product</td>
+            <td>N/A for crude oil</td>
+            <td>Ventilation; gas detection system; isolation of H&sub2;S sources</td>
+            <td>2-person rule; written H&sub2;S procedures; air monitor required before entry</td>
+            <td>Supplied-air respirator; 4-gas personal monitor</td>
+          </tr>
+          <tr>
+            <td><strong>Fall from tank top</strong></td>
+            <td>Perform work from ground using remote tools</td>
+            <td>Use drone or camera inspection instead of physical access</td>
+            <td>Install permanent guardrails; use aerial work platform</td>
+            <td>Safety observer; buddy system; limit time at edge</td>
+            <td>Full body harness; shock-absorbing lanyard; anchor system</td>
+          </tr>
+          <tr>
+            <td><strong>Dropped objects on scaffold</strong></td>
+            <td>Complete work before removing scaffold</td>
+            <td>Use lightweight tools that reduce consequence if dropped</td>
+            <td>Toeboards; debris nets; exclusion zones below</td>
+            <td>Tool inventories; no loose items on platforms; warning signs below</td>
+            <td>Hard hat; tool lanyards</td>
+          </tr>
+          <tr>
+            <td><strong>Chemical burns from acid cleaning</strong></td>
+            <td>Use non-caustic descaling method</td>
+            <td>Use lower-concentration acid formulation</td>
+            <td>Enclosed system; drip trays; eyewash within 10 seconds</td>
+            <td>Two-person mixing procedure; written mixing SOP; no decanting alone</td>
+            <td>Chemical splash goggles; nitrile/neoprene gloves; face shield; acid-resistant apron</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Combining Controls</h3>
+      <p>For most tasks, multiple levels of the hierarchy are used simultaneously. This is the correct approach. A single control, even a good engineering control, can fail. Combining a reliable engineering control with an administrative control and appropriate PPE creates layers of protection &mdash; the &ldquo;Swiss cheese&rdquo; model where no single layer is perfect, but multiple layers together prevent the hazard from reaching the worker.</p>
+
+      <div class="box box-success">
+        <strong>&#10003; The Control Adequacy Test:</strong> After selecting controls, ask: &ldquo;If this control fails, what prevents the hazard from causing harm?&rdquo; If the answer is &ldquo;nothing&rdquo; &mdash; only one control stands between the worker and the hazard &mdash; add another layer. Single-layer protection is inadequate for any High or Extreme risk task.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Job Safety Analysis (JSA)</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>A <strong>Job Safety Analysis (JSA)</strong> &mdash; also called a Job Hazard Analysis (JHA) &mdash; is the formal, written risk assessment tool used by BBB Tank Services before all significant maintenance, repair, and service tasks. It breaks a job into specific steps, identifies the hazards associated with each step, and documents the controls required before that step can be performed. The JSA is reviewed with the entire crew before work begins and is a living document that must be updated if conditions change.</p>
+
+      <h3>How to Complete a JSA</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Define the task.</strong> Write a clear, specific description of the task to be performed. Vague task descriptions produce vague hazard identification. &ldquo;Nozzle maintenance on Tank 7, south side&rdquo; is better than &ldquo;tank work.&rdquo;</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Break the task into sequential steps.</strong> List every distinct step in the order it will be performed. Include setup steps (obtaining tools, setting up scaffold) and closeout steps (cleaning up, returning tools). Steps should be specific enough that a new worker could follow them.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Identify hazards for each step.</strong> For every step, ask: What could go wrong? What hazards are present? Use the six hazard categories. Do not combine hazards from different steps or write &ldquo;all standard hazards&rdquo; &mdash; be specific to the step.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Evaluate the risk.</strong> Score each hazard using the risk matrix before controls are applied. This confirms that the hazard warrants the controls you are planning.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Document the controls.</strong> For each hazard, list the specific controls required using the hierarchy. Name the PPE specifically &mdash; not just &ldquo;PPE required&rdquo; but &ldquo;full-face APR with OV+P100 cartridges.&rdquo;</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Brief the crew.</strong> Review every step and hazard with the entire crew before work begins. Every worker must sign the JSA confirming they have been briefed and understand their responsibilities.</div></li>
+      </ol>
+
+      <h3>JSA Example &mdash; Tank Nozzle Gasket Replacement</h3>
+      <table class="jsa-table">
+        <thead>
+          <tr>
+            <th style="width:20%">Job Step</th>
+            <th style="width:30%">Hazard</th>
+            <th style="width:10%">Risk (Pre)</th>
+            <th style="width:40%">Controls Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="step-col">1. Obtain permits &amp; verify isolation</td>
+            <td>Inadequate isolation; unexpected product in line</td>
+            <td style="text-align:center;font-weight:700;color:var(--red)">High (8)</td>
+            <td>Confirm double-block-and-bleed with gauge verification; review LOTO; ensure hot work permit if needed; check atmospheric readings on permit match current conditions</td>
+          </tr>
+          <tr>
+            <td class="step-col">2. Set up work area &amp; PPE</td>
+            <td>Slip on petroleum-contaminated grating; missing PPE</td>
+            <td style="text-align:center;font-weight:700;color:#9a7000">Med (4)</td>
+            <td>Lay absorbent pads on grating; don full PPE (hard hat, FRC, nitrile gloves over leather, full-face APR with OV+P100, safety boots); stage eyewash within 10 seconds</td>
+          </tr>
+          <tr>
+            <td class="step-col">3. Loosen flange bolts (do not remove)</td>
+            <td>Residual pressure; product spray; asbestos gasket disturbance</td>
+            <td style="text-align:center;font-weight:700;color:var(--red)">High (9)</td>
+            <td>Loosen bolts slowly; position yourself to the side of the flange, not in the direct spray path; confirm gauge reads zero before proceeding; wet the gasket face before separating; ensure HEPA vacuum ready for asbestos</td>
+          </tr>
+          <tr>
+            <td class="step-col">4. Separate flange &amp; remove old gasket</td>
+            <td>Asbestos fiber release; product exposure; pinch point</td>
+            <td style="text-align:center;font-weight:700;color:var(--red)">High (9)</td>
+            <td>Use wet methods on gasket face; HEPA vacuum immediately as gasket is removed; bag gasket as asbestos waste; do not scrape with dry metal tools; supplied-air respirator if asbestos confirmed</td>
+          </tr>
+          <tr>
+            <td class="step-col">5. Clean flange faces &amp; install new gasket</td>
+            <td>Chemical exposure from solvent cleaning; incorrect torque sequence</td>
+            <td style="text-align:center;font-weight:700;color:#9a7000">Med (4)</td>
+            <td>Use compatible solvent per SDS; nitrile gloves and eye protection; follow manufacturer torque sequence and specification; re-verify gasket type matches service rating</td>
+          </tr>
+          <tr>
+            <td class="step-col">6. Reinstate &amp; verify</td>
+            <td>Leak on reinstatement; unauthorized change from original config</td>
+            <td style="text-align:center;font-weight:700;color:#9a7000">Med (6)</td>
+            <td>Slow reinstatement per facility procedures; leak check with appropriate method; document that no configuration changes were made (see Module 023 &mdash; MOC); notify facility of task completion</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Dynamic Risk Assessment &amp; When to Stop</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Dynamic Risk Assessment</h3>
+      <p>A formal JSA or risk assessment completed before a job starts is a <strong>pre-task assessment</strong> based on known conditions at the time of planning. But conditions at petroleum tank sites change constantly &mdash; wind shifts, adjacent operations begin, equipment behaves unexpectedly, and previously unknown hazards are discovered mid-task. <strong>Dynamic risk assessment</strong> is the continuous, ongoing mental process of evaluating whether the current conditions still match the risk assessment that authorized the work.</p>
+
+      <p>Every worker performs dynamic risk assessment every time they pause to consider whether what they are about to do is safe. The key skill is acting on that evaluation &mdash; stopping work when new hazards emerge rather than continuing because &ldquo;the permit said it was okay.&rdquo;</p>
+
+      <h3>When the Risk Assessment Must Be Reviewed or Restarted</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Mandatory Review Triggers</h4>
+          <ul>
+            <li>A personal gas monitor alarms during work</li>
+            <li>Unexpected product, pressure, or temperature is found in an &ldquo;isolated&rdquo; system</li>
+            <li>A new hazard is discovered that was not in the original JSA</li>
+            <li>A near-miss or incident occurs, even a minor one</li>
+            <li>Work scope changes from what was planned (even if the change seems minor)</li>
+            <li>A new worker joins the crew mid-task who was not briefed on the JSA</li>
+            <li>Weather or environmental conditions change significantly (wind shift near a tank, rain on an elevated surface, lightning in the area)</li>
+            <li>Work continues across a shift change</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>What Review Means in Practice</h4>
+          <ul>
+            <li>Stop work immediately when a review trigger occurs</li>
+            <li>Gather the crew and assess the new conditions</li>
+            <li>Update the JSA to document the new hazard and the controls being implemented</li>
+            <li>Re-brief all crew members on the updated assessment &mdash; including any who were not present when the trigger occurred</li>
+            <li>If the new hazard cannot be adequately controlled with available resources, do not resume &mdash; escalate to the BBB supervisor and the facility</li>
+            <li>Document the review event and the decision made</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Risk Assessment &amp; Stop Work Authority</h3>
+      <p>Risk assessment and Stop Work Authority (Module 026) are directly linked. Stop Work Authority is the action that follows when dynamic risk assessment reveals that conditions have exceeded what is safely manageable with current controls. A worker who is continuously assessing risk during their work and uses SWA when they identify an unacceptable hazard is applying both tools correctly.</p>
+
+      <p>The key connection: <strong>SWA gives you the right to stop. Risk assessment gives you the information to know when to stop.</strong></p>
+
+      <div class="box box-success">
+        <strong>&#10003; BBB Tank Services Risk Assessment Requirements Summary:</strong>
+        <ul style="margin-top:8px;">
+          <li>A written JSA is required for all significant maintenance, repair, and service tasks</li>
+          <li>The JSA must be reviewed with the entire crew and signed before work begins</li>
+          <li>Hazards must be evaluated using the risk matrix before and after controls are applied</li>
+          <li>Controls must be selected using the hierarchy &mdash; highest feasible level first</li>
+          <li>Dynamic risk assessment is continuous throughout all tasks</li>
+          <li>Work stops whenever conditions exceed the risk assessment&rsquo;s scope or new hazards emerge that have not been assessed and controlled</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is the difference between a hazard and a risk?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> A hazard is a minor concern; a risk is a major concern that requires formal documentation</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> A hazard is a source of potential harm; risk is the combination of the likelihood that harm will occur and the severity of that harm</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> A hazard requires PPE; a risk requires engineering controls</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> They are interchangeable terms that mean the same thing in occupational safety</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. Using the BBB Tank Services Risk Matrix, what is the risk score for a hazard rated Likely (3) with a Catastrophic (4) consequence?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> High (7) &mdash; add likelihood and consequence together</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Medium (3.5) &mdash; average the two values</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> EXTREME (12) &mdash; multiply likelihood &times; consequence</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> High (9) &mdash; catastrophic consequence always yields High regardless of likelihood</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. A task is evaluated and found to have an EXTREME inherent risk before any controls are applied. What must happen before work begins?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Add PPE requirements to the JSA and proceed &mdash; EXTREME risks can always be managed with the right PPE</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Work must NOT proceed until the risk is substantially reduced through elimination or engineering controls; management authorization is required</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Proceed with extra caution and two crew members rather than one</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Notify OSHA before starting any EXTREME risk task</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. When completing a JSA, the risk matrix should be applied:</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Only after all controls are in place, to confirm the final residual risk</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Only before controls are planned, to understand the inherent hazard level</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Twice &mdash; first to evaluate inherent risk before controls, and again to evaluate residual risk after controls are applied</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Once per task, at the discretion of the supervisor based on task complexity</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. Mid-task, a worker discovers that the pressure gauge on the section being worked shows 15 psi &mdash; it should read zero per the permit. What does dynamic risk assessment require?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Continue cautiously &mdash; gauge readings can be inaccurate due to sensor drift, and stopping unnecessarily delays the job</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Stop work immediately; the new condition (unexpected pressure) is a hazard that was not in the original risk assessment; the assessment must be reviewed before work resumes</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Document the reading and continue if the supervisor verbally approves over the radio</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Continue work since the permit was signed this morning and the conditions were acceptable at that time</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. Which of the following is the MOST reliable type of control in the hierarchy?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> PPE &mdash; it is immediately available and the worker controls its use directly</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Administrative controls such as written procedures and training</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Elimination &mdash; removing the hazard entirely so it cannot cause harm</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Engineering controls such as ventilation and machine guarding</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. A new crew member arrives on site mid-task and joins the crew. The JSA was briefed two hours ago before work started. What must happen before the new worker begins participating?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Nothing &mdash; the JSA was already reviewed and signed; the new worker can observe the task and learn as they go</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> The new worker must be briefed on the JSA and sign it before participating in the work; a new worker who has not been briefed is a mandatory review trigger</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> The supervisor verbally summarizes the main hazards; a formal re-briefing is only required if the task involves confined space entry</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> The new worker signs the JSA when the task is complete to confirm they participated safely</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. In the JSA, controls must be listed specifically rather than generally. Which of the following is an example of a specific, useful control?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> &ldquo;Standard PPE required&rdquo;</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> &ldquo;Be careful near the flange&rdquo;</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> &ldquo;Full-face APR with OV+P100 cartridges; confirm seal check before entering the dike; change cartridges if any chemical odor is detected&rdquo;</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> &ldquo;Follow all applicable OSHA standards&rdquo;</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. How does dynamic risk assessment relate to Stop Work Authority?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> They are competing tools &mdash; if a formal risk assessment has been completed, SWA is not needed since the hazards were already evaluated</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Dynamic risk assessment provides the information to know when conditions have become unsafe; SWA is the action that follows when that assessment reveals an unacceptable hazard</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> SWA is used only in emergencies; dynamic risk assessment is used for routine task planning</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> They apply to different workers: supervisors use risk assessment; workers use SWA</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. A task assessed as High risk has two controls in place: an engineering control (local exhaust ventilation) and PPE (half-face APR). The ventilation system fails. What is the correct response under the &ldquo;Swiss cheese&rdquo; multi-layer protection model?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Continue working &mdash; the APR is still providing adequate protection and the ventilation failure is a minor inconvenience</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Upgrade the PPE to a full-face APR to compensate for the lost engineering control and continue</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Stop work &mdash; the failed ventilation has removed one protection layer, leaving only PPE between the worker and the hazard. The risk level has increased and must be re-assessed before work continues</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Work for a maximum of 30 minutes with PPE only and then evaluate whether ventilation has been restored</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-030.html" class="nav-btn prev">&larr; Module 30</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-036.html" class="nav-btn next">Module 36 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-035 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'c', q3:'b', q4:'c', q5:'b',
+    q6:'c', q7:'b', q8:'c', q9:'b', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'A hazard is a source of potential harm — a condition, substance, or situation that has the potential to cause injury or illness. Risk is the combination of likelihood (how probable is harm?) and consequence (how severe would the harm be?). The same hazard can represent different levels of risk depending on who is exposed, how often, and with what controls in place.',
+    q2:  'Risk = Likelihood × Consequence = 3 × 4 = 12 = EXTREME. The risk matrix multiplies the two factors to produce the score. A Likely/Catastrophic combination is EXTREME risk and requires management authorization and substantial risk reduction before work may begin.',
+    q3:  'An EXTREME risk rating means work must NOT proceed without eliminating or substantially reducing the risk through controls higher in the hierarchy than PPE. Management authorization is required. The task should be reconsidered — can it be done differently, with different tools, at a different time, or not at all? PPE alone cannot make an EXTREME risk acceptable.',
+    q4:  'The risk matrix must be applied twice: first to evaluate the inherent risk before any controls are planned (to understand the true nature of the hazard), and again after controls are selected to confirm the residual risk is acceptable. Applying it only before controls misses the verification step; applying it only after controls may underestimate the inherent hazard.',
+    q5:  'An unexpected gauge reading mid-task is a dynamic risk assessment trigger — a new condition has emerged that was not present when the permit and JSA were written. Stop work immediately. The unexpected pressure indicates either a failed isolation, a process change, or an incorrect isolation procedure. The original risk assessment no longer reflects actual conditions. Do not continue until the source of the pressure is identified and the assessment is updated.',
+    q6:  'Elimination is the most reliable control because it removes the hazard entirely. A hazard that no longer exists cannot cause harm regardless of human behavior, equipment failure, or changing conditions. Engineering controls are second-most reliable because they physically separate workers from hazards. Administrative controls and PPE are least reliable because they depend on consistent human behavior.',
+    q7:  'A new worker who has not been briefed on the JSA is a mandatory review trigger. Every person performing or working near the task must have been briefed on all hazards and controls before they can participate. A worker who arrives mid-task and begins working without a JSA briefing has no knowledge of the hazards specific to that task — they are working blind to the risks that have already been identified.',
+    q8:  'Specific controls identify exactly what PPE is required, exactly what monitoring is required, and exactly what triggers a stop. "Standard PPE" means nothing — it leaves the worker to guess which items are needed. "Be careful near the flange" provides no actionable information. "Follow all applicable OSHA standards" is too vague to be useful in the field. The third option gives the worker specific, actionable information they can verify and implement.',
+    q9:  'Dynamic risk assessment and SWA work together: dynamic risk assessment is the continuous mental evaluation of whether current conditions remain safe. When that evaluation reveals an unacceptable hazard — a new condition, a failed control, a changed environment — SWA is the action taken to stop work and address the hazard. SWA gives you the right to stop; risk assessment gives you the information to know when to exercise that right.',
+    q10: 'When an engineering control fails, the multi-layer protection model has been compromised. Only PPE now stands between the worker and the hazard. This is single-layer protection for a High-risk task — unacceptable. Stop work, assess the current risk level with the failed control, and either restore the engineering control before resuming or upgrade controls to restore the required level of protection. Continuing on PPE alone for a High-risk task with a failed primary control is not acceptable.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'035', title:'Risk Assessment', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 035 complete! Your record has been saved. Proceed to Module 036.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

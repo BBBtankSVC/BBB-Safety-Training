@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 029 &ndash; Asbestos Policy | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* ACM LOCATION CARDS */
+    .acm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin: 14px 0; }
+    .acm-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; border-top: 4px solid var(--orange); }
+    .acm-card h4 { font-size: .87rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .acm-card .risk { display: inline-block; font-size: .71rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; margin-bottom: 7px; }
+    .risk-high { background: #FEF0EE; color: var(--red); }
+    .risk-med  { background: #FFFBEA; color: #9a7000; }
+    .acm-card p { font-size: .8rem; color: #444; margin: 0; }
+
+    /* CLASS CARDS */
+    .class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 14px 0; }
+    .class-card { border-radius: 8px; padding: 16px; border-left: 5px solid; }
+    .class-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 5px; }
+    .class-card .class-label { font-size: .75rem; color: #666; margin-bottom: 9px; font-style: italic; }
+    .class-card ul { padding-left: 16px; font-size: .83rem; }
+    .class-card li { margin-bottom: 4px; }
+    .cc1 { background: #FEF0EE; border-color: #C0392B; } .cc1 h4 { color: #C0392B; }
+    .cc2 { background: #FEF9EE; border-color: #e67e22; } .cc2 h4 { color: #9a5000; }
+    .cc3 { background: #FFFBEA; border-color: #D4AC0D; } .cc3 h4 { color: #7a5000; }
+    .cc4 { background: #EDFAF2; border-color: var(--green); } .cc4 h4 { color: var(--green); }
+
+    /* DISEASE TIMELINE */
+    .disease-bar { margin: 14px 0; }
+    .disease-item { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px; }
+    .disease-icon { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: var(--navy); }
+    .disease-text strong { display: block; color: var(--navy); font-size: .92rem; }
+    .disease-text span { font-size: .84rem; color: #444; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-028.html">&larr; Mod 28</a>
+    <a href="module-029.html" class="active">Mod 29</a>
+    <a href="module-030.html">Mod 30 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 29 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 029 &middot; SHP-BBB-029</div>
+  <h1>Asbestos Policy</h1>
+  <p class="subtitle">Recognizing, avoiding, and responding to asbestos-containing materials at petroleum tank facilities &mdash; where decades-old insulation, gaskets, and pipe wrap can release deadly fibers when disturbed.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 35 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Explain what asbestos is and why it is a serious health hazard</li>
+      <li>Identify the diseases caused by asbestos exposure and their latency periods</li>
+      <li>List locations where asbestos-containing materials are commonly found at tank sites</li>
+      <li>State the OSHA PEL and Action Level for asbestos</li>
+      <li>Describe the BBB Tank Services &ldquo;assume and protect&rdquo; asbestos policy</li>
+      <li>Distinguish between the four classes of asbestos work</li>
+      <li>Explain what to do when suspected ACM is discovered during tank work</li>
+      <li>Identify the PPE requirements for incidental asbestos contact</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is Asbestos &amp; Why It Is Dangerous</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Asbestos is a group of naturally occurring silicate minerals that were widely used in industrial applications throughout the 20th century for their remarkable heat resistance, tensile strength, and chemical inertness. Asbestos was considered an ideal material for insulation, fire protection, and chemical resistance &mdash; until it became clear that the microscopic fibers it releases when disturbed cause severe and fatal lung diseases.</p>
+
+      <p>What makes asbestos uniquely hazardous is that the fibers responsible for disease are <strong>invisible to the naked eye</strong>, have no odor, and produce no immediate symptoms. Workers exposed to high concentrations of asbestos fibers feel nothing at the time of exposure. The diseases caused by asbestos develop over a latency period of <strong>10 to 50 years</strong> after initial exposure, meaning that workers exposed today may not develop symptoms until decades from now.</p>
+
+      <h3>Asbestos-Related Diseases</h3>
+      <div class="disease-bar">
+        <div class="disease-item">
+          <div class="disease-icon">&#129740;</div>
+          <div class="disease-text">
+            <strong>Mesothelioma</strong>
+            <span>A rare and aggressive cancer of the lining of the lungs (pleura) or abdomen (peritoneum). Almost exclusively caused by asbestos exposure. Latency period of 20&ndash;50 years. No cure; median survival after diagnosis is 12&ndash;21 months. Even brief exposures have caused mesothelioma.</span>
+          </div>
+        </div>
+        <div class="disease-item">
+          <div class="disease-icon">&#128164;</div>
+          <div class="disease-text">
+            <strong>Asbestosis</strong>
+            <span>Progressive scarring of lung tissue caused by accumulated asbestos fibers. Reduces lung capacity over time, causing shortness of breath, coughing, and eventually respiratory failure. No cure; typically requires high cumulative exposure. Latency period of 10&ndash;20 years.</span>
+          </div>
+        </div>
+        <div class="disease-item">
+          <div class="disease-icon">&#128165;</div>
+          <div class="disease-text">
+            <strong>Lung Cancer</strong>
+            <span>Asbestos exposure significantly increases the risk of lung cancer, particularly in smokers (multiplicative, not additive risk). Latency period of 15&ndash;35 years. Asbestos-related lung cancer is indistinguishable from smoking-related lung cancer at diagnosis.</span>
+          </div>
+        </div>
+        <div class="disease-item">
+          <div class="disease-icon">&#128203;</div>
+          <div class="disease-text">
+            <strong>Pleural Plaques &amp; Effusion</strong>
+            <span>Thickening and calcification of the pleural lining, or fluid accumulation in the pleural space. Can cause chest pain and reduced lung function. A marker of asbestos exposure and an indicator of elevated cancer risk. Latency period of 20&ndash;30 years.</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Types of Asbestos</h3>
+      <p>There are six regulated types of asbestos, grouped into two families. All are hazardous; some are more potent than others:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Serpentine Family</h4>
+          <ul>
+            <li><strong>Chrysotile</strong> (white asbestos) &mdash; by far the most commonly used; found in the majority of ACM in the U.S.; curly fibers; still highly hazardous despite being considered less potent than amphiboles</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Amphibole Family (more potent)</h4>
+          <ul>
+            <li><strong>Amosite</strong> (brown asbestos) &mdash; common in pipe and boiler insulation</li>
+            <li><strong>Crocidolite</strong> (blue asbestos) &mdash; most hazardous type; needle-like fibers; strongly linked to mesothelioma</li>
+            <li><strong>Tremolite, actinolite, anthophyllite</strong> &mdash; less common; found as contaminants in other materials</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; There Is No Safe Level of Asbestos Exposure.</strong> OSHA sets a PEL to define the maximum legally permissible exposure &mdash; not a safe level. No scientific study has established a threshold below which asbestos causes no harm. Every exposure adds to cumulative risk. BBB Tank Services policy is to treat all suspected ACM as if it contains the most hazardous type of asbestos until proven otherwise.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Where Asbestos Is Found at Tank Sites</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Petroleum storage tank facilities built or renovated before approximately <strong>1980</strong> are likely to contain asbestos-containing materials (ACM). Facilities built between 1980 and 1990 may also contain ACM in some applications. BBB Tank Services operates at refineries, terminals, and tank farms that may be decades old, and workers must recognize where ACM is typically found.</p>
+
+      <div class="box box-warning">
+        <strong>&#9888; You Cannot Identify ACM by Looking at It.</strong> Asbestos-containing materials look identical to non-asbestos materials of the same type. White pipe insulation could contain 30% chrysotile or none at all. Gray floor tiles could be 20% amosite or completely ACM-free. The only reliable identification method is laboratory analysis of a sample taken by a qualified person. Never assume a material is ACM-free based on appearance alone.
+      </div>
+
+      <h3>Common ACM Locations at Petroleum Tank Facilities</h3>
+      <div class="acm-grid">
+        <div class="acm-card">
+          <h4>Pipe Insulation</h4>
+          <span class="risk risk-high">High Risk</span>
+          <p>Magnesia or calcium silicate pipe insulation on steam lines, heat tracing, and process piping. Commonly contains chrysotile or amosite. Highly friable when aged or damaged.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Valve &amp; Flange Insulation</h4>
+          <span class="risk risk-high">High Risk</span>
+          <p>Removable asbestos blankets or molded insulation covers on valves and flanged joints. Often deteriorated and friable. Commonly disturbed during maintenance.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Gaskets &amp; Packing</h4>
+          <span class="risk risk-high">High Risk</span>
+          <p>Asbestos-containing compressed sheet gaskets in older flanges; rope packing in valve stems. Releasing fibers during removal or grinding is a serious hazard specific to mechanical work.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Tank &amp; Vessel Insulation</h4>
+          <span class="risk risk-high">High Risk</span>
+          <p>Sprayed-on or pre-formed insulation on heated storage tanks and process vessels. May appear as a grey or white textured coating. Extremely hazardous when disturbed.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Boiler &amp; Furnace Insulation</h4>
+          <span class="risk risk-high">High Risk</span>
+          <p>Fire-rated insulation on heating equipment, furnace doors, and firebox linings in tank heating systems. Often contains multiple types of asbestos.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Building Materials</h4>
+          <span class="risk risk-med">Moderate</span>
+          <p>Vinyl floor tiles, ceiling tiles, roof shingles, corrugated roofing panels, transite pipe (water supply), drywall joint compound, and exterior siding on older pump houses and operator buildings.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Fireproofing</h4>
+          <span class="risk risk-med">Moderate</span>
+          <p>Sprayed-on fireproofing on structural steel, including pipe racks and structural members supporting tank farm infrastructure. Older sprayed fireproofing almost always contains asbestos.</p>
+        </div>
+        <div class="acm-card">
+          <h4>Electrical Components</h4>
+          <span class="risk risk-med">Moderate</span>
+          <p>Arc chutes in older switchgear, electrical panel boards, and motor starters. Wire insulation on very old electrical systems. Insulating tape and paper in older transformers.</p>
+        </div>
+      </div>
+
+      <h3>Presumed Asbestos-Containing Material (PACM)</h3>
+      <p>OSHA&rsquo;s asbestos construction standard (29 CFR 1926.1101) defines <strong>Presumed Asbestos-Containing Material (PACM)</strong> as thermal system insulation (TSI) and surfacing material in buildings or structures constructed no later than 1980. This presumption means:</p>
+      <ul>
+        <li>Any thermal insulation (pipe, vessel, tank) or surfacing material (sprayed fireproofing, floor tiles, ceiling tiles) in a pre-1980 facility <strong>must be treated as ACM</strong> unless sampling and analysis by a certified industrial hygienist definitively confirms otherwise</li>
+        <li>BBB Tank Services applies the PACM presumption broadly &mdash; if the age of the facility is unknown, treat as PACM</li>
+        <li>Facilities built after 1980 may still contain ACM; PACM presumption just does not automatically apply to post-1980 construction</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> OSHA Standards &amp; Exposure Limits</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Applicable OSHA Standards</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Scope</th><th>Applicability to BBB</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>29 CFR 1926.1101</strong></td>
+            <td>Asbestos &mdash; Construction. Applies to all construction work involving ACM including removal, encapsulation, repair, and disturbance during renovation or demolition.</td>
+            <td>Primary standard for BBB Tank Services work. Tank maintenance, insulation work, and mechanical work at facilities falls under construction standards.</td>
+          </tr>
+          <tr>
+            <td><strong>29 CFR 1910.1001</strong></td>
+            <td>Asbestos &mdash; General Industry. Applies to manufacturing operations and some maintenance work in general industry settings.</td>
+            <td>May apply when BBB work is classified as maintenance rather than construction at a general industry facility.</td>
+          </tr>
+          <tr>
+            <td><strong>EPA NESHAP<br>40 CFR Part 61, Subpart M</strong></td>
+            <td>National Emission Standards for Hazardous Air Pollutants for asbestos. Controls asbestos emissions during demolition and renovation of structures containing friable ACM.</td>
+            <td>Host facility responsibility, but BBB supervisors must be aware. Federally regulated asbestos removal requires notification to state environmental agency before work begins.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>OSHA Exposure Limits</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Permissible Exposure Limit (PEL)</h4>
+          <ul>
+            <li><strong>0.1 f/cc</strong> as an 8-hour time-weighted average (TWA)</li>
+            <li>f/cc = fibers per cubic centimeter of air</li>
+            <li>At this concentration, the fibers are invisible &mdash; there is no practical way to know you are at or near the PEL without air monitoring instruments</li>
+            <li>Exceeding the PEL triggers the full requirements of 1926.1101 including medical surveillance, respirator use, and regulated area controls</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Excursion Limit (EL)</h4>
+          <ul>
+            <li><strong>1.0 f/cc</strong> as a 30-minute short-term exposure average</li>
+            <li>The short-term limit for brief high-exposure tasks</li>
+            <li>Exceeding the EL, even briefly, triggers immediate respirator use and engineering controls</li>
+            <li>Friable ACM disturbed without controls can generate concentrations thousands of times higher than the PEL in seconds</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Asbestos Work Classifications</h3>
+      <p>OSHA 1926.1101 defines four classes of asbestos work, each with different requirements based on the type and quantity of disturbance. BBB Tank Services workers must understand which class applies to any potential asbestos encounter.</p>
+
+      <div class="class-grid">
+        <div class="class-card cc1">
+          <h4>Class I</h4>
+          <div class="class-label">Most hazardous &mdash; Licensed contractor only</div>
+          <ul>
+            <li>Removal of thermal system insulation (TSI) and surfacing ACM</li>
+            <li>Removing pipe insulation, vessel insulation, or sprayed-on fireproofing</li>
+            <li>Requires licensed asbestos abatement contractor</li>
+            <li>Requires negative-pressure enclosure, HEPA air filtration, and air monitoring</li>
+            <li><strong>BBB workers must NEVER perform Class I work</strong></li>
+          </ul>
+        </div>
+        <div class="class-card cc2">
+          <h4>Class II</h4>
+          <div class="class-label">High risk &mdash; Licensed contractor only</div>
+          <ul>
+            <li>Removal of ACM that is not TSI or surfacing material</li>
+            <li>Includes floor tiles, roofing materials, siding, and cementitious materials</li>
+            <li>Requires licensed abatement contractor and significant controls</li>
+            <li>Air monitoring, PPE, and regulated areas required</li>
+            <li><strong>BBB workers must NEVER perform Class II work</strong></li>
+          </ul>
+        </div>
+        <div class="class-card cc3">
+          <h4>Class III</h4>
+          <div class="class-label">Moderate risk &mdash; Trained workers only</div>
+          <ul>
+            <li>Repair and maintenance activities that disturb ACM or PACM</li>
+            <li>Includes removing old gaskets, working around damaged pipe insulation</li>
+            <li>Requires 16-hour O&amp;M (Operations &amp; Maintenance) training minimum</li>
+            <li>Specific PPE, wet methods, HEPA vacuum, and glove-bag techniques required</li>
+            <li><strong>BBB workers may perform Class III only with specific training and authorization</strong></li>
+          </ul>
+        </div>
+        <div class="class-card cc4">
+          <h4>Class IV</h4>
+          <div class="class-label">Lower risk &mdash; 2-hour awareness training</div>
+          <ul>
+            <li>Custodial activities adjacent to ACM that may contact but do not disturb it</li>
+            <li>Cleaning up dust or debris in an area where ACM is present but not being worked</li>
+            <li>Does not involve cutting, sanding, drilling, or scraping ACM</li>
+            <li>Requires HEPA vacuum, wet methods for cleanup, and half-face APR minimum</li>
+            <li><strong>This training module qualifies BBB workers for Class IV awareness only</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> BBB Tank Services Asbestos Policy</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>The Core Policy: Assume and Protect</h3>
+      <p>BBB Tank Services operates under an <strong>&ldquo;Assume and Protect&rdquo;</strong> asbestos policy at all facilities built before 1990. This policy has three elements:</p>
+
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>1. Assume ACM Is Present</h4>
+          <ul>
+            <li>Treat all thermal insulation, surfacing materials, gaskets, and building materials in pre-1990 facilities as if they contain asbestos until laboratory analysis proves otherwise</li>
+            <li>Do not rely on facility records, labels, or verbal assurances as confirmation that materials are ACM-free</li>
+            <li>When in doubt about a material&rsquo;s age or composition, treat it as ACM</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>2. Do Not Disturb</h4>
+          <ul>
+            <li>Do not cut, drill, sand, grind, break, chip, or otherwise disturb any material suspected of containing asbestos</li>
+            <li>Do not remove suspected ACM gaskets or packing without authorization from a competent asbestos professional</li>
+            <li>Do not walk through or work in an area with visibly damaged insulation without respiratory protection</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>3. Stop Work and Report</h4>
+          <ul>
+            <li>If suspected ACM is encountered during work, <strong>stop immediately</strong> and move workers out of the area</li>
+            <li>Notify the BBB supervisor and the facility health and safety representative</li>
+            <li>Do not resume work in that area until the material has been assessed by a qualified industrial hygienist and proper controls are in place</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>What BBB Workers Are and Are Not Authorized to Do</h3>
+      <table class="std-table">
+        <thead><tr><th>Authorized &#10003;</th><th>Not Authorized &#10007;</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Visually identify and avoid materials suspected of containing asbestos</td>
+            <td>Remove, cut, drill, grind, or otherwise disturb suspected ACM</td>
+          </tr>
+          <tr>
+            <td>Work in areas with intact, undamaged ACM that is not being disturbed</td>
+            <td>Remove old asbestos-containing gaskets from flanges without proper training and authorization</td>
+          </tr>
+          <tr>
+            <td>Perform Class IV custodial cleanup with proper PPE (HEPA vacuum, wet methods, half-face APR)</td>
+            <td>Perform Class I, II, or III asbestos work without specific OSHA-required asbestos training</td>
+          </tr>
+          <tr>
+            <td>Stop work and report when suspected ACM is discovered or damaged</td>
+            <td>Collect samples of suspected ACM for identification &mdash; only trained industrial hygienists sample ACM</td>
+          </tr>
+          <tr>
+            <td>Exercise Stop Work Authority when working conditions expose workers to suspected ACM</td>
+            <td>Continue work after disturbing suspected ACM and hope the exposure was minor</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>Gasket Replacement &mdash; A Specific BBB Concern.</strong> Replacing flange gaskets is a routine BBB Tank Services task. In pre-1990 facilities, the gasket being removed may contain asbestos. Scraping or grinding an old asbestos gasket from a flange face releases fibers directly at the worker&rsquo;s breathing zone. BBB policy requires that any gasket removal in a pre-1990 facility first be assessed for ACM. If ACM cannot be ruled out, wet methods, a glove bag or tent enclosure, and supplied-air respirator are required. This is a Class III task requiring specific training.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> PPE &amp; Response When ACM Is Encountered</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Minimum PPE When Working Near Intact Suspected ACM</h3>
+      <p>When working in an area where intact (undamaged, not friable) suspected ACM is present but is not being disturbed, BBB Tank Services requires:</p>
+      <ul>
+        <li><strong>Half-face APR with P100 (HEPA) filters</strong> &mdash; protects against asbestos fibers. OV+P100 combination cartridges also provide protection. N95 filtering facepieces do NOT meet OSHA&rsquo;s asbestos respirator requirements.</li>
+        <li><strong>Disposable coveralls (Tyvek or equivalent)</strong> &mdash; prevent fiber contamination of street clothing; discarded as asbestos waste after use in the work area</li>
+        <li><strong>Nitrile gloves</strong> &mdash; prevent skin contact with fibers</li>
+        <li><strong>Safety glasses</strong> &mdash; standard eye protection; goggles if dust is anticipated</li>
+      </ul>
+
+      <h3>PPE for Incidental Contact / Class IV Work</h3>
+      <ul>
+        <li><strong>Half-face or full-face APR with P100 filters</strong> (full-face if heavy dust or high contact potential)</li>
+        <li><strong>Disposable coveralls with hood</strong> &mdash; fully sealed at wrists, ankles, and face opening</li>
+        <li><strong>Disposable boot covers</strong> over safety boots to prevent tracking fibers out of the work area</li>
+        <li><strong>Nitrile gloves, double-gloved</strong> when handling ACM debris</li>
+        <li><strong>HEPA vacuum</strong> &mdash; standard vacuums spread asbestos fibers; only HEPA-rated vacuums trap asbestos. No compressed air blowdown.</li>
+        <li><strong>Wet methods</strong> &mdash; amended water (water + surfactant) applied to suppress fiber release before and during cleanup</li>
+      </ul>
+
+      <h3>Decontamination &mdash; Leaving a Potentially ACM-Exposed Area</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>HEPA vacuum all surfaces of your coveralls</strong> while still wearing them. Work top to bottom, covering all surfaces. This is the critical step &mdash; fibers clinging to coveralls will be released if not removed before doffing.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Remove boot covers carefully</strong> &mdash; fold outward so the potentially contaminated outer surface is contained inside the folded cover. Place directly in an asbestos waste bag.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Remove outer gloves</strong> using the standard inside-out technique. Place in the waste bag.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Remove coveralls carefully</strong> &mdash; fold inward as you remove them so the potentially contaminated outer surface remains inside. Place directly in the asbestos waste bag.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Remove the respirator last</strong> &mdash; this is the same rule as for toxic chemical work. The respirator protects you during the entire decontamination sequence. Remove it after all other potentially contaminated PPE is off and in the waste bag.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Wash hands and face thoroughly</strong> before eating, drinking, or leaving the site. Never eat, drink, or smoke in areas where asbestos work has been performed.</div></li>
+      </ol>
+
+      <h3>Asbestos Waste Disposal</h3>
+      <ul>
+        <li>All asbestos waste must be placed in <strong>sealed, leak-tight containers</strong> (typically double polyethylene bags of at least 6 mil thickness) and labeled with the OSHA asbestos hazard warning label</li>
+        <li>Asbestos waste cannot be disposed of in regular trash &mdash; it must go to a licensed asbestos waste landfill</li>
+        <li>Used PPE (coveralls, boot covers, gloves) that contacted ACM are asbestos waste and must be bagged and disposed of accordingly</li>
+        <li>Contact the facility health and safety representative for asbestos waste handling at customer sites &mdash; the facility typically manages this process</li>
+      </ul>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Unexpected Discovery</div>
+        <h4>The Crumbling Pipe Insulation</h4>
+        <p>A BBB pipefitter is removing a section of process piping at a 1965-era refinery. As he loosens a pipe support, he disturbs the adjacent pipe insulation, which crumbles and releases a visible dust cloud. He is wearing a half-face OV+P100 respirator, Tyvek coveralls, and safety glasses. He immediately steps back and holds his breath momentarily.</p>
+        <p><strong>What he did right:</strong> He was wearing appropriate PPE, which provided immediate protection. He stopped immediately when ACM was disturbed. <strong>What must happen next:</strong> Stop all work in that area. Notify the BBB supervisor and the facility safety representative. Do not attempt to clean up the debris himself. The area must be assessed, air monitoring performed, and a licensed abatement contractor engaged before work in that area continues. The pipefitter&rsquo;s name and the exposure event must be documented for his medical surveillance file. Even with proper PPE, an unexpected ACM disturbance must be reported and documented.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Medical Surveillance &amp; Recordkeeping</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Medical Surveillance Requirements</h3>
+      <p>OSHA requires medical surveillance for workers who perform Class I, II, or III asbestos work, or for any worker whose exposure is at or above the action level (0.1 f/cc). Medical surveillance consists of:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Initial Medical Exam</h4>
+          <ul>
+            <li>Comprehensive medical and work history</li>
+            <li>Standardized respiratory questionnaire</li>
+            <li>Pulmonary function tests (spirometry)</li>
+            <li>Chest X-ray (PA, 14&times;17 inches, read by a B-reader physician)</li>
+            <li>Completed prior to assignment to ACM work</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Periodic Exams</h4>
+          <ul>
+            <li>Annual for workers performing Class I, II, or III work</li>
+            <li>Chest X-ray frequency based on exposure duration and B-reader recommendation</li>
+            <li>At termination of employment if the worker was exposed at or above the action level</li>
+            <li>All medical records maintained for 30 years plus the duration of employment</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Asbestos Exposure Documentation</h3>
+      <p>Any time a BBB Tank Services worker is potentially exposed to asbestos &mdash; even with appropriate PPE in place &mdash; the following must be documented:</p>
+      <ul>
+        <li>Date, time, and location of the exposure event</li>
+        <li>Name and job title of the exposed worker(s)</li>
+        <li>Description of the ACM or suspected ACM involved</li>
+        <li>Description of the work being performed when exposure occurred</li>
+        <li>PPE worn at the time of exposure</li>
+        <li>Whether the event was planned or unexpected</li>
+        <li>Air monitoring results, if available</li>
+      </ul>
+      <p>This documentation becomes part of the worker&rsquo;s permanent exposure record, which must be maintained for <strong>30 years after the end of employment</strong> per 29 CFR 1910.1001(m). Given the 20&ndash;50 year latency of asbestos diseases, these records are critical for future medical diagnosis and workers&rsquo; compensation claims.</p>
+
+      <h3>Employee Rights Under Asbestos Standards</h3>
+      <ul>
+        <li><strong>Right to know</strong> &mdash; OSHA requires that workers be informed of the presence of ACM or PACM in their work areas before beginning work</li>
+        <li><strong>Right to air monitoring results</strong> &mdash; workers must have access to the results of any air monitoring performed in their work area within 15 days of receiving results</li>
+        <li><strong>Right to medical records</strong> &mdash; workers have the right to access their own asbestos-related medical and exposure records</li>
+        <li><strong>Right to refuse unsafe work</strong> &mdash; a worker who is assigned to disturb suspected ACM without proper training, PPE, or controls has the right to refuse the assignment without retaliation (see Module 026 &mdash; Stop Work Authority)</li>
+      </ul>
+
+      <div class="box box-success">
+        <strong>&#10003; BBB Tank Services Asbestos Summary &mdash; The Non-Negotiables:</strong>
+        <ul style="margin-top:8px;">
+          <li>Treat all insulation and surfacing materials in pre-1990 facilities as ACM until proven otherwise</li>
+          <li>Never disturb suspected ACM &mdash; stop work and report immediately if ACM is encountered unexpectedly</li>
+          <li>BBB workers are authorized for Class IV (awareness) only &mdash; never perform Class I, II, or III work without specific asbestos O&amp;M or abatement training</li>
+          <li>Half-face APR with P100 filters minimum when working near suspected ACM</li>
+          <li>Decontaminate properly &mdash; HEPA vacuum coveralls before doffing; respirator comes off last</li>
+          <li>Document every asbestos exposure event; records kept 30 years</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. A worker is exposed to high concentrations of asbestos fibers during a pipe insulation disturbance but feels no symptoms at the time. What does this mean?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> The exposure was likely below the PEL since there are no immediate symptoms</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> Asbestos diseases have a latency period of 10&ndash;50 years &mdash; the absence of immediate symptoms provides no reassurance about long-term health impact</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> No medical follow-up is needed since symptoms develop only in people who smoke</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> The worker should monitor for symptoms over the next 48 hours before filing a report</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. You are working at a 1958-era refinery and see white fibrous pipe insulation in good condition covering the pipe you need to work near. How should you treat it?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> It is safe &mdash; if it were asbestos, the facility would have labeled it by now</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Treat it as Presumed Asbestos-Containing Material (PACM) and apply full asbestos precautions until lab analysis proves otherwise</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Identify it by color &mdash; white insulation is chrysotile and less hazardous than brown or blue types</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> It is only a concern if it is visibly damaged or crumbling</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. What class of asbestos work covers the removal of thermal system insulation (pipe and vessel insulation), and who is authorized to perform it?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Class III &mdash; any worker who has completed this awareness training module</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Class IV &mdash; standard BBB workers with half-face APR and Tyvek coveralls</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Class I &mdash; only a licensed asbestos abatement contractor with full regulatory controls</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Class II &mdash; trained BBB workers with OSHA O&amp;M certification</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. What is the OSHA PEL for asbestos as an 8-hour TWA?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> 1.0 f/cc (fibers per cubic centimeter)</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> 0.1 f/cc (fibers per cubic centimeter)</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> 5.0 f/cc (fibers per cubic centimeter)</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> 0.01 f/cc (fibers per cubic centimeter)</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. A BBB pipefitter is about to remove a gasket from a flange in a 1970s-era refinery. What should happen before the gasket is removed?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> The pipefitter can proceed &mdash; gasket replacement is routine maintenance and not covered by asbestos regulations</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> The gasket should be assessed for ACM content first; if it cannot be ruled out, wet methods, enclosure, and supplied-air respirator are required since this is a Class III task</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> A half-face N95 respirator is adequate protection for any gasket removal task at older facilities</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Proceed quickly to minimize exposure time &mdash; speed reduces dose even for ACM gaskets</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. During decontamination after working near suspected ACM, in what order should PPE be removed?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Respirator first, then coveralls, then gloves, then boot covers</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> HEPA vacuum coveralls, remove boot covers, remove outer gloves, remove coveralls, and remove the respirator last</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Coveralls first, then the respirator, then gloves — the same sequence used for chemical PPE removal</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> All PPE can be removed simultaneously since asbestos fibers are only airborne during the work, not during decontamination</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. Why does BBB Tank Services policy treat all pre-1990 insulation as PACM even when facility records say it is asbestos-free?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> OSHA regulations prohibit relying on facility records for PACM determination</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Facility records may be incomplete, inaccurate, or not based on lab analysis; the only reliable determination is sampling and analysis by a certified industrial hygienist</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> All pre-1990 insulation contains asbestos by definition under OSHA standards</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Facility records must always be independently verified by BBB Tank Services safety staff before relying on them</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. Which respirator is the minimum requirement when working near intact suspected ACM, and which is NOT acceptable?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> N95 filtering facepiece is the minimum; half-face APR is excessive for intact ACM</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Half-face APR with P100 (HEPA) filters is the minimum; N95 does NOT meet OSHA asbestos respirator requirements</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> Any NIOSH-approved respirator is acceptable for asbestos work regardless of filter type</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> OV cartridges alone (without P100 filters) are adequate since asbestos is a vapor, not a particle</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. A BBB crew member accidentally disturbs pipe insulation that crumbles and releases dust. He is wearing proper PPE. He plans to clean it up himself quickly with a shop vacuum and continue work. What is wrong with this plan?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Nothing &mdash; if he was wearing proper PPE during the disturbance, cleanup with a standard shop vacuum is acceptable</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> He should use a wet mop, not a shop vacuum, but can otherwise continue the cleanup himself</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Standard shop vacuums spread asbestos fibers rather than containing them; he must stop work, leave the area, notify the supervisor, and have the area assessed by a qualified person before any cleanup occurs</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> He can clean up with a HEPA vacuum himself since this module qualifies him for Class III cleanup tasks</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. How long must asbestos exposure records be maintained for a BBB Tank Services employee?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> 5 years from the date of the last recorded exposure</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> The duration of employment only</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> 30 years after the end of employment, reflecting the long latency period of asbestos-related diseases</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Until the employee turns 65, regardless of employment status</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-028.html" class="nav-btn prev">&larr; Module 28</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-030.html" class="nav-btn next">Module 30 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-029 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'b', q3:'c', q4:'b', q5:'b',
+    q6:'b', q7:'b', q8:'b', q9:'c', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'Asbestos-related diseases have a latency period of 10 to 50 years. No symptoms appear at the time of exposure, and no symptoms appear for years or decades afterward. This latency period is precisely why asbestos is so insidious — workers feel fine after an exposure event, which can create a false sense of safety. Every asbestos exposure must be documented regardless of how the worker feels at the time.',
+    q2:  'OSHA defines Presumed Asbestos-Containing Material (PACM) as thermal insulation and surfacing material in buildings constructed no later than 1980. At a 1958 facility, any pipe insulation is PACM and must be treated as ACM. Visual identification is unreliable — the only definitive determination is laboratory analysis of a sample taken by a qualified person.',
+    q3:  'Class I asbestos work covers removal of thermal system insulation (TSI) including pipe insulation and vessel insulation. It is the most hazardous class and requires a licensed asbestos abatement contractor with negative-pressure enclosures, HEPA air filtration, air monitoring, and full Level B or C protective equipment. BBB workers are never authorized to perform Class I work.',
+    q4:  'The OSHA PEL for asbestos is 0.1 f/cc (fibers per cubic centimeter) as an 8-hour TWA. The excursion limit is 1.0 f/cc for a 30-minute period. These concentrations are invisible and produce no odor — air monitoring equipment is the only way to know if the PEL is being exceeded.',
+    q5:  'Gasket removal from a pre-1990 facility is a Class III asbestos task when the gasket may contain asbestos. Class III requires specific OSHA O&M training, wet methods to suppress fiber release, a glove bag or mini-enclosure over the flange face, and at minimum a supplied-air respirator for the worker performing the removal. Gasket replacement is one of the most common routes to asbestos exposure for mechanical craft workers.',
+    q6:  'The correct decontamination sequence is: (1) HEPA vacuum all surfaces of coveralls while wearing them, (2) remove boot covers folded inward, (3) remove outer gloves, (4) remove coveralls folded inward, (5) remove the respirator last. The respirator must come off last because fibers may be on the coverall surface and on your gloves — removing the respirator first exposes your face while contaminated PPE is still being handled.',
+    q7:  'Facility records may be based on visual identification, manufacturer claims, or old assumptions rather than laboratory analysis. Records may be missing for some materials. The only reliable determination that a material is ACM-free is bulk sampling by a certified industrial hygienist followed by laboratory analysis using polarized light microscopy (PLM) or transmission electron microscopy (TEM). BBB policy treats records as insufficient evidence to override the PACM presumption.',
+    q8:  'OSHA\'s asbestos standards require a respirator with at least a P100 (HEPA) filter for asbestos work. P100 filters capture 99.97% of particles including asbestos fibers. N95 filters are rated for 95% efficiency for non-oil aerosols and do NOT meet OSHA\'s asbestos respirator requirements. Asbestos is a particulate, not a vapor, so OV cartridges alone provide no protection against asbestos fibers.',
+    q9:  'Standard shop vacuums do not have HEPA filtration and actually spread asbestos fibers back into the air through their exhaust. The correct response to an unexpected ACM disturbance is: stop work immediately, leave the area, notify the supervisor and facility safety representative, and wait for a qualified person to assess the situation before any cleanup. This module qualifies workers for Class IV awareness only — not for cleanup of unexpected ACM disturbances.',
+    q10: 'OSHA requires that asbestos exposure records be maintained for 30 years after the end of employment (29 CFR 1910.1001(m)). This reflects the 20–50 year latency period of asbestos-related diseases. A worker exposed at age 25 may not develop mesothelioma until age 65–75. The exposure record from decades earlier becomes critical evidence for medical diagnosis, treatment, and workers\' compensation claims.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'029', title:'Asbestos Policy', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 029 complete! Your record has been saved. Proceed to Module 030.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

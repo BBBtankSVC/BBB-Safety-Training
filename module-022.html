@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 018 &ndash; Ladder Safety Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 620px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong  { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong    { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* DUTY RATING CARDS */
+    .duty-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 14px 0; }
+    .duty-card { border-radius: 8px; padding: 14px; text-align: center; border: 2px solid var(--border); }
+    .duty-card .duty-type { font-size: 1.1rem; font-weight: 800; }
+    .duty-card .duty-name { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin: 4px 0; }
+    .duty-card .duty-lbs  { font-size: .82rem; color: var(--muted); }
+    .dc-iaa { background: #e8f5e9; border-color: #1D8348; color: #1D8348; }
+    .dc-ia  { background: #e3f2fd; border-color: #1565c0; color: #1565c0; }
+    .dc-i   { background: #fff8e1; border-color: #f57f17; color: #f57f17; }
+    .dc-ii  { background: #fce4ec; border-color: #c62828; color: #c62828; }
+    .dc-iii { background: #f3e5f5; border-color: #6a1b9a; color: #6a1b9a; }
+
+    /* ANGLE DIAGRAM */
+    .angle-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin: 16px 0; }
+    .angle-card h4 { color: var(--navy); font-size: .93rem; font-weight: 700; margin-bottom: 14px; }
+    .angle-visual { display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .angle-diagram { position: relative; width: 120px; height: 160px; flex-shrink: 0; }
+    .angle-diagram .wall { position: absolute; right: 0; top: 0; width: 10px; height: 160px; background: var(--navy); border-radius: 2px; }
+    .angle-diagram .ground { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: var(--navy); border-radius: 2px; }
+    .angle-diagram .ladder-line { position: absolute; bottom: 10px; left: 0; width: 100%; height: 3px; background: var(--orange); transform-origin: right bottom; transform: rotate(-68deg); }
+    .angle-diagram .dim-h { position: absolute; right: 14px; top: 0; height: 70%; border-left: 1.5px dashed var(--muted); }
+    .angle-diagram .dim-b { position: absolute; bottom: 14px; left: 0; width: 30%; border-bottom: 1.5px dashed var(--muted); }
+    .angle-diagram .label { position: absolute; font-size: .72rem; color: var(--orange2); font-weight: 700; }
+    .angle-text { flex: 1; min-width: 200px; font-size: .88rem; }
+    .angle-text p { margin-bottom: 8px; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    /* INSPECTION CHECKLIST */
+    .checklist { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; margin: 14px 0; }
+    .checklist h4 { color: var(--navy); font-size: .93rem; font-weight: 700; margin-bottom: 12px; }
+    .checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .88rem; }
+    .checklist-item:last-child { border-bottom: none; }
+    .check-box { flex-shrink: 0; width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 3px; margin-top: 2px; }
+    .check-label strong { display: block; color: var(--navy); }
+    .check-label span { color: var(--muted); font-size: .82rem; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-017.html">&larr; Mod 17</a>
+    <a href="module-018.html" class="active">Mod 18</a>
+    <a href="module-019.html">Mod 19 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 18 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 018 &middot; SHP-BBB-018</div>
+  <h1>Ladder Safety Program</h1>
+  <p class="subtitle">Selecting, inspecting, setting up, and safely climbing portable and fixed ladders &mdash; including the shell stairways and fixed ladder systems common on BBB Tank Services job sites.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 30 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>State the leading causes of ladder-related fatalities and injuries</li>
+      <li>Identify each ANSI duty rating and its load capacity</li>
+      <li>Select the correct ladder type for a given task</li>
+      <li>Perform a pre-use inspection on a portable ladder</li>
+      <li>Set up an extension ladder using the 4:1 angle rule</li>
+      <li>Demonstrate three-point contact climbing technique</li>
+      <li>Identify fixed ladder safety requirements including cages and fall arrest</li>
+      <li>State when a ladder is not the right tool and a scaffold or aerial lift should be used instead</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> Ladder Hazards &amp; OSHA Requirements</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>Falls are the leading cause of death in construction and a top cause in general industry. Ladders are involved in a significant number of those falls. According to OSHA, nearly <strong>24,000 workers are injured</strong> and over <strong>300 are killed</strong> in ladder-related incidents every year in the United States. Most of these incidents are preventable through proper selection, inspection, setup, and use.</p>
+
+      <h3>Leading Causes of Ladder Incidents</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Worker Behavior</h4>
+          <ul>
+            <li>Overreaching &mdash; leaning too far to the side</li>
+            <li>Climbing with tools or materials in both hands</li>
+            <li>Standing on the top cap or top rung</li>
+            <li>Mounting the wrong side of a stepladder</li>
+            <li>Moving a ladder while someone is on it</li>
+            <li>Using a ladder in high winds or wet conditions</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Equipment &amp; Setup Problems</h4>
+          <ul>
+            <li>Wrong ladder type or duty rating for the job</li>
+            <li>Defective ladder put back into service</li>
+            <li>Extension ladder set at incorrect angle</li>
+            <li>Ladder not secured at top or bottom</li>
+            <li>Set up on unstable or uneven ground</li>
+            <li>Ladder too short &mdash; worker overreaches at top</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>OSHA Standards That Apply</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td><strong>29 CFR 1926.1053</strong></td><td>Construction &mdash; portable ladders; use, construction, and care</td></tr>
+          <tr><td><strong>29 CFR 1910.23</strong></td><td>General Industry &mdash; ladders (updated 2017); portable and fixed ladders</td></tr>
+          <tr><td><strong>29 CFR 1910.28 / 1926.502</strong></td><td>Fall protection &mdash; applies to fixed ladders over 24 ft and when climbing unprotected fixed ladders</td></tr>
+          <tr><td><strong>ANSI/ASC A14 Series</strong></td><td>Performance standards for portable metal, wood, reinforced plastic, and fixed ladders &mdash; basis for duty ratings</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>Ladders at BBB Tank Services:</strong> Our crews use portable extension ladders for tank access, stepladders for equipment maintenance at height, and climb fixed tank shell ladders and stairways during in-service and out-of-service tank work. Every ladder type presents distinct hazards. This module covers all three.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Ladder Types &amp; Duty Ratings</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>ANSI Duty Ratings</h3>
+      <p>All portable ladders are rated by ANSI for maximum load capacity, which includes the <strong>combined weight of the worker, tools, equipment, and materials</strong> on the ladder at one time. BBB Tank Services requires workers to know their duty rating and never exceed it.</p>
+
+      <div class="duty-grid">
+        <div class="duty-card dc-iaa">
+          <div class="duty-type">IAA</div>
+          <div class="duty-name">Special Duty</div>
+          <div class="duty-lbs">375 lbs</div>
+        </div>
+        <div class="duty-card dc-ia">
+          <div class="duty-type">IA</div>
+          <div class="duty-name">Extra Heavy</div>
+          <div class="duty-lbs">300 lbs</div>
+        </div>
+        <div class="duty-card dc-i">
+          <div class="duty-type">I</div>
+          <div class="duty-name">Heavy Duty</div>
+          <div class="duty-lbs">250 lbs</div>
+        </div>
+        <div class="duty-card dc-ii">
+          <div class="duty-type">II</div>
+          <div class="duty-name">Medium Duty</div>
+          <div class="duty-lbs">225 lbs</div>
+        </div>
+        <div class="duty-card dc-iii">
+          <div class="duty-type">III</div>
+          <div class="duty-name">Light Duty</div>
+          <div class="duty-lbs">200 lbs</div>
+        </div>
+      </div>
+
+      <div class="box box-warning">
+        <strong>&#9888; BBB Tank Services Minimum Rating:</strong> All portable ladders used on BBB Tank Services job sites must be rated <strong>Type I (250 lbs) or higher</strong>. Workers carrying tools and wearing PPE routinely exceed 200 lbs total load. Type II and Type III ladders are not permitted on our job sites.
+      </div>
+
+      <h3>Portable Ladder Types</h3>
+      <table class="std-table">
+        <thead><tr><th>Type</th><th>Key Features</th><th>When to Use / Not Use</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Stepladder</strong></td>
+            <td>Self-supporting A-frame; non-adjustable; both sides have steps (on a Type II) or one side steps/one side rail only (standard)</td>
+            <td>Use: work within reach of the top. <strong>Never</strong> climb the back (rail-only) side; never stand on the top cap or top step; never lean a closed stepladder against a surface and use as an extension ladder</td>
+          </tr>
+          <tr>
+            <td><strong>Extension Ladder</strong></td>
+            <td>Two-section sliding ladder; non-self-supporting; must lean against a stable structure; adjustable to needed height</td>
+            <td>Use: accessing roofs, elevated structures, tank tops. Must be secured top and bottom. Requires correct angle setup. Never use on a slippery surface without securing feet.</td>
+          </tr>
+          <tr>
+            <td><strong>Step Stool</strong></td>
+            <td>Short self-supporting ladder (&le;6 ft); for short-reach tasks only</td>
+            <td>Use: accessing equipment at low to moderate heights in stable conditions. Not suitable for tank access.</td>
+          </tr>
+          <tr>
+            <td><strong>Platform Ladder</strong></td>
+            <td>Stepladder with a standing platform and top guardrail; provides a stable work position</td>
+            <td>Use: tasks requiring extended working time at height where a scaffold is impractical. Preferred over standard stepladder for tasks lasting more than a few minutes.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>When Not to Use a Ladder</h3>
+      <p>A ladder is not always the right access solution. OSHA requires that when tasks require extended work at height, a more stable work platform is the better choice. Consider a scaffold or aerial lift instead of a ladder when:</p>
+      <ul>
+        <li>The task requires more than a few minutes of work at height</li>
+        <li>Both hands are needed to perform the work (leaving no hand for the ladder)</li>
+        <li>The work area requires lateral movement along the work surface</li>
+        <li>Heavy tools or materials must be used or held at height</li>
+        <li>Wind conditions make ladder stability questionable</li>
+        <li>The work height exceeds what can be safely reached from a properly positioned ladder</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Pre-Use Inspection</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Every portable ladder must be inspected before each use. An inspection takes less than two minutes and can prevent a fatal fall. If any defect is found, the ladder must be immediately removed from service, tagged &ldquo;DO NOT USE,&rdquo; and reported to your supervisor. <strong>Never use a defective ladder.</strong></p>
+
+      <div class="checklist">
+        <h4>&#9989; Pre-Use Inspection Checklist &mdash; All Portable Ladders</h4>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Rails (Side Stringers)</strong><span>No cracks, dents, bends, or corrosion. No paint covering potential damage (paint obscures cracks on metal ladders).</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Rungs &amp; Steps</strong><span>All rungs present, tight, not bent, cracked, or corroded. No slippery coatings (grease, mud, paint). Non-slip surfaces intact.</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Feet &amp; Pads</strong><span>Rubber or non-slip feet present, not cracked, hardened, or missing. Feet swivel freely to contact the ground flat.</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Locking Devices (Extension Ladders)</strong><span>Both rung locks (dogs/pawls) engage fully and lock positively. No bent or cracked lock components. Locks hold under light load test.</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Spreaders (Stepladders)</strong><span>Both spreader arms fully open and locked. No bent, cracked, or missing spreader components. Spreader hinge rivets tight.</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Labels &amp; Ratings</strong><span>Duty rating label present and legible. Manufacturer&rsquo;s warning labels intact. Do not use a ladder with missing or illegible rating label.</span></div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-box"></div>
+          <div class="check-label"><strong>Overall Condition</strong><span>No evidence of prior overload (bent rails, spread rungs). No previous repairs using tape, wire, or improvised materials. No evidence of heat or chemical damage.</span></div>
+        </div>
+      </div>
+
+      <h3>Remove-from-Service Criteria</h3>
+      <p>Remove the ladder immediately and tag &ldquo;DEFECTIVE &mdash; DO NOT USE&rdquo; if any of the following are found:</p>
+      <ul>
+        <li>Any cracked, bent, or broken rail or rung</li>
+        <li>Missing, loose, or non-functioning rung lock on an extension ladder</li>
+        <li>Missing, cracked, or hardened rubber feet</li>
+        <li>Evidence of prior overloading (bent rails, spread rungs, twisted frame)</li>
+        <li>Previous repair with tape, wire, bolts, or any improvised material</li>
+        <li>Missing or illegible duty rating label</li>
+        <li>A ladder that has been dropped from height or involved in an incident</li>
+      </ul>
+
+      <div class="box box-danger">
+        <strong>&#9888; Never Paint a Metal Ladder.</strong> Paint fills cracks and hides corrosion on aluminum and steel ladders, allowing hidden damage to go undetected during inspection. Metal ladders must remain unpainted. If you find a painted metal ladder, remove it from service and report it.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Setup &amp; Positioning</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+
+      <h3>The 4:1 Rule &mdash; Extension Ladder Angle</h3>
+      <p>The most critical setup requirement for an extension ladder is the angle of inclination. The correct angle is <strong>75.5&deg;</strong> from horizontal, established by the 4:1 rule: for every 4 feet of working height, the base of the ladder is set 1 foot out from the wall or structure.</p>
+
+      <div class="angle-card">
+        <h4>4:1 Rule Illustrated</h4>
+        <div class="angle-visual">
+          <div class="angle-diagram">
+            <div class="wall"></div>
+            <div class="ground"></div>
+            <div class="ladder-line"></div>
+            <div class="dim-h"></div>
+            <div class="dim-b"></div>
+            <div class="label" style="right:14px;top:42%;color:var(--navy2)">H</div>
+            <div class="label" style="bottom:14px;left:14%">B</div>
+          </div>
+          <div class="angle-text">
+            <p><strong>Formula: B = H &divide; 4</strong></p>
+            <p>If the ladder reaches <strong>16 feet</strong> up the wall, the base must be <strong>4 feet</strong> out from the wall.</p>
+            <p>If the ladder reaches <strong>20 feet</strong>, the base must be <strong>5 feet</strong> out.</p>
+            <p><strong>Too steep</strong> (base too close): ladder tips backward &mdash; falls away from structure.</p>
+            <p><strong>Too shallow</strong> (base too far): ladder slides down the wall &mdash; feet kick out.</p>
+            <p>A quick field check: stand at the base with toes touching the feet, arms extended horizontally &mdash; if your palms just reach a rung, the angle is approximately correct.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Extension Ladder Setup &mdash; Step by Step</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Inspect before setup.</strong> Complete the pre-use inspection before carrying the ladder to the work location.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Choose a stable, level surface.</strong> The feet must rest on a firm, level base. On soft ground, use a mud sill (board) under the feet. On hard floors, use a ladder mat or have a second person foot the ladder.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Extend to the correct length.</strong> The ladder must extend at least <strong>3 feet (3 rungs) above</strong> the landing point (roof edge, tank top, platform). The overlap between sections must meet the manufacturer&rsquo;s minimum requirement (typically 3 ft for ladders up to 36 ft; more for longer ladders).</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Set the angle using the 4:1 rule.</strong> Position the base 1 foot out for every 4 feet of height. Confirm both rung locks are fully engaged before climbing.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Secure the ladder.</strong> Tie off or lash the top of the ladder to the structure before climbing, whenever possible. If top tie-off is not possible before initial ascent, have a second person hold the base firmly during the first climb. After reaching the top, secure before descending.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Position away from doors and traffic.</strong> Barricade or lock doors that open toward the ladder base. Post warning cones if the ladder is in a traffic area. Notify others that the ladder is in use.</div></li>
+      </ol>
+
+      <h3>Stepladder Setup</h3>
+      <ul>
+        <li>Open all four feet fully and lock all spreader arms before use &mdash; never use a stepladder in the closed position leaned against a wall</li>
+        <li>Place on a firm, level surface &mdash; all four feet must contact the ground</li>
+        <li>Never use on a scaffold, in a vehicle, or on any other elevated surface without additional fall protection</li>
+        <li>Do not place at the top of a staircase without using a specially designed staircase ladder leveler</li>
+      </ul>
+
+      <div class="box box-warning">
+        <strong>&#9888; Ladder Near Energized Equipment:</strong> Do not use a metal (aluminum) ladder near overhead electrical lines or energized equipment. Maintain at least <strong>10 feet of clearance</strong> from energized lines up to 50 kV. Use a fiberglass ladder when any electrical hazard is present. BBB Tank Services job sites may have powered equipment on and around tank structures &mdash; look up before setting up.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Safe Climbing &amp; Working Practices</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+
+      <h3>Three Points of Contact</h3>
+      <p>The most important climbing rule is <strong>three points of contact</strong> at all times: two hands and one foot, or two feet and one hand must be in contact with the ladder during all ascent and descent. This gives you two independent support points if one contact slips or fails. Three points of contact is not optional &mdash; it is the fundamental ladder safety rule.</p>
+
+      <div class="box box-info">
+        <strong>How to Carry Tools &amp; Materials:</strong> If both hands are needed for three-point contact, tools and materials cannot be hand-carried while climbing. Use a <strong>tool belt, tool bucket, or hand line</strong> to raise and lower tools. Never carry an item that requires both hands to hold. Never carry an item so large or heavy that it throws off your balance.
+      </div>
+
+      <h3>Climbing Rules &mdash; Always and Never</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Always Do</h4>
+          <ul>
+            <li>Face the ladder when climbing and descending</li>
+            <li>Maintain three points of contact at all times</li>
+            <li>Center your body between the rails &mdash; keep your belt buckle between the rails</li>
+            <li>Wear slip-resistant footwear</li>
+            <li>Climb and descend slowly and deliberately</li>
+            <li>Descend the same way you ascended &mdash; facing the ladder</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Never Do</h4>
+          <ul>
+            <li>Never stand on the top cap or top two rungs of a stepladder</li>
+            <li>Never reach so far to the side that your belt buckle passes outside the rails</li>
+            <li>Never carry items in both hands while climbing</li>
+            <li>Never allow two people on a portable ladder simultaneously</li>
+            <li>Never climb on the back (bracing) side of a stepladder</li>
+            <li>Never jump from a ladder</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Working from a Ladder</h3>
+      <p>Ladders are a means of access, not a work platform. Extended work at height from a ladder is a leading cause of overreaching and falls. When working from a ladder:</p>
+      <ul>
+        <li><strong>Keep your center of gravity between the rails.</strong> Your hips and belt buckle must remain within the width of the ladder rails at all times. If you need to reach farther, climb down and move the ladder.</li>
+        <li><strong>Do not work at arm&rsquo;s length.</strong> If you cannot comfortably reach the work while maintaining three points of contact, the ladder is in the wrong position. Reposition.</li>
+        <li><strong>Secure the ladder before working.</strong> If you will be performing work that requires both hands (drilling, wrench work), the ladder must be tied off at the top before you begin. Do not rely on a footing partner for extended work.</li>
+        <li><strong>Limit task duration on a ladder.</strong> Fatigue increases fall risk. For tasks requiring more than 20&ndash;30 minutes of continuous work at height, use a scaffold or aerial lift.</li>
+      </ul>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; The Overreach</div>
+        <h4>Six Inches Too Far</h4>
+        <p>A crew member is on an extension ladder painting the shell of a tank. He is almost finished with a section but there is a spot just out of his comfortable reach about 18 inches to his right. Rather than climb down and move the ladder, he leans out to reach it, extending his right arm and shifting his weight. The ladder rotates slightly and he grabs for the rung with his left hand, dropping his brush. He catches himself but his heart is pounding.</p>
+        <p><strong>What should have happened:</strong> The moment the work is beyond comfortable reach, stop &mdash; climb down and move the ladder. The few minutes to reposition a ladder is a trivial cost compared to a fall from even 10 feet. There is no &ldquo;just this once&rdquo; on a ladder. Overreaching is the number one cause of ladder falls and the cause is always the same: the worker decided the shortcut was worth it.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Fixed Ladders &amp; Tank Shell Access</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Fixed ladders are permanently attached to structures &mdash; including tank shells, platforms, and elevated equipment. At BBB Tank Services job sites, fixed ladders on storage tanks are one of the most frequently used means of access. They present distinct hazards from portable ladders and are governed by specific OSHA requirements.</p>
+
+      <h3>OSHA Requirements for Fixed Ladders</h3>
+      <table class="std-table">
+        <thead><tr><th>Requirement</th><th>Specifics</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cage or Well</strong></td><td>Required on fixed ladders extending more than <strong>20 feet</strong> above a lower level. Begins no more than 8 feet above the base and extends to the top of the ladder.</td></tr>
+          <tr><td><strong>Rest Platforms</strong></td><td>Required at no more than <strong>150-foot intervals</strong> on ladders exceeding 24 feet. Ladders are offset at each platform.</td></tr>
+          <tr><td><strong>Personal Fall Arrest</strong></td><td>Required on fixed ladders extending <strong>24 feet or more</strong> that are not equipped with a cage or well. A ladder safety system (self-retracting lifeline or fixed vertical lifeline with sleeve) must be provided.</td></tr>
+          <tr><td><strong>Ladder Width</strong></td><td>Minimum 16 inches between side rails; rungs spaced uniformly 12 inches apart (&plusmn;3/8 inch).</td></tr>
+          <tr><td><strong>Landing Platform Clearance</strong></td><td>At least 7 inches of toe clearance from the centerline of rungs to any obstacle. Through-the-hole exit: at least 24 &times; 24 inch opening.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Inspecting a Fixed Ladder Before Use</h3>
+      <p>Fixed ladders on customer tanks may not be routinely maintained by the customer. Before climbing any fixed ladder on a job site, perform a visual inspection from ground level and at each level of the climb:</p>
+      <ul>
+        <li>Inspect mounting brackets &mdash; look for corrosion, loose bolts, or separation from the tank shell</li>
+        <li>Check rungs for corrosion, damage, or missing anti-slip treatment</li>
+        <li>Verify cage or fall arrest system is intact before ascending ladders &gt;20 ft</li>
+        <li>Check that the self-retracting lifeline or vertical lifeline is present, undamaged, and correctly anchored if a fall arrest system is required</li>
+        <li>Inspect the top landing &mdash; confirm there is a safe step-off platform and adequate handrail at the transition point</li>
+        <li>If any structural deficiency is observed, do not use the ladder &mdash; report to your supervisor and the customer</li>
+      </ul>
+
+      <h3>Using a Ladder Safety System (LSS)</h3>
+      <p>Many tall tank fixed ladders are equipped with a ladder safety system &mdash; either a fixed vertical lifeline with a climbing sleeve, or an integrated self-retracting lifeline (SRL) track. Using it correctly is mandatory before ascending any fixed ladder requiring one:</p>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Don your full body harness</strong> and confirm it is correctly fitted before approaching the ladder. Check all buckles, leg straps, and the dorsal D-ring.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Connect the sleeve or SRL</strong> to your harness D-ring at the bottom of the ladder before ascending. Never connect after you have already started to climb.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Keep the sleeve or SRL above you</strong> as you climb &mdash; it should always be at chest to shoulder level, not below your feet. Letting it fall below you creates slack that converts a slip into a longer, harder fall arrest.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Do not detach at intermediate rest platforms.</strong> Transfer to the next ladder section&rsquo;s LSS before releasing from the current one &mdash; maintain continuous protection.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Disconnect only at the designated top landing.</strong> Never detach from the LSS while still on the ladder, even to reposition.</div></li>
+      </ol>
+
+      <div class="box box-danger">
+        <strong>&#9888; Never Climb a Fixed Ladder Without Its Required Fall Protection.</strong> If a fixed ladder requires a cage, safety system, or fall arrest equipment and that equipment is missing, damaged, or non-functional, the ladder is out of service until repaired. Using an unprotected fixed ladder &gt;24 feet is an OSHA violation and a potentially fatal decision. Report missing or damaged fixed ladder safety equipment to your supervisor and the facility immediately.
+      </div>
+
+      <h3>Tank Stairways vs. Ladders</h3>
+      <p>Many larger storage tanks are equipped with spiral stairways rather than vertical fixed ladders. Stairways are always preferred over ladders for tank access when both are available. When using tank stairways:</p>
+      <ul>
+        <li>Use handrails on both sides if available; grip the rail continuously</li>
+        <li>Do not run on tank stairways &mdash; open grating can catch boot toes</li>
+        <li>Check for wet, icy, or product-contaminated grating before stepping</li>
+        <li>Do not carry items in both hands on a stairway &mdash; use a tool bag</li>
+        <li>On floating roof tanks, be aware that stairways may articulate or pivot as the roof level changes</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What does the ANSI duty rating on a ladder represent?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> The maximum height the ladder can safely be used at</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> The combined maximum weight of the worker, tools, equipment, and materials on the ladder at one time</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> The number of years the ladder is certified for use before replacement</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> The minimum surface rating for the ground the ladder must be placed on</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. What is the minimum duty rating required for portable ladders on BBB Tank Services job sites?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> Type III (200 lbs) &mdash; sufficient for most single workers</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Type II (225 lbs) &mdash; medium duty is adequate for field work</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Type I (250 lbs) or higher &mdash; because workers with PPE and tools routinely exceed 200 lbs total load</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> Any rated ladder is acceptable as long as the individual worker weighs less than the rated capacity</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. Using the 4:1 rule, how far from the base of a wall should the feet of an extension ladder be placed if the ladder reaches 24 feet up the wall?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> 2 feet</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> 8 feet</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> 6 feet</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> 4 feet</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. When using an extension ladder to access a roof or elevated platform, how far must the ladder extend above the landing point?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> At least 1 foot (1 rung) above the surface</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> At least 3 feet (3 rungs) above the landing point</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> The ladder can end exactly at the landing point &mdash; any more is unnecessary</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> At least 5 feet above so workers have a handhold during step-off</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. You need to carry a power drill to the top of a ladder to install a bracket. How should you transport the drill?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Hold it in one hand and use the other hand plus both feet for three-point contact</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Tuck it under your arm so both hands are free for climbing</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Use a tool belt or tool bucket on a hand line, keeping both hands free for three-point contact on the ladder</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Ask a coworker to hold the drill and pass it up once you reach the top</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. While inspecting an extension ladder before use, you notice that one rung lock (dog/pawl) clicks into place but feels loose and does not hold firmly when you pull on it. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Use only the other lock and climb carefully, keeping your weight centered</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Remove the ladder from service immediately, tag it &ldquo;DEFECTIVE &mdash; DO NOT USE,&rdquo; and report it to your supervisor</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Tape the lock in the engaged position with duct tape until it can be repaired</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Use the ladder at a lower height where the faulty lock section is not extended</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. What does &ldquo;three points of contact&rdquo; mean when climbing a ladder?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Both feet and your chest must remain in contact with the ladder at all times</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> Two hands and one foot, or two feet and one hand, must be in contact with the ladder at all times during ascent and descent</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> Three different body parts must touch the ladder every time you move to the next rung</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Both hands must grip the rails &mdash; never the rungs &mdash; while both feet step on the rungs</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. At what fixed ladder height does OSHA require either a cage/well OR a personal fall arrest system?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> 10 feet &mdash; any fixed ladder over 10 feet requires fall protection</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> 24 feet &mdash; fixed ladders 24 feet or more require a cage/well or ladder safety system</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> 6 feet &mdash; OSHA&rsquo;s standard 6-foot fall protection trigger applies to all ladder types</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> 50 feet &mdash; only very tall fixed ladders on tank structures require fall protection</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. You are climbing a fixed tank ladder equipped with a vertical lifeline and sleeve. At what point should the sleeve be positioned relative to your body as you climb?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Below your feet &mdash; it should trail behind you and self-tighten only if you fall</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> At chest to shoulder level &mdash; always above you to minimize fall distance and arrest forces</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> At your waist &mdash; this is the most comfortable position for extended climbing</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Position does not matter as long as the sleeve is connected to the lifeline</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. You are working from a stepladder and the item you need to reach is about 20 inches to your right &mdash; just beyond comfortable reach without leaning significantly. What is the correct action?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Lean to the right slowly and reach, keeping one hand on the ladder at all times</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Stand on the next-higher step to gain extra height and reduce the lateral reach needed</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Climb down, move the ladder so the work is within comfortable reach, and re-ascend</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Ask a coworker to hold the base of the ladder while you stretch out to reach</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-017.html" class="nav-btn prev">&larr; Module 17</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-019.html" class="nav-btn next">Module 19 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-018 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'c', q3:'c', q4:'b', q5:'c',
+    q6:'b', q7:'b', q8:'b', q9:'b', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'The duty rating is the maximum combined load — the worker\'s body weight plus all tools, equipment, and materials carried. A 200 lb worker wearing 15 lbs of PPE and carrying a 20 lb tool bag is already at 235 lbs. Always account for total load, not just body weight.',
+    q2:  'BBB Tank Services requires Type I (250 lbs) minimum because workers wearing full PPE and carrying tools routinely approach or exceed 225 lbs combined. Type II and III ladders do not provide adequate safety margin for industrial field work.',
+    q3:  'The 4:1 rule: base distance = ladder height ÷ 4. For a 24-foot height: 24 ÷ 4 = 6 feet. The feet must be placed 6 feet out from the base of the wall. This establishes the correct 75.5° angle for safe, stable use.',
+    q4:  'OSHA and ANSI both require extension ladders to extend at least 3 feet (3 rungs) above the landing point. This provides a handhold for the transition on and off the ladder at the top, preventing falls during the most vulnerable part of the climb.',
+    q5:  'Three-point contact requires both hands available for the ladder. Tools must be transported using a tool belt, tool pouch, or hand line so both hands remain free for climbing. Carrying a tool in one hand leaves only one hand and two feet — one slip removes a contact point.',
+    q6:  'A rung lock that does not hold firmly is a defective ladder that must be removed from service immediately. Using an extension ladder with a faulty lock risks the ladder collapsing to a shorter length while someone is on it. No field repair is acceptable.',
+    q7:  'Three points of contact means two hands + one foot, or two feet + one hand, simultaneously on the ladder at all times while ascending or descending. This ensures that if one contact point slips, two others remain to prevent a fall.',
+    q8:  'OSHA 29 CFR 1910.23 requires that fixed ladders 24 feet or more in height be equipped with a cage, well, or a ladder safety system (personal fall arrest). Ladders over 20 feet require a cage beginning within 8 feet of the base.',
+    q9:  'The sleeve must be kept at chest to shoulder level — always above the climber\'s center of gravity. Allowing it to drop below the waist creates slack in the system. If a slip occurs with the sleeve at foot level, the fall distance before arrest is much greater, dramatically increasing arrest forces and injury risk.',
+    q10: 'Any time the work is beyond comfortable reach while maintaining proper body position, the correct response is to climb down and move the ladder. No task is worth the risk of a fall. Leaning, stretching, or standing on a higher step are all leading causes of stepladder falls.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'018', title:'Ladder Safety Program', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 018 complete! Your record has been saved. Proceed to Module 019.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

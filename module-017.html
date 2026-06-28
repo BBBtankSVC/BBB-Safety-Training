@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 017 &ndash; In-Service Tank Work | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong  { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong    { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    /* HAZARD ZONE VISUAL */
+    .tank-zones { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; }
+    .tank-zones h4 { color: var(--navy); font-size: .93rem; font-weight: 700; margin-bottom: 14px; text-align: center; }
+    .zone-row { display: flex; align-items: stretch; gap: 0; border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
+    .zone-color { width: 10px; flex-shrink: 0; }
+    .zone-content { padding: 11px 14px; flex: 1; font-size: .87rem; }
+    .zone-content strong { display: block; color: var(--navy); margin-bottom: 3px; font-size: .9rem; }
+    .z-red    { background: #C0392B; }
+    .z-orange { background: var(--orange); }
+    .z-yellow { background: #D4AC0D; }
+    .z-green  { background: var(--green); }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    /* PERMIT BLOCK */
+    .permit-card { border: 2px dashed var(--orange); border-radius: var(--radius); padding: 18px 22px; margin: 16px 0; background: #fff8f5; }
+    .permit-card h4 { color: var(--orange2); font-size: .93rem; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .6px; }
+    .permit-card ul { padding-left: 18px; font-size: .88rem; }
+    .permit-card li { margin-bottom: 6px; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-016.html">&larr; Mod 16</a>
+    <a href="module-017.html" class="active">Mod 17</a>
+    <a href="module-018.html">Mod 18 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 17 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 017 &middot; SHP-BBB-017</div>
+  <h1>In-Service Tank Work</h1>
+  <p class="subtitle">Recognizing and controlling the unique hazards of working on tanks that still contain product &mdash; from gauging and sampling to roof maintenance and external inspection.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 40 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Define in-service tank work and explain why it is uniquely hazardous</li>
+      <li>Identify the primary hazards present at an in-service storage tank</li>
+      <li>Describe the vapor zone classifications around a tank in service</li>
+      <li>State the ignition source controls required for in-service tank work</li>
+      <li>Explain grounding and bonding requirements to prevent static ignition</li>
+      <li>Identify safe practices for gauging, sampling, and roof work on in-service tanks</li>
+      <li>Describe floating roof hazards specific to in-service operations</li>
+      <li>Follow pre-job planning and permit requirements before starting in-service tank work</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is In-Service Tank Work?</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>An <strong>in-service tank</strong> is any storage tank that contains product &mdash; petroleum, chemicals, or other hazardous materials &mdash; and has not been fully emptied, isolated, cleaned, and gas-freed. In-service work means any task performed on or around a tank while it is in this condition, including tanks that have been partially emptied but still hold liquid or vapors.</p>
+
+      <p>In-service work is fundamentally different from working on an out-of-service, cleaned, and gas-freed tank. The tank is still an active hazardous system. Product movement, vapor generation, and the potential for sudden release are all ongoing. This requires a disciplined, pre-planned approach every time.</p>
+
+      <h3>Common In-Service Tank Tasks at BBB Tank Services</h3>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>Inspection &amp; Measurement</h4>
+          <ul>
+            <li>Manual gauging (innage/ullage)</li>
+            <li>Automatic gauge maintenance</li>
+            <li>Sampling for product quality</li>
+            <li>External visual inspection</li>
+            <li>Shell thickness testing (UT)</li>
+            <li>Leak detection surveys</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Roof &amp; Vent Maintenance</h4>
+          <ul>
+            <li>Thief hatch inspection and gasket replacement</li>
+            <li>Pressure/vacuum vent inspection and cleaning</li>
+            <li>Floating roof seal inspection</li>
+            <li>Roof drain maintenance</li>
+            <li>Geodesic and fixed-roof vent work</li>
+            <li>Level instrument maintenance</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>External Maintenance</h4>
+          <ul>
+            <li>Shell painting and coating</li>
+            <li>Insulation installation/repair</li>
+            <li>Stairway and handrail maintenance</li>
+            <li>Cathodic protection testing</li>
+            <li>Nozzle and valve maintenance (isolated)</li>
+            <li>Secondary containment inspection</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; The Defining Hazard: Flammable Vapor.</strong> Petroleum storage tanks continuously generate flammable vapors from the liquid surface. These vapors are heavier than air and accumulate at the tank roof, around open hatches, in the vapor space, and anywhere vapor can escape. A single ignition source &mdash; a spark, a hot surface, static discharge, or a non-intrinsically-safe device &mdash; can ignite these vapors with explosive force. This hazard is present at every in-service petroleum tank, every time.
+      </div>
+
+      <h3>Applicable Standards &amp; References</h3>
+      <table class="std-table">
+        <thead><tr><th>Standard</th><th>Topic</th></tr></thead>
+        <tbody>
+          <tr><td><strong>API 2015</strong></td><td>Requirements for Safe Entry and Cleaning of Petroleum Storage Tanks</td></tr>
+          <tr><td><strong>API 2207</strong></td><td>Preparing Tank Bottoms for Hot Work</td></tr>
+          <tr><td><strong>API 2219</strong></td><td>Safe Operating Guidelines for Vacuum Trucks in Petroleum Service</td></tr>
+          <tr><td><strong>NFPA 30</strong></td><td>Flammable and Combustible Liquids Code &mdash; classification, storage, operations</td></tr>
+          <tr><td><strong>OSHA 1910.119</strong></td><td>Process Safety Management &mdash; applies at qualifying facilities</td></tr>
+          <tr><td><strong>OSHA 1910.146</strong></td><td>Permit-Required Confined Spaces &mdash; if tank interior entry is required</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> Hazard Identification &amp; Vapor Zones</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Primary Hazards of In-Service Tank Work</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Fire &amp; Explosion Hazards</h4>
+          <ul>
+            <li>Flammable vapors from product surface and breathing losses</li>
+            <li>Vapor accumulation at roof openings (hatches, vents, seals)</li>
+            <li>Static electricity discharge during gauging and sampling</li>
+            <li>Non-intrinsically-safe equipment introduced near open hatches</li>
+            <li>Sparks from tools, vehicles, or falling objects striking steel</li>
+            <li>Heated surfaces (catalytic converters, exhaust pipes) near vapor zones</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Chemical &amp; Physical Hazards</h4>
+          <ul>
+            <li>H&sub2;S and benzene vapors at tank openings</li>
+            <li>Falls from tank roofs and stairways</li>
+            <li>Roof collapse &mdash; especially corroded fixed roofs or pontoon-style floating roofs</li>
+            <li>Product overflow if tank is filled above working capacity</li>
+            <li>Extreme shell temperatures from solar heating (Texas summers: tank shells can exceed 150&deg;F)</li>
+            <li>Pressurized tanks &mdash; unexpected release when opening fittings</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Vapor Zone Classification</h3>
+      <p>The area around an in-service petroleum storage tank is divided into classified zones based on the likelihood of flammable vapor being present. Understanding these zones tells you what equipment is allowed and what controls are required in each area.</p>
+
+      <div class="tank-zones">
+        <h4>Flammable Vapor Zone Classification &mdash; In-Service Petroleum Tank</h4>
+        <div class="zone-row">
+          <div class="zone-color z-red"></div>
+          <div class="zone-content">
+            <strong>Zone 0 &mdash; Vapor Space Interior (Continuous Hazard)</strong>
+            Inside the tank above the liquid surface. Flammable mixture present continuously. No entry without full gas-free certification, confined space permit, or supplied-air protection. Absolutely no ignition sources.
+          </div>
+        </div>
+        <div class="zone-row">
+          <div class="zone-color z-orange"></div>
+          <div class="zone-content">
+            <strong>Zone 1 &mdash; Immediate Roof Area / Open Hatches (Intermittent Hazard)</strong>
+            Within 5 feet of any tank opening (hatch, vent, seal gap, gauge pole) when open. Flammable vapors present intermittently during normal operation. Intrinsically safe equipment only. No open flames, non-IS radios, non-IS flashlights, or spark-producing tools.
+          </div>
+        </div>
+        <div class="zone-row">
+          <div class="zone-color z-yellow"></div>
+          <div class="zone-content">
+            <strong>Zone 2 &mdash; General Roof &amp; Diked Area (Low-Probability Hazard)</strong>
+            The tank roof (with all openings closed), the area within the dike wall, and within 10 feet of the tank shell. Flammable vapor unlikely under normal conditions but possible during abnormal events. Non-sparking tools preferred; no open flames without a hot-work permit.
+          </div>
+        </div>
+        <div class="zone-row">
+          <div class="zone-color z-green"></div>
+          <div class="zone-content">
+            <strong>Unclassified &mdash; Beyond the Dike Wall (General Area)</strong>
+            Beyond 10 feet from the tank shell and outside the dike area under normal conditions. Standard industrial equipment permitted. No vehicle parking facing toward the tank; exhaust directed away from the dike.
+          </div>
+        </div>
+      </div>
+
+      <div class="box box-warning">
+        <strong>&#9888; Wind Direction Matters.</strong> Vapors released from open hatches or vents travel downwind. Always position yourself and your crew upwind of any open tank opening. Wind direction can shift &mdash; monitor throughout the job and relocate personnel if the wind shifts to blow vapors toward the work area.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Ignition Source Control &amp; Static Electricity</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Controlling ignition sources is the single most critical safety requirement for in-service tank work. No amount of atmospheric monitoring replaces the discipline of eliminating every possible ignition source before opening any tank fitting.</p>
+
+      <h3>The Fire Triangle at an In-Service Tank</h3>
+      <p>Two elements of the fire triangle are always present at an in-service petroleum tank: <strong>fuel</strong> (flammable vapor) and <strong>oxygen</strong> (from air mixing with vapor at openings). The only element under your control is <strong>ignition</strong>. Every procedure in this section is designed to eliminate all potential ignition sources.</p>
+
+      <h3>Prohibited Ignition Sources in Tank Work Zones</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Always Prohibited in Zone 0 &amp; Zone 1</h4>
+          <ul>
+            <li>Open flames of any kind (lighters, matches, torches)</li>
+            <li>Smoking &mdash; including e-cigarettes and vaping devices</li>
+            <li>Non-intrinsically-safe (non-IS) electrical equipment</li>
+            <li>Ordinary (non-IS) flashlights, phones, cameras, radios</li>
+            <li>Spark-producing hand tools (steel striking steel)</li>
+            <li>Any hot-work activity (welding, cutting, grinding)</li>
+            <li>Vehicles and internal combustion engines</li>
+            <li>Non-explosion-proof motors or pumps</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Required Controls for Zone 2</h4>
+          <ul>
+            <li>No smoking within the dike area</li>
+            <li>No open flames without a hot-work permit</li>
+            <li>Non-sparking (brass, bronze, or spark-resistant alloy) tools preferred</li>
+            <li>Vehicle exhaust directed away from tank; catalytic converters not facing tank</li>
+            <li>Hot work permit required for any grinding or cutting</li>
+            <li>Fire watch posted during any grinding or cutting</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Static Electricity &mdash; The Invisible Ignition Source</h3>
+      <p>Static electricity is generated whenever dissimilar materials move against each other &mdash; a gauging tape moving through product, a sample thief being lowered, product flowing through a pipe, or even a worker moving across a plastic surface. At an open tank hatch with flammable vapor present, a static discharge of only <strong>0.2 millijoules</strong> is enough to ignite many petroleum vapors.</p>
+
+      <h3>Grounding &amp; Bonding Requirements</h3>
+      <ol class="steps">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Tank grounding.</strong> The tank itself must be properly grounded to earth through its foundation grounding system. Verify the grounding system is intact before starting any in-service work. Do not assume it is functional &mdash; check for broken or corroded ground straps.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>Bond all equipment to the tank.</strong> Any metal equipment brought near the tank &mdash; vacuum trucks, pumps, portable containers &mdash; must be bonded to the tank with a bonding cable before any connections are made or any hatches are opened. Bond first, then open.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>Use conductive gauging and sampling equipment.</strong> Gauging tapes, bob weights, sample thieves, and gauging poles must be made of conductive material (brass, stainless steel, or conductive composite) and must be bonded to the tank before being lowered through any opening.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <strong>Lower equipment slowly.</strong> The rate at which a gauging tape or sample thief is lowered affects static charge buildup. Lower slowly and steadily &mdash; never drop equipment into the tank or lower at speed. After contact with product, allow a 30-second relaxation time before retrieving.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">5</div>
+          <div class="step-text">
+            <strong>Avoid plastic and synthetic materials at open hatches.</strong> Nylon rope, plastic funnels, and synthetic fabrics can accumulate static charge. Use conductive alternatives near open tank fittings. Do not use plastic sample bottles at the hatch opening &mdash; lower to depth, fill, then retrieve.
+          </div>
+        </li>
+      </ol>
+
+      <div class="box box-danger">
+        <strong>&#9888; The 30-Second Rule for Sampling.</strong> After a sample thief or gauging device contacts product, allow at least 30 seconds before retrieving it. This relaxation period allows static charge that built up during the lowering process to dissipate before the device is brought back through the vapor-rich zone at the hatch opening &mdash; the point of highest ignition risk.
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Static Ignition Near Miss</div>
+        <h4>The Wrong Sampling Bottle</h4>
+        <p>A crew member opens a gauging hatch on a crude oil tank to collect a sample. He reaches into his truck and grabs a clean plastic sample bottle, then lowers it through the hatch on a nylon rope to collect the sample. As he pulls it back up through the hatch opening, there is a flash at the hatch rim. No fire results, but everyone nearby felt the shock wave.</p>
+        <p><strong>What went wrong:</strong> Two compounding static hazards &mdash; a plastic (non-conductive) sample bottle and a nylon (non-conductive) rope. Neither was bonded to the tank. As the rope and bottle moved through the vapor-rich hatch opening, static charge that accumulated during sampling discharged at the hatch rim, igniting vapor momentarily. The correct procedure: use a conductive sample thief on a conductive wire or cable, bonded to the tank before opening the hatch. Lower slowly, allow 30-second relaxation, retrieve slowly.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Gauging, Sampling &amp; Atmospheric Monitoring</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Pre-Task Atmospheric Monitoring</h3>
+      <p>Before opening any hatch, vent, or fitting on an in-service tank, atmospheric testing must be performed. Monitor at the work location &mdash; not just at ground level. Flammable vapors at a closed hatch may be far higher concentration than at grade.</p>
+
+      <table class="std-table">
+        <thead><tr><th>Parameter</th><th>Instrument</th><th>Acceptable Range for Work</th></tr></thead>
+        <tbody>
+          <tr><td><strong>% LEL (Flammable Vapor)</strong></td><td>Catalytic bead or infrared combustible gas detector</td><td>&lt;10% LEL in work area; &lt;1% LEL at ignition sources</td></tr>
+          <tr><td><strong>Oxygen (O&sub2;)</strong></td><td>Electrochemical O&sub2; sensor</td><td>19.5% &ndash; 23.5%</td></tr>
+          <tr><td><strong>H&sub2;S</strong></td><td>Electrochemical H&sub2;S sensor</td><td>&lt;10 ppm for unprotected work; &lt;1 ppm at face level near open hatches</td></tr>
+          <tr><td><strong>Benzene (if crude/gasoline)</strong></td><td>Photoionization detector (PID)</td><td>&lt;0.5 ppm (OSHA PEL); &lt;0.1 ppm NIOSH REL target</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>Monitor at the Hatch Level, Not Ground Level.</strong> Test with the probe positioned at the hatch opening before opening it, and again immediately after opening. Concentrations directly at the opening can be orders of magnitude higher than at ground level, especially on calm, hot days when vapors stratify and do not disperse.
+      </div>
+
+      <h3>Manual Gauging Procedure</h3>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Check the wind.</strong> Position yourself upwind of the hatch. Confirm the wind direction will carry any vapor releases away from you and your crew.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Don required PPE.</strong> At minimum: hard hat, safety glasses, FRC (flame-resistant clothing), chemical-resistant gloves, and a 4-gas monitor clipped at the collar.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Bond the gauging equipment to the tank.</strong> Clip the bonding cable to the gauging tape reel and attach to a grounded point on the tank before touching the hatch. Verify the bond is secure.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Open the hatch slowly and stand to the side.</strong> Do not position your face directly over the opening. Open slowly, allowing vapor to dissipate before leaning over. If your monitor alarms &mdash; close the hatch immediately and move upwind.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Lower the tape slowly and steadily.</strong> Use a slow, controlled motion. No dropping or free-spooling. Allow the tape to settle in product for 30 seconds before reading.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Retrieve slowly.</strong> Pull the tape upward at a steady, controlled rate. Wipe clean as it passes the hatch rim to prevent dripping flammable product on the tank roof.</div></li>
+        <li><div class="step-num">7</div><div class="step-text"><strong>Close and secure the hatch immediately</strong> after completing the gauge. Never leave a hatch open unattended. Record your gauge reading and note any observation about vapor release, foam, or unusual odor.</div></li>
+      </ol>
+
+      <h3>Product Sampling</h3>
+      <p>All sampling from in-service tanks follows the same bonding, slow-lowering, and 30-second relaxation requirements as gauging. Additional considerations:</p>
+      <ul>
+        <li>Use a weighted, conductive sample thief (bacon bomb, weighted bottle) bonded to the tank</li>
+        <li>Only open sample containers away from the hatch opening &mdash; move downwind to a safe area before unsealing sample bottles</li>
+        <li>Label samples immediately with tank ID, date, time, sample depth, and your name</li>
+        <li>Store samples in approved containers in a cool, ventilated area &mdash; not in a truck cab</li>
+        <li>If sampling a sour crude (H&sub2;S-containing) tank, SCBA must be within reach and H&sub2;S levels verified before opening the hatch</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Floating Roof Tanks &amp; Roof Work</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>Floating roof tanks (external floating roof &mdash; EFR; and internal floating roof &mdash; IFR) present unique hazards not present on fixed-roof tanks. The floating roof rests on the product surface and rises and falls with the liquid level. Working on a floating roof means working directly above the product and its vapors.</p>
+
+      <h3>Floating Roof Hazards</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Structural Hazards</h4>
+          <ul>
+            <li><strong>Roof sink risk</strong> &mdash; a compromised pontoon, leg failure, or drainage blockage can cause the roof to tilt or sink into the product</li>
+            <li>Accumulated rainwater on the roof adds weight and accelerates sinking if roof drains are blocked</li>
+            <li>Corrosion of roof deck plating can create weak spots that fail under foot traffic</li>
+            <li>Leg sockets corrode and can collapse without warning</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Vapor &amp; Chemical Hazards</h4>
+          <ul>
+            <li>The seal area between the roof rim and tank shell contains the highest vapor concentrations on an EFR tank</li>
+            <li>Seal gaps allow continuous vapor escape &mdash; assume Zone 1 conditions anywhere near the shell on a floating roof</li>
+            <li>Rim fires are a leading cause of tank fires; damaged or missing seals dramatically increase risk</li>
+            <li>H&sub2;S accumulates in the rim space on sour service tanks</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Safe Practices for Floating Roof Work</h3>
+      <ul>
+        <li><strong>Check roof condition before stepping onto it.</strong> From the top of the stairway, visually inspect the roof deck for pooled water, unusual tilt, visible corrosion damage, or sunken areas. Do not step onto a roof that shows any of these conditions without engineering approval.</li>
+        <li><strong>Never work alone on a floating roof.</strong> At minimum, a qualified standby person must be stationed at the top of the access stairway with communication to the worker and the ability to call for help.</li>
+        <li><strong>Know the roof level before ascending.</strong> Confirm the current product level and roof elevation. A roof that is too low (near the landing legs or anti-rotation guides) may be close to settling &mdash; work is restricted when the roof is in the critical zone.</li>
+        <li><strong>Walk on designated walkway surfaces only.</strong> Walk on pontoons or structural members &mdash; never on the center deck plating of a single-deck roof, which is not designed to support body weight.</li>
+        <li><strong>Only intrinsically-safe equipment on the roof.</strong> The entire floating roof surface is Zone 1 or Zone 2 depending on proximity to the rim. Use only IS-rated flashlights, monitors, and communication devices.</li>
+        <li><strong>Wear FRC and a personal H&sub2;S and LEL monitor</strong> at all times on the roof. Keep your monitor alarm audible and unobstructed at all times.</li>
+        <li><strong>Roof drain maintenance priority.</strong> Blocked roof drains are one of the leading causes of floating roof sinkings. Inspect and clear drains before any extended work period on the roof.</li>
+      </ul>
+
+      <h3>Rim Seal Inspection</h3>
+      <p>Rim seal inspection is one of the most common floating roof maintenance tasks BBB Tank Services performs. The seal prevents product vapors from escaping the annular space between the roof rim and the tank shell.</p>
+      <div class="box box-warning">
+        <strong>&#9888; Seal Work = Zone 1 Conditions.</strong> Any work within 5 feet of the tank shell on a floating roof &mdash; including seal inspection, adjustment, or replacement &mdash; must be treated as Zone 1. This means: no non-IS equipment, no spark-producing tools, no steel striking steel. Use bronze or brass tools only. Confirm LEL readings are below 10% before and continuously during seal work.
+      </div>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; Floating Roof Assessment</div>
+        <h4>The Tilted Roof</h4>
+        <p>A crew arrives to perform a routine seal inspection on a large crude oil EFR tank. Before descending the stairway to the roof, the crew leader looks down and notices the roof appears to be tilted approximately 5&ndash;6 inches lower on one side. There is also significant standing water visible near the shell on the low side.</p>
+        <p><strong>Correct action:</strong> Do not step onto the roof. A tilted floating roof is a serious structural warning sign &mdash; it may indicate blocked roof drains, a compromised pontoon, or leg failure. Immediately notify the customer/facility representative and your BBB supervisor. Do not attempt to inspect the roof or clear the drains until engineering has assessed the roof condition and confirmed it is safe to enter. Document the observation with photos from the stairway and submit an incident report.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Pre-Job Planning, Permits &amp; Emergency Procedures</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>Pre-Job Planning Requirements</h3>
+      <p>No in-service tank work may begin without completing a pre-job plan. At BBB Tank Services, the supervisor or crew leader is responsible for completing the following before any in-service tank work begins:</p>
+
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Identify the product.</strong> Know exactly what is in the tank. Obtain the SDS. Understand the flash point, vapor pressure, H&sub2;S content, benzene content (for crude/gasoline), and any other relevant chemical properties.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Obtain all required permits.</strong> Check which permits are required for the specific task (see permit table below). Permits must be signed before work begins &mdash; not during or after.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Identify and communicate emergency information.</strong> Know the location of the nearest fire extinguisher, emergency shower, first aid kit, and muster point. Know the facility&rsquo;s emergency contact number. Brief all crew members before starting.</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Establish communication.</strong> Ensure all crew members have working IS radios or a reliable communication method. Confirm check-in intervals if workers will be on the roof or near the tank.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Verify equipment and PPE.</strong> Confirm all 4-gas monitors are bump-tested, bonding cables are available and in good condition, and all PPE including FRC is on and being worn correctly by every crew member before work begins.</div></li>
+        <li><div class="step-num">6</div><div class="step-text"><strong>Conduct a tailgate safety meeting.</strong> Review the hazards, controls, permit conditions, emergency procedures, and muster point with all crew members. All crew sign the JSA/JHA before starting.</div></li>
+      </ol>
+
+      <h3>Permit Requirements by Task</h3>
+      <div class="permit-card">
+        <h4>&#128203; In-Service Tank Work &mdash; Permit Reference</h4>
+        <ul>
+          <li><strong>Gauging &amp; Sampling</strong> &mdash; No permit required, but JSA/JHA required; atmospheric monitoring required; bonding checklist completed</li>
+          <li><strong>Roof Work (inspection, seal, vents)</strong> &mdash; Roof Entry JSA required; buddy/standby required; IS equipment verified; atmospheric monitoring continuous</li>
+          <li><strong>External Maintenance (painting, insulation)</strong> &mdash; JSA required; hot-work permit required if any grinding or spark-producing work is performed</li>
+          <li><strong>Nozzle/Valve Work</strong> &mdash; Requires facility isolation and depressurization confirmation; JSA; atmospheric monitoring at work point</li>
+          <li><strong>Any Tank Interior Entry</strong> &mdash; Tank must be taken out of service, emptied, and gas-freed; Confined Space Entry Permit required (see Module 022)</li>
+          <li><strong>Hot Work Within Dike Area</strong> &mdash; Hot Work Permit required; fire watch for 30 minutes post-work; LEL verified &lt;1% at ignition source location (see Module 027)</li>
+        </ul>
+      </div>
+
+      <h3>Emergency Procedures &mdash; In-Service Tank Incidents</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Vapor Release / Gas Alarm</h4>
+          <ul>
+            <li>Stop all work immediately</li>
+            <li>Close any open hatches or fittings if safe to do so without delay</li>
+            <li>Evacuate upwind to the muster point</li>
+            <li>Account for all personnel</li>
+            <li>Call facility emergency number and 911 if exposure has occurred</li>
+            <li>Do not re-enter until cleared by competent person with gas meter</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Fire or Ignition at Tank</h4>
+          <ul>
+            <li>Activate facility fire alarm immediately</li>
+            <li>Evacuate all personnel from the dike area</li>
+            <li>Call 911 &mdash; do not attempt to fight a tank fire without trained HAZMAT/fire resources</li>
+            <li>Shut off vehicle engines and remove vehicles if safe to do so from outside the dike</li>
+            <li>Meet emergency responders at the facility gate with tank product information and SDS</li>
+            <li>Account for all personnel at the muster point</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <strong>&#9888; Never Fight a Tank Fire Yourself.</strong> A storage tank fire is a major industrial emergency requiring specialized foam and suppression equipment operated by trained fire professionals. A BBB Tank Services crew&rsquo;s job in a tank fire is to evacuate safely, account for all personnel, call 911, and provide facility and product information to emergency responders. Do not attempt suppression beyond a very small incipient fire (e.g., a small drip fire at grade that can be knocked down with a portable extinguisher without approaching the tank).
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A passing score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What makes in-service tank work fundamentally more hazardous than working on an out-of-service, cleaned tank?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> In-service tanks are usually taller and require more fall protection</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> The tank still contains product, continuously generating flammable vapors and presenting chemical exposure hazards at every opening</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> OSHA requires more paperwork for in-service work than for gas-free tank entry</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> In-service tanks are always pressurized, creating a higher physical risk from sudden releases</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. You are preparing to open a gauging hatch on an in-service crude oil tank. What is the FIRST action you must take?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> Open the hatch and check the vapor reading immediately to see if conditions are safe</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Bond the gauging equipment and yourself to the tank, then confirm your position is upwind before opening</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Check the wind direction, put on PPE, and begin atmospheric monitoring at the hatch before opening</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> Notify the control room and wait for their authorization to open the hatch</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. According to vapor zone classifications, what conditions apply within 5 feet of an open tank hatch?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> Zone 2 &mdash; standard equipment is permitted since vapors are quickly diluted outdoors</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> Zone 1 &mdash; flammable vapors intermittently present; only intrinsically-safe equipment is permitted; no open flames or spark sources</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> Unclassified &mdash; the hatch is a controlled opening and standard equipment is acceptable</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> Zone 0 &mdash; no work of any kind is permitted within 5 feet of any tank opening</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. Why must gauging tapes and sample thieves be lowered slowly into an in-service tank, and why should you wait 30 seconds before retrieving?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Fast movement causes the tape to coil and tangle, making it difficult to get an accurate reading</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> Product splashing from fast lowering can cause inaccurate readings due to emulsification</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> Slow lowering and the 30-second relaxation allow static charge to dissipate before the device is retrieved through the vapor-rich zone at the hatch, where discharge could ignite vapors</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> Regulatory requirements from API 2015 mandate a minimum 30-second contact time for accurate ullage measurements</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. A crew member wants to use his personal cell phone to take a photo of a roof fitting defect on an external floating roof tank for documentation. Is this acceptable?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Yes &mdash; cell phones do not produce sparks and are safe near tank openings</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Yes &mdash; only if the phone is in airplane mode, which eliminates radio frequency ignition risk</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> No &mdash; ordinary cell phones are not intrinsically safe and must not be used in Zone 1 or Zone 2 areas near in-service tank hatches or the floating roof rim</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Yes &mdash; as long as the photo is taken quickly and the phone does not contact any metal on the tank</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. When you arrive to perform a seal inspection on a floating roof tank and notice the roof appears to be tilted noticeably to one side with pooled water visible, what should you do?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Step onto the roof carefully on the high side and visually assess whether the tilt is significant enough to report</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Clear the roof drain by poking a rod through the drain opening from the stairway to relieve the water load before stepping on</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Do not step onto the roof; notify your supervisor and the facility representative immediately and document the condition</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Proceed with the inspection since the tilt is likely just from uneven weight &mdash; report it in your post-job documentation</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. What is the purpose of bonding a vacuum truck to the tank before making any connections or opening any hatches?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> To ensure the truck&rsquo;s vacuum pump is properly grounded to the tank&rsquo;s electrical system</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> To equalize any static charge difference between the truck and the tank before connections are made, preventing a static discharge that could ignite vapors</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> To comply with OSHA&rsquo;s requirement that all vehicle-mounted equipment be mechanically secured before operation</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> To provide a communication ground for the truck&rsquo;s radio equipment near the tank</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. When walking on an external floating roof, where should you place your weight?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> The center of the roof deck, which is designed to be the most structurally reinforced area</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> Only on pontoons and structural members &mdash; never on center-deck plating, which is not rated for foot traffic weight</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> The edges of the roof near the rim, which are supported by the tank shell</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> Anywhere, provided the roof is confirmed to be in good condition by visual inspection</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. Your 4-gas monitor alarms while you are on a floating roof performing a seal inspection. What is your immediate action?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Note the reading, continue working, and call your supervisor to report the alarm level</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Try to identify the source of the alarm before deciding whether to evacuate</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> Stop work immediately, move upwind and off the roof to the muster point, and account for all personnel before any re-entry is considered</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Increase ventilation by opening a roof hatch to allow vapors to disperse</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. A small fire ignites at a drip point at the base of an in-service tank&rsquo;s nozzle &mdash; about the size of a candle flame. What should BBB Tank Services crew members do?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Immediately attempt to smother the flame with a jacket or rag to prevent it from growing</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Use a dry chemical extinguisher from a safe distance if trained and the fire is truly small and not growing; simultaneously call 911 and the facility emergency line, and prepare to evacuate immediately if the fire grows</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Do nothing until the facility fire brigade arrives &mdash; any intervention increases risk</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Use the nearest garden hose to cool the area around the flame and prevent it from spreading to the tank</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-016.html" class="nav-btn prev">&larr; Module 16</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-018.html" class="nav-btn next">Module 18 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-017 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'c', q3:'b', q4:'c', q5:'c',
+    q6:'c', q7:'b', q8:'b', q9:'c', q10:'b'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'In-service tanks still contain product and continuously generate flammable vapors. Every opening presents a vapor release and ignition risk. This is the defining hazard that separates in-service work from gas-free tank work, where the vapor hazard has been eliminated.',
+    q2:  'The correct sequence is: check wind direction, don PPE, perform atmospheric monitoring at the hatch before opening. Bonding must also be completed before opening. Opening first to check conditions introduces ignition risk before controls are in place — never open before bonding and atmospheric monitoring are complete.',
+    q3:  'Within 5 feet of any open tank fitting, Zone 1 conditions apply — flammable vapors are intermittently present. Only intrinsically-safe (IS) rated equipment may be used. No ordinary phones, radios, flashlights, or spark-producing tools. This zone classification applies regardless of current atmospheric readings.',
+    q4:  'Static charge builds up as equipment moves through product during lowering. The 30-second relaxation period allows this charge to dissipate before retrieval. Retrieving immediately causes the charged device to pass through the vapor-rich hatch opening at maximum charge, creating a significant static ignition risk.',
+    q5:  'Ordinary cell phones are not intrinsically safe. They contain internal circuitry that can produce arcs or sparks during normal operation or if the battery fails. In Zone 1 or Zone 2, only IS-certified equipment is permitted — including cameras and communication devices. IS-rated cameras are available for documentation.',
+    q6:  'A tilted floating roof is a structural emergency indicator — it may mean a pontoon has failed, legs have collapsed, or the roof is about to sink. Never step onto a tilted roof. Report immediately and let engineering assess the situation before any personnel go onto the roof.',
+    q7:  'Bonding equalizes the static potential between two conductive objects before connections are made. Without bonding, the act of making a metal-to-metal connection (or even bringing the bonding cable close) can cause a spark as charges equalize — potentially igniting vapors present at the hatch or connection point.',
+    q8:  'On a single-deck floating roof, the center deck plating is thin gauge metal designed to span between structural members, not to bear concentrated loads from foot traffic. Walking on it can cause it to buckle or fail. Always walk on pontoons, rafters, or structural beams — the designated walking surface.',
+    q9:  'A monitor alarm requires immediate evacuation — not investigation. On a floating roof above flammable product, any LEL alarm means conditions could reach ignition range rapidly. Stop work, move upwind and off the roof, account for all personnel at the muster point. Investigate only after everyone is safe and with proper equipment.',
+    q10: 'A very small incipient fire (drip fire the size of a candle) may be addressed with a portable extinguisher if you are trained, the fire is stable, and you can attack it without approaching the tank. Simultaneously call 911 and the facility emergency line and be prepared to abandon suppression and evacuate if the fire grows at all. Water on a flammable liquid fire is ineffective and can spread the fire.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'017', title:'In-Service Tank Work', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 017 complete! Your record has been saved. Proceed to Module 018.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

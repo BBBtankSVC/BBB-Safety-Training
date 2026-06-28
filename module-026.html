@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 023 &ndash; Process Safety Management Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --navy:    #0D1B2A;
+      --navy2:   #1A2E4A;
+      --orange:  #E8611A;
+      --orange2: #C9510E;
+      --bg:      #F0F4F8;
+      --card:    #FFFFFF;
+      --text:    #1C2B3A;
+      --muted:   #6B7E8E;
+      --border:  #D3DCE6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --radius:  10px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+    .top-bar { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,.4); border-bottom: 3px solid var(--orange); }
+    .top-bar .logo { font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; }
+    .top-bar .logo span { color: var(--orange); }
+    .top-bar nav { display: flex; gap: 6px; }
+    .top-bar nav a { color: #8FAEC8; text-decoration: none; font-size: .82rem; padding: 6px 12px; border-radius: 6px; transition: background .15s, color .15s; }
+    .top-bar nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .top-bar nav a.active { background: var(--orange); color: #fff; font-weight: 700; }
+
+    .progress-container { background: var(--card); border-bottom: 1px solid var(--border); padding: 9px 24px; display: flex; align-items: center; gap: 14px; font-size: .78rem; color: var(--muted); }
+    .prog-bar-bg { flex: 1; background: var(--border); border-radius: 6px; height: 7px; overflow: hidden; }
+    .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange2), var(--orange)); border-radius: 6px; width: 0%; transition: width .4s ease; }
+
+    .hero { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; padding: 44px 28px 36px; text-align: center; }
+    .module-tag { display: inline-block; background: var(--orange); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .hero .subtitle { font-size: .97rem; color: #8FAEC8; max-width: 640px; margin: 0 auto 22px; }
+    .hero-meta { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: .8rem; color: #8FAEC8; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 30px 16px 60px; }
+
+    .objectives-card { background: var(--card); border-left: 5px solid var(--orange); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .objectives-card h2 { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--orange2); margin-bottom: 14px; }
+    .objectives-card ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 9px 20px; }
+    .objectives-card li { padding-left: 22px; position: relative; font-size: .91rem; }
+    .objectives-card li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+
+    .section-card { background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+    .sec-header { background: var(--navy); color: #fff; padding: 16px 22px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background .2s; }
+    .sec-header:hover { background: var(--navy2); }
+    .sec-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .sec-num { background: var(--orange); color: #fff; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 12px; letter-spacing: .5px; }
+    .chevron { font-size: 1rem; transition: transform .3s; }
+    .sec-header.open .chevron { transform: rotate(180deg); }
+    .sec-body { display: none; padding: 24px 26px 28px; }
+    .sec-body.open { display: block; animation: fadeSlide .22s ease; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .sec-body h3 { color: var(--navy); font-size: .97rem; font-weight: 700; margin: 20px 0 9px; }
+    .sec-body h3:first-child { margin-top: 0; }
+    .sec-body p { margin-bottom: 12px; font-size: .93rem; color: #333; }
+    .sec-body ul, .sec-body ol { padding-left: 20px; margin-bottom: 12px; }
+    .sec-body li { margin-bottom: 6px; font-size: .91rem; color: #333; }
+    .sec-body strong { color: var(--navy); }
+
+    .box { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: .91rem; }
+    .box-danger  { background: #FEF0EE; border-left: 5px solid #C0392B; color: #5a0000; }
+    .box-danger strong { color: #C0392B; }
+    .box-warning { background: #FFFBEA; border-left: 5px solid #D4AC0D; color: #5a4000; }
+    .box-warning strong { color: #9a7000; }
+    .box-info    { background: #EEF4FF; border-left: 5px solid var(--navy2); color: #0a1e40; }
+    .box-info strong { color: var(--navy2); }
+    .box-success { background: #EDFAF2; border-left: 5px solid var(--green); color: #0a3a1e; }
+    .box-success strong { color: var(--green); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 14px 0; }
+    @media(max-width:640px){ .three-col { grid-template-columns: 1fr; } }
+    .mini-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px 17px; }
+    .mini-card h4 { color: var(--navy2); font-size: .9rem; margin-bottom: 8px; }
+    .mini-card ul { padding-left: 17px; font-size: .87rem; }
+    .mini-card li { margin-bottom: 5px; }
+
+    .std-table { width: 100%; border-collapse: collapse; font-size: .87rem; margin: 14px 0; }
+    .std-table th { background: var(--navy); color: #fff; padding: 10px 13px; text-align: left; font-weight: 600; }
+    .std-table td { padding: 9px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .std-table tr:nth-child(even) td { background: #F6F8FC; }
+
+    /* PSM 14 ELEMENTS GRID */
+    .elements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 14px 0; }
+    .element-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; position: relative; }
+    .element-card .el-num { position: absolute; top: 10px; right: 12px; font-size: .72rem; font-weight: 800; color: var(--orange); background: var(--navy); padding: 2px 7px; border-radius: 10px; }
+    .element-card h4 { font-size: .85rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; padding-right: 36px; }
+    .element-card p { font-size: .78rem; color: var(--muted); margin: 0; }
+    .element-card.highlighted { border-color: var(--orange); background: #fff8f5; }
+    .element-card.highlighted h4 { color: var(--orange2); }
+    .element-card.highlighted .el-num { background: var(--orange); color: #fff; }
+
+    /* MOC FLOW */
+    .moc-flow { display: flex; flex-direction: column; gap: 0; margin: 14px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .moc-step { display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: .88rem; }
+    .moc-step:last-child { border-bottom: none; }
+    .moc-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--navy); color: var(--orange); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .9rem; }
+    .moc-text strong { display: block; color: var(--navy); font-size: .9rem; }
+    .moc-text span { font-size: .8rem; color: var(--muted); }
+
+    .steps { list-style: none; padding: 0; margin: 12px 0; }
+    .steps li { display: flex; gap: 13px; margin-bottom: 13px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: var(--orange); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .82rem; }
+    .step-text { padding-top: 4px; font-size: .91rem; }
+    .step-text strong { display: block; color: var(--navy); margin-bottom: 2px; }
+
+    .scenario { background: linear-gradient(135deg, var(--navy2) 0%, var(--navy) 100%); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin: 18px 0; }
+    .scenario .scenario-label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1.5px; color: #8FAEC8; margin-bottom: 7px; }
+    .scenario h4 { font-size: .97rem; color: var(--orange); margin-bottom: 9px; }
+    .scenario p { font-size: .88rem; color: #d0dcea; margin-bottom: 7px; }
+    .scenario p:last-child { margin-bottom: 0; }
+
+    .quiz-section { background: var(--navy); color: #fff; border-radius: 12px; padding: 30px 26px; margin-top: 32px; }
+    .quiz-section h2 { font-size: 1.2rem; color: var(--orange); margin-bottom: 5px; }
+    .quiz-intro { font-size: .88rem; color: #8FAEC8; margin-bottom: 22px; }
+    .q-block { margin-bottom: 26px; }
+    .q-text  { font-size: .95rem; font-weight: 600; margin-bottom: 11px; line-height: 1.5; }
+    .opt-label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border-radius: 6px; cursor: pointer; margin-bottom: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); transition: background .15s; font-size: .88rem; }
+    .opt-label:hover { background: rgba(255,255,255,.13); }
+    .opt-label input { margin-top: 2px; flex-shrink: 0; accent-color: var(--orange); }
+    .opt-label.correct   { background: rgba(29,131,72,.3);  border-color: #27ae60; }
+    .opt-label.incorrect { background: rgba(192,57,43,.3);  border-color: #e74c3c; }
+    .feedback { display: none; margin-top: 9px; padding: 9px 13px; border-radius: 6px; font-size: .85rem; }
+    .feedback.show { display: block; }
+    .feedback.correct   { background: rgba(29,131,72,.2);  color: #a8f0c0; }
+    .feedback.incorrect { background: rgba(192,57,43,.2);  color: #f5b0a8; }
+    .quiz-submit { display: block; width: 100%; padding: 13px; background: var(--orange); color: #fff; font-size: .97rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px; transition: background .2s, transform .1s; }
+    .quiz-submit:hover  { background: var(--orange2); }
+    .quiz-submit:active { transform: scale(.98); }
+    .quiz-result { display: none; margin-top: 20px; background: rgba(255,255,255,.08); border-radius: 10px; padding: 22px; text-align: center; }
+    .quiz-result.show { display: block; }
+    .score-big   { font-size: 2.8rem; font-weight: 800; color: var(--orange); }
+    .score-label { font-size: .85rem; color: #8FAEC8; margin-bottom: 8px; }
+    .result-msg  { font-size: .95rem; margin-bottom: 16px; }
+    .retake-btn  { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 9px 22px; cursor: pointer; font-size: .87rem; transition: background .2s; }
+    .retake-btn:hover { background: rgba(255,255,255,.2); }
+
+    .module-nav { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+    .nav-btn { flex: 1; min-width: 140px; padding: 13px 18px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: .88rem; text-align: center; transition: opacity .2s, transform .1s; border: none; cursor: pointer; }
+    .nav-btn:hover { opacity: .87; transform: translateY(-1px); }
+    .nav-btn.prev { background: #E8EDF4; color: var(--navy); border: 2px solid var(--border); }
+    .nav-btn.home { background: var(--orange); color: #fff; }
+    .nav-btn.next { background: var(--navy); color: #fff; }
+
+    .page-footer { background: var(--navy); color: #4A6785; text-align: center; font-size: .74rem; padding: 18px 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a class="logo" href="index.html">&#9881; BBB <span>Tank Services</span> &mdash; Safety Training</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="module-022.html">&larr; Mod 22</a>
+    <a href="module-023.html" class="active">Mod 23</a>
+    <a href="module-024.html">Mod 24 &rarr;</a>
+  </nav>
+</div>
+
+<div class="progress-container">
+  <span>Module 23 of 50</span>
+  <div class="prog-bar-bg"><div class="prog-bar-fill" id="progFill"></div></div>
+  <span id="progPct">0%</span>
+</div>
+
+<div class="hero">
+  <div class="module-tag">Module 023 &middot; SHP-BBB-023</div>
+  <h1>Process Safety Management Program</h1>
+  <p class="subtitle">Understanding OSHA&rsquo;s PSM standard, what it means to work at a covered facility, and the contractor responsibilities that protect BBB Tank Services employees from catastrophic process releases.</p>
+  <div class="hero-meta">
+    <span>&#9201; Est. 40 min</span>
+    <span>&#128203; 6 Sections</span>
+    <span>&#9989; 10-Question Quiz</span>
+    <span>&#128197; Rev. Oct 2025</span>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="objectives-card">
+    <h2>&#127919; Learning Objectives</h2>
+    <ul>
+      <li>Explain the purpose of OSHA&rsquo;s PSM standard and what makes a facility PSM-covered</li>
+      <li>Identify the 14 elements of the PSM standard</li>
+      <li>Describe contractor obligations and employer obligations under the PSM Contractors element</li>
+      <li>Explain what Process Safety Information (PSI) is and why contractors need access to it</li>
+      <li>Describe the purpose of a Process Hazard Analysis (PHA) and what it produces</li>
+      <li>Explain Management of Change (MOC) and why contractors must never make unauthorized changes</li>
+      <li>Describe what a Pre-Startup Safety Review (PSSR) is and when it is required</li>
+      <li>Identify incident investigation requirements and what contractors must report</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card">
+    <div class="sec-header open" onclick="toggleSection(this)">
+      <h2><span class="sec-num">01</span> What Is PSM &amp; When Does It Apply?</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body open">
+      <p>OSHA&rsquo;s <strong>Process Safety Management (PSM)</strong> standard, found at <strong>29 CFR 1910.119</strong>, is one of the most comprehensive and consequential safety regulations in the United States. It was enacted in response to catastrophic industrial accidents &mdash; including Bhopal (1984, over 3,000 deaths), Texas City (2005, 15 deaths), and West, Texas (2013, 15 deaths) &mdash; where the unexpected release of highly hazardous chemicals caused mass casualties.</p>
+
+      <p>PSM applies to facilities that use, store, manufacture, handle, or move certain <strong>Highly Hazardous Chemicals (HHCs)</strong> in quantities at or above <strong>threshold quantities (TQs)</strong> established by OSHA. BBB Tank Services frequently works at refineries, petrochemical plants, chemical facilities, and terminals that are PSM-covered. Understanding PSM is not optional for a contractor working at these facilities.</p>
+
+      <h3>What Makes a Facility PSM-Covered?</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Covered Chemicals Include</h4>
+          <ul>
+            <li>Flammable liquids or gases &ge;10,000 lbs (crude oil, gasoline, LPG, etc.)</li>
+            <li>Listed toxic chemicals above threshold (chlorine, ammonia, hydrogen sulfide)</li>
+            <li>Reactive chemicals above threshold</li>
+            <li>Explosive chemicals above threshold</li>
+            <li>Over 130 specifically listed chemicals with individual TQs</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Common BBB Tank Services Customer Types</h4>
+          <ul>
+            <li>Oil refineries</li>
+            <li>Petrochemical plants</li>
+            <li>Chemical manufacturing facilities</li>
+            <li>Terminals handling flammable or toxic products</li>
+            <li>LPG/NGL storage and fractionation facilities</li>
+            <li>Wastewater treatment plants with chlorine &gt; 1,500 lbs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-info">
+        <strong>How to Know You&rsquo;re at a PSM Facility:</strong> The host employer (customer) will tell you during site orientation. PSM facilities must provide contractors with specific information before work begins. If you are unsure whether a facility is PSM-covered, ask your BBB Tank Services supervisor before starting work. Operating at a PSM facility without understanding its requirements puts you and others at risk.
+      </div>
+
+      <h3>PSM vs. EPA&rsquo;s Risk Management Program (RMP)</h3>
+      <p>PSM (OSHA) and RMP (EPA, 40 CFR Part 68) are parallel programs designed to prevent catastrophic chemical releases. PSM focuses on worker safety; RMP focuses on protecting the surrounding community and environment. Many facilities are covered by both. As a contractor, PSM is the primary standard that governs your work obligations &mdash; but awareness of RMP is valuable context.</p>
+
+      <div class="box box-danger">
+        <strong>&#9888; Why PSM Matters for Contractors.</strong> OSHA data shows that contractors account for a disproportionate share of injuries and fatalities at PSM-covered facilities. This occurs because contractors are often less familiar with the specific processes, hazards, and procedures at the host facility than permanent employees are. PSM&rsquo;s contractor element exists specifically to close this knowledge gap.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">02</span> The 14 Elements of PSM</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <p>OSHA&rsquo;s PSM standard consists of <strong>14 elements</strong> that together create a comprehensive safety management system for covered processes. Every element has specific requirements for both host employers and contractors. The elements highlighted in orange are the ones most directly relevant to BBB Tank Services workers at covered facilities.</p>
+
+      <div class="elements-grid">
+        <div class="element-card highlighted">
+          <div class="el-num">1</div>
+          <h4>Process Safety Information (PSI)</h4>
+          <p>Technical data on hazardous chemicals, technology, and equipment used in the process</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">2</div>
+          <h4>Process Hazard Analysis (PHA)</h4>
+          <p>Structured study identifying hazards, causes, and consequences of process failures</p>
+        </div>
+        <div class="element-card">
+          <div class="el-num">3</div>
+          <h4>Operating Procedures</h4>
+          <p>Written procedures for all phases of operation including startup, shutdown, and emergencies</p>
+        </div>
+        <div class="element-card">
+          <div class="el-num">4</div>
+          <h4>Training</h4>
+          <p>Initial and refresher training for all employees involved in covered processes</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">5</div>
+          <h4>Contractors</h4>
+          <p>Requirements for selecting, training, and overseeing contractors at PSM facilities</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">6</div>
+          <h4>Pre-Startup Safety Review (PSSR)</h4>
+          <p>Formal review before startup of new or modified processes to confirm all safeguards are in place</p>
+        </div>
+        <div class="element-card">
+          <div class="el-num">7</div>
+          <h4>Mechanical Integrity</h4>
+          <p>Inspection, testing, and maintenance of critical equipment (pressure vessels, piping, relief valves)</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">8</div>
+          <h4>Hot Work Permit</h4>
+          <p>Formal permit required for ignition-source work in or near a covered process</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">9</div>
+          <h4>Management of Change (MOC)</h4>
+          <p>Formal review and authorization required before making any change to process, equipment, or procedures</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">10</div>
+          <h4>Incident Investigation</h4>
+          <p>Thorough investigation of incidents and near-misses to identify root causes and prevent recurrence</p>
+        </div>
+        <div class="element-card highlighted">
+          <div class="el-num">11</div>
+          <h4>Emergency Planning &amp; Response</h4>
+          <p>Plans for responding to accidental releases, including evacuation, emergency contacts, and coordination with local responders</p>
+        </div>
+        <div class="element-card">
+          <div class="el-num">12</div>
+          <h4>Compliance Audits</h4>
+          <p>Audits every 3 years to verify the management system is functioning effectively</p>
+        </div>
+        <div class="element-card">
+          <div class="el-num">13</div>
+          <h4>Trade Secrets</h4>
+          <p>Confidentiality requirements for proprietary process information shared with workers</p>
+        </div>
+        <div class="element-card">
+          <div class="el-num">14</div>
+          <h4>Employee Participation</h4>
+          <p>Workers must be involved in PHA development and other PSM elements; access to PSM documents guaranteed</p>
+        </div>
+      </div>
+
+      <div class="box box-success">
+        <strong>&#10003; Orange-highlighted elements</strong> are the ones you will most directly encounter and be responsible for as a BBB Tank Services contractor. Sections 3&ndash;6 of this module cover each in detail.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">03</span> Contractor Requirements &amp; Process Safety Information</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>PSM Element 5 &mdash; Contractors</h3>
+      <p>The Contractors element of PSM creates a shared responsibility between the <strong>host employer</strong> (the facility/customer) and the <strong>contract employer</strong> (BBB Tank Services). Both have specific, non-delegable obligations.</p>
+
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Host Employer (Customer) Must:</h4>
+          <ul>
+            <li>Inform BBB Tank Services of known process hazards that may affect contractor personnel</li>
+            <li>Explain applicable parts of the facility&rsquo;s Emergency Action Plan</li>
+            <li>Develop and implement procedures to control contractor entry, exit, and presence near covered processes</li>
+            <li>Periodically evaluate contractor safety performance</li>
+            <li>Maintain a log of contract employer injuries and illnesses at the covered process</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>BBB Tank Services (Contract Employer) Must:</h4>
+          <ul>
+            <li>Ensure each contractor employee is trained in the work practices necessary to safely perform their job</li>
+            <li>Ensure each contractor employee is informed of potential fire, explosion, or toxic release hazards at the facility</li>
+            <li>Ensure each contractor employee knows the applicable provisions of the facility Emergency Action Plan</li>
+            <li>Document that each contractor employee has received and understood the required training</li>
+            <li>Ensure contractor employees follow safety rules of the facility</li>
+            <li>Advise the host employer of any hazards created by BBB Tank Services&rsquo; work</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>PSM Element 1 &mdash; Process Safety Information (PSI)</h3>
+      <p>Before any work begins at a PSM-covered facility, the host employer must make <strong>Process Safety Information</strong> available to workers. PSI is the technical foundation of the entire PSM system &mdash; it documents the properties and hazards of the chemicals, the process technology, and the equipment used.</p>
+
+      <table class="std-table">
+        <thead><tr><th>PSI Category</th><th>What It Contains</th><th>Why Contractors Need It</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Chemical Hazard Information</strong></td>
+            <td>Toxicity, permissible exposure limits, physical data, reactivity data, thermal and chemical stability, corrosivity, SDS</td>
+            <td>Tells you what chemicals you may be exposed to and their specific hazards &mdash; inputs to your PPE selection and emergency response planning</td>
+          </tr>
+          <tr>
+            <td><strong>Process Technology Information</strong></td>
+            <td>Block flow diagrams, process description, maximum intended inventory, safe operating limits (temperature, pressure, flow, composition)</td>
+            <td>Tells you what the process does and what the consequences of deviation are &mdash; helps you understand why procedures are the way they are</td>
+          </tr>
+          <tr>
+            <td><strong>Process Equipment Information</strong></td>
+            <td>Materials of construction, P&amp;IDs (Piping and Instrumentation Diagrams), electrical classification, relief valve design, safety system design</td>
+            <td>Essential for work on or near process equipment &mdash; P&amp;IDs tell you what is connected to what and where isolation points are located</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="box box-info">
+        <strong>P&amp;IDs Are Not Optional.</strong> For any work involving breaking into process piping, isolating equipment, or modifying instrumentation, you must have access to the current P&amp;ID for that section of the process. Outdated or incorrect P&amp;IDs have contributed to multiple fatalities when workers opened connections to lines that turned out to contain hazardous materials.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">04</span> Process Hazard Analysis &amp; Safe Work Permits</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>PSM Element 2 &mdash; Process Hazard Analysis (PHA)</h3>
+      <p>A <strong>Process Hazard Analysis (PHA)</strong> is a formal, structured study of a covered process that systematically identifies potential hazards, determines their causes and consequences, and recommends safeguards. PHAs are conducted by multidisciplinary teams using recognized methodologies. For contractors, the PHA produces the risk picture that informs all safe work practices at that facility.</p>
+
+      <h3>Common PHA Methodologies</h3>
+      <div class="three-col">
+        <div class="mini-card">
+          <h4>HAZOP (Hazard &amp; Operability Study)</h4>
+          <ul>
+            <li>Most rigorous PHA method</li>
+            <li>Uses guide words (No, More, Less, Reverse, Other Than) applied to process parameters</li>
+            <li>Identifies deviations and their causes, consequences, and safeguards</li>
+            <li>Required for complex processes</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>What-If Analysis</h4>
+          <ul>
+            <li>Team brainstorms &ldquo;What if X happens?&rdquo; scenarios</li>
+            <li>Less structured than HAZOP; good for simpler processes</li>
+            <li>Produces a list of scenarios with consequences and recommended actions</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Fault Tree Analysis (FTA) / FMEA</h4>
+          <ul>
+            <li>Top-down (FTA) or bottom-up (FMEA) analysis of failure modes</li>
+            <li>Quantitative or qualitative</li>
+            <li>Used to analyze specific high-risk events in detail</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>What PHA Results Mean for Contractors</h3>
+      <p>The PHA produces a set of findings and recommendations. These may include safeguards, procedures, PPE requirements, and restricted-access zones specifically because of risks identified in the PHA. When you are told at a PSM facility that:</p>
+      <ul>
+        <li>&ldquo;You must wear a supplied air respirator in that area&rdquo; &mdash; a PHA finding likely identified a toxic release scenario there</li>
+        <li>&ldquo;Two-man rule applies throughout this unit&rdquo; &mdash; a PHA safeguard requiring continuous mutual observation</li>
+        <li>&ldquo;That valve cannot be operated while the unit is in service&rdquo; &mdash; a PHA finding identified a hazardous consequence if it is operated incorrectly</li>
+        <li>&ldquo;You need a hot work permit anywhere in this dike&rdquo; &mdash; a PHA found the entire dike area to be a classified flammable zone</li>
+      </ul>
+      <p>These are not arbitrary rules &mdash; they are the outputs of systematic hazard studies. Following them is not optional.</p>
+
+      <h3>PSM Element 8 &mdash; Hot Work Permits</h3>
+      <p>At PSM-covered facilities, hot work permits are a formal, documented authorization specifically required by the standard &mdash; not just a company preference. Hot work permits must be issued for any work that could be an ignition source in or near a covered process, including:</p>
+      <ul>
+        <li>Welding, cutting, or brazing</li>
+        <li>Grinding (spark-generating)</li>
+        <li>Use of non-explosion-proof electrical equipment in classified areas</li>
+        <li>Internal combustion engines operated within the process unit boundary</li>
+      </ul>
+      <p>The hot work permit must specify the location, work to be done, fire protection measures, atmospheric monitoring requirements, and the name of the person issuing authorization. See Module 027 (Hot Work Program) for the full BBB Tank Services hot work procedure.</p>
+
+      <div class="scenario">
+        <div class="scenario-label">Scenario &mdash; PHA in Practice</div>
+        <h4>The &ldquo;Simple&rdquo; Line Break</h4>
+        <p>A BBB Tank Services crew is asked to replace a 2-inch isolation valve on a product line at a refinery. The crew leader looks at the line, sees it is tagged &ldquo;drained and isolated,&rdquo; and begins loosening the flange bolts to remove the valve. As the final bolt is removed, residual hydrocarbon under pressure sprays from the flange. Two workers are doused with product. The line was marked as drained but a check valve upstream had trapped significant pressure that the drain procedure did not relieve.</p>
+        <p><strong>What should have happened:</strong> The facility&rsquo;s HAZOP for this line had identified exactly this scenario &mdash; trapped pressure upstream of a check valve &mdash; as a hazard, with the safeguard being a specific double-block-and-bleed procedure plus pressure gauge verification before breaking the flange. The crew should have reviewed the facility&rsquo;s safe work permit and LOTO procedure for this specific task, which would have specified the required verification steps. &ldquo;It looks drained&rdquo; is never adequate on a PSM-covered process line.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">05</span> Management of Change &amp; Pre-Startup Safety Review</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>PSM Element 9 &mdash; Management of Change (MOC)</h3>
+      <p>The <strong>Management of Change (MOC)</strong> process is one of the most important PSM elements for contractors to understand. MOC requires that any change to process chemicals, technology, equipment, procedures, or facilities at a covered facility must go through a formal review and authorization process <em>before</em> the change is made. &ldquo;Change&rdquo; is interpreted broadly &mdash; it includes everything from changing a gasket material to rerouting a process line to modifying a control setpoint.</p>
+
+      <div class="box box-danger">
+        <strong>&#9888; The Most Common Contractor MOC Violation:</strong> A BBB Tank Services crew completes a repair and realizes that to reconnect a line, it would be easier (or necessary) to route it slightly differently than the original configuration. The crew makes the change without informing the facility. This is an unauthorized MOC &mdash; potentially a serious OSHA violation and, more importantly, a hazard that has not been evaluated. The change may affect pressure ratings, thermal expansion, support requirements, instrumentation, or process flow in ways the contractor cannot predict without the process knowledge the host facility has.
+      </div>
+
+      <h3>What Must Go Through MOC</h3>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Always Requires MOC</h4>
+          <ul>
+            <li>Any change to a process chemical (including concentration, grade, or alternative supplier)</li>
+            <li>Changes to process equipment (different pipe size, different valve type, different material)</li>
+            <li>Changes to control setpoints or alarm limits</li>
+            <li>Changes to procedures (even &ldquo;temporary&rdquo; ones)</li>
+            <li>Changes to the physical layout of process piping or equipment</li>
+            <li>Software or programming changes to process control systems</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>What Does NOT Require MOC</h4>
+          <ul>
+            <li>&ldquo;Replacement in kind&rdquo; &mdash; replacing a failed component with an identical one (same material, size, rating, and configuration)</li>
+            <li>Routine maintenance that restores equipment to its original design specification</li>
+            <li><em>Note: &ldquo;Better than original&rdquo; or &ldquo;equivalent but different&rdquo; is still a change and still requires MOC</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>The MOC Process</h3>
+      <div class="moc-flow">
+        <div class="moc-step">
+          <div class="moc-icon">1</div>
+          <div class="moc-text"><strong>Change Request Initiated</strong><span>Worker or supervisor identifies a needed change and submits a formal MOC request describing the change, the reason, and the scope.</span></div>
+        </div>
+        <div class="moc-step">
+          <div class="moc-icon">2</div>
+          <div class="moc-text"><strong>Technical Review</strong><span>Engineering, process safety, and operations review the change for safety implications, code compliance, and process impact. PHA may be updated.</span></div>
+        </div>
+        <div class="moc-step">
+          <div class="moc-icon">3</div>
+          <div class="moc-text"><strong>Authorization</strong><span>Appropriate level of management approves the change based on risk level. Higher-risk changes require higher levels of authorization.</span></div>
+        </div>
+        <div class="moc-step">
+          <div class="moc-icon">4</div>
+          <div class="moc-text"><strong>Training &amp; Documentation Update</strong><span>Affected workers are trained on the change. P&amp;IDs, procedures, and other documents are updated before or immediately after implementation.</span></div>
+        </div>
+        <div class="moc-step">
+          <div class="moc-icon">5</div>
+          <div class="moc-text"><strong>Implementation &amp; PSSR (if required)</strong><span>The change is implemented. If the change affects process safety, a Pre-Startup Safety Review is conducted before the modified process is returned to service.</span></div>
+        </div>
+        <div class="moc-step">
+          <div class="moc-icon">6</div>
+          <div class="moc-text"><strong>Close Out</strong><span>MOC is documented and closed. Temporary changes have defined expiration dates and revert unless extended through a new MOC.</span></div>
+        </div>
+      </div>
+
+      <h3>PSM Element 6 &mdash; Pre-Startup Safety Review (PSSR)</h3>
+      <p>A <strong>PSSR</strong> is a formal safety check conducted before a new or modified process is started up. It confirms that all safety-related requirements have been met before the process is exposed to hazardous chemicals. PSSRs are triggered by:</p>
+      <ul>
+        <li>New covered processes being placed into operation for the first time</li>
+        <li>Major modifications to a covered process that required a MOC</li>
+        <li>Any change that would require an update to the process safety information</li>
+      </ul>
+      <p>For BBB Tank Services crews completing maintenance at a covered facility, you may be asked to participate in or support a PSSR by:</p>
+      <ul>
+        <li>Confirming that all work has been completed per the scope and that no unauthorized changes were made</li>
+        <li>Confirming that all materials, tools, and scaffolding have been removed from the equipment</li>
+        <li>Signing off on the physical inspection component of the PSSR checklist</li>
+        <li>Being available to answer questions about the work scope during the PSSR walkdown</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-card">
+    <div class="sec-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">06</span> Incident Investigation &amp; Emergency Response at PSM Facilities</h2>
+      <span class="chevron">&#9660;</span>
+    </div>
+    <div class="sec-body">
+      <h3>PSM Element 10 &mdash; Incident Investigation</h3>
+      <p>OSHA&rsquo;s PSM standard requires that every incident that resulted in, or could have resulted in, a catastrophic release of a covered chemical be investigated. This includes near-misses. Investigations must:</p>
+      <ul>
+        <li>Begin as promptly as possible, no later than 48 hours after the incident</li>
+        <li>Be conducted by a team including at least one person knowledgeable in the process involved and a contract employee if the incident involved contract work</li>
+        <li>Identify the nature of the incident, its factors, and root causes</li>
+        <li>Produce a written report with recommendations</li>
+        <li>Have their recommendations resolved and documented within a reasonable timeframe</li>
+      </ul>
+
+      <h3>BBB Tank Services Contractor Reporting Obligations</h3>
+      <p>As a contractor at a PSM facility, you have reporting obligations that go beyond normal workplace incident reporting:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>You Must Report Immediately:</h4>
+          <ul>
+            <li>Any near-miss involving process equipment, chemicals, or energy sources &mdash; even if no injury occurred</li>
+            <li>Any unplanned release of a process chemical, however small</li>
+            <li>Any equipment failure, unexpected condition, or deviation from the approved work scope</li>
+            <li>Any situation where you believe a procedure was inadequate for the actual conditions encountered</li>
+            <li>Any injury or illness related to process chemical exposure</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Why Reporting Everything Matters:</h4>
+          <ul>
+            <li>Near-misses at PSM facilities are often leading indicators of future catastrophic events</li>
+            <li>PSM investigations require the earliest possible notification to preserve evidence and witness accounts</li>
+            <li>OSHA requires host employers to maintain a log of contractor incidents at covered processes</li>
+            <li>Unreported near-misses allow the same conditions to recur with potentially worse consequences</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>PSM Element 11 &mdash; Emergency Planning &amp; Response</h3>
+      <p>PSM-covered facilities are required to establish and implement emergency action plans covering catastrophic chemical releases. As a contractor, you will receive this information during site orientation. Your responsibilities during a facility emergency are:</p>
+      <ol class="steps">
+        <li><div class="step-num">1</div><div class="step-text"><strong>Know the emergency signal before work begins.</strong> PSM facilities use sirens, PA announcements, or radio calls to signal emergencies. Know what the signal sounds like and what it means before you start work.</div></li>
+        <li><div class="step-num">2</div><div class="step-text"><strong>Know the designated shelter-in-place and evacuation assembly points.</strong> Different emergency scenarios may require different responses &mdash; some require evacuation upwind; others (toxic gas releases) may require shelter-in-place indoors. Know which applies when.</div></li>
+        <li><div class="step-num">3</div><div class="step-text"><strong>Stop work and secure the work area immediately</strong> when an emergency signal sounds. Leave tools and equipment. Ensure the work area is safe to leave (no open flanges, open hatches, or uncontrolled energy).</div></li>
+        <li><div class="step-num">4</div><div class="step-text"><strong>Proceed to your designated assembly point</strong> and report to your crew supervisor. Your supervisor will account for all BBB Tank Services personnel and report the count to the facility.</div></li>
+        <li><div class="step-num">5</div><div class="step-text"><strong>Do not re-enter the facility until cleared</strong> by the facility emergency coordinator. A BBB Tank Services supervisor alone does not have the authority to authorize re-entry during a facility emergency.</div></li>
+      </ol>
+
+      <h3>PSM Facility Site Orientation Checklist</h3>
+      <p>Before beginning work at any PSM-covered facility, confirm you have received and understand all of the following from the host employer:</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>Process Hazard Information</h4>
+          <ul>
+            <li>Chemicals present and their hazards (toxicity, flammability, reactivity)</li>
+            <li>Maximum intended inventory in the area where you will work</li>
+            <li>Safe operating limits you need to be aware of</li>
+            <li>Specific hazards identified in the PHA for your work area</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Emergency &amp; Safety Information</h4>
+          <ul>
+            <li>Emergency signal types and what each means</li>
+            <li>Your assembly point location and headcount procedure</li>
+            <li>Shelter-in-place location if applicable</li>
+            <li>Facility emergency contact numbers</li>
+            <li>Hot work permit and LOTO authority contacts</li>
+            <li>Restricted areas and no-go zones</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="box box-success">
+        <strong>&#10003; Your Right to Stop Work at a PSM Facility.</strong> Workers at PSM-covered facilities have the right to stop work when they believe an imminent hazard exists &mdash; even if this means stopping a process. This is not insubordination; it is a recognized safety right. If you encounter conditions at a PSM facility that appear unsafe and your supervisor is unavailable, you may and should stop work and request facility safety personnel review the situation before continuing.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h2>&#128221; Knowledge Check</h2>
+    <p class="quiz-intro">Answer all 10 questions, then click <strong>Submit Quiz</strong>. A score of <strong>70% or higher</strong> is required. Your result is saved automatically.</p>
+
+    <div class="q-block">
+      <p class="q-text">1. What is the primary purpose of OSHA&rsquo;s Process Safety Management (PSM) standard?</p>
+      <label class="opt-label"><input type="radio" name="q1" value="a"> To regulate environmental permits for chemical manufacturing facilities</label>
+      <label class="opt-label"><input type="radio" name="q1" value="b"> To prevent catastrophic releases of highly hazardous chemicals through a comprehensive management system</label>
+      <label class="opt-label"><input type="radio" name="q1" value="c"> To establish air quality standards for chemical plants near residential areas</label>
+      <label class="opt-label"><input type="radio" name="q1" value="d"> To require safety data sheets for all chemicals used in industrial workplaces</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">2. Under the PSM Contractors element, which of the following is a specific obligation of BBB Tank Services as the contract employer?</p>
+      <label class="opt-label"><input type="radio" name="q2" value="a"> Conducting a Process Hazard Analysis of all areas where contractors will work</label>
+      <label class="opt-label"><input type="radio" name="q2" value="b"> Ensuring each contractor employee is trained in required work practices, informed of facility hazards, and knows the Emergency Action Plan</label>
+      <label class="opt-label"><input type="radio" name="q2" value="c"> Maintaining the facility&rsquo;s Process Safety Information and updating P&amp;IDs after each job</label>
+      <label class="opt-label"><input type="radio" name="q2" value="d"> Performing a Pre-Startup Safety Review before any contractor work begins at the facility</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">3. What are Piping and Instrumentation Diagrams (P&amp;IDs) and why are they critical for contractor work at PSM facilities?</p>
+      <label class="opt-label"><input type="radio" name="q3" value="a"> P&amp;IDs are personnel identification documents that contractors must carry at all times inside the facility</label>
+      <label class="opt-label"><input type="radio" name="q3" value="b"> P&amp;IDs are process equipment drawings showing what is connected to what, where isolation points are, and what safety systems are in place &mdash; essential for safely breaking into or isolating any process line</label>
+      <label class="opt-label"><input type="radio" name="q3" value="c"> P&amp;IDs are the facility&rsquo;s emergency plans that must be reviewed before any hot work begins</label>
+      <label class="opt-label"><input type="radio" name="q3" value="d"> P&amp;IDs are OSHA inspection records showing past PSM violations at the facility</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">4. A BBB Tank Services crew completes a valve replacement and realizes the new valve&rsquo;s body is 2 inches longer than the original, requiring the connecting pipe to be cut and rewelded at a slightly different angle. The crew makes the modification to complete the job. What is wrong with this approach?</p>
+      <label class="opt-label"><input type="radio" name="q4" value="a"> Nothing &mdash; small piping modifications during a valve replacement are considered routine maintenance and are exempt from MOC</label>
+      <label class="opt-label"><input type="radio" name="q4" value="b"> This is an unauthorized Management of Change. Any modification to process piping configuration must go through the facility&rsquo;s formal MOC process before being implemented</label>
+      <label class="opt-label"><input type="radio" name="q4" value="c"> The modification is acceptable as long as the crew documents it in their work order and notifies the facility at the end of the shift</label>
+      <label class="opt-label"><input type="radio" name="q4" value="d"> This only requires MOC if the pipe size or pressure rating changes &mdash; angle changes are replacement-in-kind</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">5. What is &ldquo;replacement in kind&rdquo; in the context of PSM Management of Change?</p>
+      <label class="opt-label"><input type="radio" name="q5" value="a"> Replacing a failed component with a newer model that has improved specifications</label>
+      <label class="opt-label"><input type="radio" name="q5" value="b"> Replacing a component with an identical one &mdash; same material, size, rating, and configuration &mdash; which does not require an MOC</label>
+      <label class="opt-label"><input type="radio" name="q5" value="c"> Any maintenance activity that restores equipment to safe working condition</label>
+      <label class="opt-label"><input type="radio" name="q5" value="d"> Replacing an outdated piece of equipment with an equivalent modern substitute, which also does not require MOC</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">6. A facility emergency siren sounds while your crew is in the middle of opening a flanged connection on a tank nozzle. What should you do first?</p>
+      <label class="opt-label"><input type="radio" name="q6" value="a"> Finish tightening the connection so the tank is secure before evacuating</label>
+      <label class="opt-label"><input type="radio" name="q6" value="b"> Call your BBB Tank Services supervisor on the radio to ask if the alarm is real before responding</label>
+      <label class="opt-label"><input type="radio" name="q6" value="c"> Make the work area as safe as possible (secure any open flanges if safe to do so instantly), then immediately evacuate to your designated assembly point</label>
+      <label class="opt-label"><input type="radio" name="q6" value="d"> Shelter in place at the work location until you receive further instructions over the radio</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">7. During PSM incident investigation, who is required to be on the investigation team if the incident involved contractor work?</p>
+      <label class="opt-label"><input type="radio" name="q7" value="a"> Only facility employees &mdash; contractors are not permitted in incident investigations due to liability concerns</label>
+      <label class="opt-label"><input type="radio" name="q7" value="b"> At least one person knowledgeable in the process involved and a contract employee</label>
+      <label class="opt-label"><input type="radio" name="q7" value="c"> An OSHA compliance officer must lead all PSM incident investigations</label>
+      <label class="opt-label"><input type="radio" name="q7" value="d"> Only the BBB Tank Services safety manager and the crew supervisor who was present</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">8. What is a Pre-Startup Safety Review (PSSR) and when is it required?</p>
+      <label class="opt-label"><input type="radio" name="q8" value="a"> A safety briefing conducted at the start of every contractor shift at a PSM facility</label>
+      <label class="opt-label"><input type="radio" name="q8" value="b"> A formal review before any new or modified process is returned to service, confirming all safety requirements are met before the process is exposed to hazardous chemicals</label>
+      <label class="opt-label"><input type="radio" name="q8" value="c"> A quarterly safety audit that OSHA inspectors conduct at all PSM-covered facilities</label>
+      <label class="opt-label"><input type="radio" name="q8" value="d"> An emergency response drill conducted annually by PSM-covered facilities</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">9. Why do contractors account for a disproportionate share of injuries at PSM-covered facilities compared to facility employees?</p>
+      <label class="opt-label"><input type="radio" name="q9" value="a"> Contractors are typically less experienced workers than facility employees across all industries</label>
+      <label class="opt-label"><input type="radio" name="q9" value="b"> Contractors are often less familiar with the specific processes, hazards, and procedures at the host facility than permanent employees who work there daily</label>
+      <label class="opt-label"><input type="radio" name="q9" value="c"> PSM facilities assign the most dangerous tasks to contractors to limit facility employee exposure</label>
+      <label class="opt-label"><input type="radio" name="q9" value="d"> Contractors receive less total PPE than facility employees at covered sites</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">10. You are working at a PSM facility and discover a condition that appears hazardous &mdash; a pipe you were told is drained still shows pressure on a gauge. Your supervisor is unavailable. What should you do?</p>
+      <label class="opt-label"><input type="radio" name="q10" value="a"> Proceed carefully &mdash; gauge readings at PSM facilities are often inaccurate due to sensor drift</label>
+      <label class="opt-label"><input type="radio" name="q10" value="b"> Wait at the work site for your supervisor to return before taking any action</label>
+      <label class="opt-label"><input type="radio" name="q10" value="c"> Stop work immediately and contact facility safety personnel &mdash; workers at PSM facilities have the right to stop work when they believe an imminent hazard exists</label>
+      <label class="opt-label"><input type="radio" name="q10" value="d"> Open the drain valve to relieve the pressure yourself so the work can continue on schedule</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="score-big"   id="scoreBig"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="result-msg"  id="resultMsg"></div>
+      <button class="retake-btn" onclick="retakeQuiz()">Retake Quiz</button>
+    </div>
+  </div>
+
+  <div class="module-nav">
+    <a href="module-022.html" class="nav-btn prev">&larr; Module 22</a>
+    <a href="index.html"      class="nav-btn home">&#127968; Module Index</a>
+    <a href="module-024.html" class="nav-btn next">Module 24 &rarr;</a>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  BBB Tank Services, LLC &middot; Safety Training Portal &middot; SHP-BBB-023 &middot; Rev. Oct 2025 &middot; Controlled Document<br>
+  162 Independence Pkwy N, Baytown, TX 77520
+</div>
+
+<script>
+  const openedSections = new Set([0]);
+
+  function toggleSection(header) {
+    const body       = header.nextElementSibling;
+    const allHeaders = document.querySelectorAll('.sec-header');
+    const allBodies  = document.querySelectorAll('.sec-body');
+    const idx        = [...allHeaders].indexOf(header);
+    const wasOpen    = body.classList.contains('open');
+    allHeaders.forEach(h => h.classList.remove('open'));
+    allBodies.forEach(b  => b.classList.remove('open'));
+    if (!wasOpen) { header.classList.add('open'); body.classList.add('open'); openedSections.add(idx); }
+    updateProgress();
+  }
+
+  function updateProgress() { setProgress(Math.round(Math.min(openedSections.size / 6, 1) * 80)); }
+  function setProgress(pct) {
+    document.getElementById('progFill').style.width = pct + '%';
+    document.getElementById('progPct').textContent  = pct + '%';
+  }
+  updateProgress();
+
+  const ANSWERS = {
+    q1:'b', q2:'b', q3:'b', q4:'b', q5:'b',
+    q6:'c', q7:'b', q8:'b', q9:'b', q10:'c'
+  };
+
+  const EXPLANATIONS = {
+    q1:  'PSM\'s purpose is to prevent catastrophic releases of highly hazardous chemicals through a comprehensive, integrated safety management system. It was created in response to disasters like Bhopal and Texas City where management system failures — not just technical failures — caused mass casualties.',
+    q2:  'Under PSM\'s Contractors element, BBB Tank Services (as the contract employer) must train each contractor employee in required work practices, ensure they are informed of process hazards that may affect them, and confirm they know applicable provisions of the facility\'s Emergency Action Plan. Documentation of this training is required.',
+    q3:  'P&IDs (Piping and Instrumentation Diagrams) are engineering drawings showing all process piping, equipment, instrumentation, and safety systems — including what is connected to what and where isolation points are located. Any work on process equipment requires access to the current, accurate P&ID to understand what conditions may exist at the work point.',
+    q4:  'Any change to process piping configuration — including angle, routing, or connection geometry — is a Management of Change. MOC is required because changes can affect pipe stress, thermal expansion, support requirements, fluid dynamics, and instrumentation readings in ways that must be evaluated by engineering before implementation. "It\'s just a small change" has caused catastrophic failures at PSM facilities.',
+    q5:  '"Replacement in kind" means replacing a failed component with one that is truly identical — same material specification, same size, same pressure rating, same configuration. Only exact replacement is exempt from MOC. "Better than original," "equivalent but different," or any change in configuration, material, or rating requires a formal MOC regardless of how minor it seems.',
+    q6:  'When an emergency alarm sounds, stop work and evacuate immediately — treat every alarm as real until confirmed otherwise. If you can make the work area safe in an instant (e.g., hand-tightening a partially removed bolt), do so, then evacuate. Do not delay evacuation to complete work. Report to your assembly point and account for all personnel.',
+    q7:  'PSM requires that incident investigation teams include at least one person knowledgeable in the process involved and, if the incident involved contract work, a contract employee. This ensures that the knowledge of the actual work being performed — which the contractor has — is integrated into the investigation.',
+    q8:  'A PSSR is a formal review conducted before a new or modified process is started up. It confirms that construction and equipment are per design specifications, adequate safety procedures are in place, all relevant employees are trained, and all PHA recommendations have been addressed. It is a final checkpoint before hazardous chemicals are introduced to a modified process.',
+    q9:  'Contractors at PSM facilities are less familiar with the specific processes, hazards, emergency procedures, and site-specific safe work practices than permanent employees who work there daily. This knowledge gap — not a lack of general skill — is why PSM\'s Contractors element specifically requires host employers to inform contractors of facility-specific hazards before work begins.',
+    q10: 'Workers at PSM-covered facilities have the right to stop work when they believe an imminent hazard exists. Unexpected pressure in a line that should be drained is exactly the kind of condition that has caused contractor fatalities. Stop work, contact facility safety personnel, and do not proceed until the condition is investigated and resolved by qualified facility personnel.'
+  };
+
+  function submitQuiz() {
+    let score = 0;
+    const total = Object.keys(ANSWERS).length;
+    Object.keys(ANSWERS).forEach(qName => {
+      const selected = document.querySelector(`input[name="${qName}"]:checked`);
+      const fbEl     = document.getElementById('fb' + qName.slice(1));
+      const allOpts  = document.querySelectorAll(`input[name="${qName}"]`);
+      allOpts.forEach(r => r.closest('.opt-label').classList.remove('correct','incorrect'));
+      if (!selected) {
+        if (fbEl) { fbEl.textContent = '⚠ No answer selected.'; fbEl.className = 'feedback show incorrect'; }
+        return;
+      }
+      const correct = selected.value === ANSWERS[qName];
+      if (correct) score++;
+      allOpts.forEach(r => { if (r.value === ANSWERS[qName]) r.closest('.opt-label').classList.add('correct'); });
+      if (!correct) selected.closest('.opt-label').classList.add('incorrect');
+      if (fbEl) {
+        fbEl.textContent = (correct ? '✅ ' : '❌ Review: ') + EXPLANATIONS[qName];
+        fbEl.className   = 'feedback show ' + (correct ? 'correct' : 'incorrect');
+      }
+    });
+    const pct    = Math.round((score / total) * 100);
+    const passed = pct >= 70;
+    try {
+      const records = JSON.parse(localStorage.getItem('bbb_training_records') || '[]');
+      records.push({ module:'023', title:'Process Safety Management Program', score, total, percentage:pct, passed, date:new Date().toISOString() });
+      localStorage.setItem('bbb_training_records', JSON.stringify(records));
+    } catch(e) { console.warn('Could not save record:', e); }
+    document.getElementById('scoreBig').textContent   = score + '/' + total;
+    document.getElementById('scoreLabel').textContent = pct + '% \u2014 ' + (passed ? 'PASS \u2713' : 'NEEDS REVIEW \u2717');
+    document.getElementById('resultMsg').textContent  = passed
+      ? '\u2705 Module 023 complete! Your record has been saved. Proceed to Module 024.'
+      : '\u274C A score of 70% is required to pass. Review the flagged sections and retake the quiz, or speak with your supervisor.';
+    const resultEl = document.getElementById('quizResult');
+    resultEl.classList.add('show');
+    resultEl.scrollIntoView({ behavior:'smooth', block:'center' });
+    setProgress(100);
+  }
+
+  function retakeQuiz() {
+    document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('correct','incorrect'));
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+    document.getElementById('quizResult').classList.remove('show');
+    updateProgress();
+  }
+</script>
+</body>
+</html>

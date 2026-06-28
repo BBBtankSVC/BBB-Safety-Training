@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 008 — Fall Protection Equipment Program | BBB Tank Services</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0D1B2A; --navy2:#1A2E4A; --orange:#E8611A; --orange2:#C9510E;
+      --bg:#F0F4F8; --card:#FFFFFF; --text:#1C2B3A; --muted:#6B7E8E;
+      --border:#D3DCE6; --green:#1D8348; --red:#C0392B; --radius:10px;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; font-size:16px; }
+    header { background:var(--navy); color:white; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+    .header-inner { display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:3px solid var(--orange); }
+    .back-link { color:#8FAEC8; text-decoration:none; font-size:14px; white-space:nowrap; }
+    .back-link:hover { color:white; }
+    .header-title { font-size:15px; font-weight:700; color:white; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .header-std { font-size:12px; color:var(--orange); font-weight:700; white-space:nowrap; }
+    .read-progress-wrap { background:var(--navy2); padding:8px 20px; display:flex; align-items:center; gap:12px; }
+    .read-progress-label { font-size:12px; color:#8FAEC8; white-space:nowrap; }
+    .read-progress-bg { flex:1; background:rgba(255,255,255,0.15); border-radius:8px; height:6px; }
+    .read-progress-fill { background:var(--orange); height:100%; border-radius:8px; width:0; transition:width 0.3s; }
+    .scroll-pct { font-size:12px; color:#8FAEC8; min-width:36px; text-align:right; }
+    main { max-width:820px; margin:0 auto; padding:28px 16px 80px; }
+    .module-banner { background:linear-gradient(135deg,var(--navy2),var(--navy)); color:white; border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+    .module-eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--orange); font-weight:700; margin-bottom:8px; }
+    .module-banner h1 { font-size:clamp(20px,4vw,28px); font-weight:800; margin-bottom:10px; }
+    .module-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#8FAEC8; }
+    .content-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+    .section-header { background:var(--navy); color:white; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:16px; font-weight:700; }
+    .section-body { padding:20px 22px; }
+    .section-body p { margin-bottom:14px; }
+    .section-body p:last-child { margin-bottom:0; }
+    .callout { border-radius:8px; padding:14px 16px; margin:14px 0; font-size:15px; }
+    .callout-orange { background:#FFF4EE; border-left:4px solid var(--orange); }
+    .callout-blue   { background:#EEF4FF; border-left:4px solid #2E6AE8; }
+    .callout-green  { background:#EDFAF3; border-left:4px solid var(--green); }
+    .callout-red    { background:#FEF0EE; border-left:4px solid var(--red); }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px; opacity:0.75; }
+    .resp-list { list-style:none; padding:0; margin:10px 0; }
+    .resp-list li { padding:10px 12px 10px 36px; border-radius:6px; margin-bottom:6px; background:#F7F9FC; border:1px solid var(--border); position:relative; font-size:15px; }
+    .resp-list li::before { content:'✓'; position:absolute; left:12px; color:var(--orange); font-weight:800; }
+    .section-divider { height:1px; background:var(--border); margin:14px 0; }
+    .key-fact { display:flex; align-items:center; gap:14px; background:var(--navy); color:white; border-radius:8px; padding:14px 18px; margin:14px 0; }
+    .key-fact .fact-num { font-size:28px; font-weight:800; color:var(--orange); white-space:nowrap; }
+    .key-fact .fact-lbl { font-size:14px; color:#8FAEC8; line-height:1.4; }
+    /* Height threshold grid */
+    .threshold-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin:14px 0; }
+    .threshold-card { border-radius:8px; padding:14px 16px; border:2px solid; }
+    .threshold-4ft { background:#FFF8F4; border-color:#FDBA74; }
+    .threshold-6ft { background:#FEF0EE; border-color:var(--red); }
+    .threshold-head { font-size:20px; font-weight:800; margin-bottom:6px; }
+    .threshold-4ft .threshold-head { color:var(--orange2); }
+    .threshold-6ft .threshold-head { color:var(--red); }
+    .threshold-body { font-size:13px; color:var(--text); line-height:1.6; }
+    /* Spec table */
+    .spec-table { width:100%; border-collapse:collapse; font-size:14px; margin:14px 0; border-radius:8px; overflow:hidden; }
+    .spec-table th { background:var(--navy); color:white; padding:10px 14px; text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+    .spec-table td { padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .spec-table tr:last-child td { border-bottom:none; }
+    .spec-table tr:nth-child(even) td { background:#F7F9FC; }
+    .spec-val { font-weight:800; color:var(--orange); }
+    /* quiz */
+    #quiz-section { background:var(--card); border:2px solid var(--orange); border-radius:var(--radius); overflow:hidden; margin-top:32px; }
+    .quiz-header { background:var(--orange); color:white; padding:20px 24px; }
+    .quiz-header h2 { font-size:20px; font-weight:800; margin-bottom:4px; }
+    .quiz-header p  { font-size:14px; opacity:0.9; }
+    .quiz-body { padding:24px; }
+    .name-block { margin-bottom:28px; }
+    .name-block label { display:block; font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .name-block input { width:100%; padding:12px 16px; font-size:16px; border:2px solid var(--border); border-radius:8px; background:#F7F9FC; color:var(--text); transition:border-color 0.2s; }
+    .name-block input:focus { outline:none; border-color:var(--orange); background:white; }
+    .name-block input.error { border-color:var(--red); }
+    .question-block { margin-bottom:28px; }
+    .question-num  { font-size:12px; font-weight:700; color:var(--orange); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .question-text { font-size:16px; font-weight:600; margin-bottom:14px; line-height:1.5; }
+    .options { display:flex; flex-direction:column; gap:8px; }
+    .option-label { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:15px; line-height:1.4; }
+    .option-label:hover { border-color:var(--orange); background:#FFF8F4; }
+    .option-label input[type="radio"] { margin-top:3px; accent-color:var(--orange); flex-shrink:0; width:18px; height:18px; }
+    .option-label.correct-ans { border-color:var(--green); background:#EDFAF3; }
+    .option-label.wrong-ans   { border-color:var(--red);   background:#FEF0EE; }
+    .question-divider { border:none; border-top:1px dashed var(--border); margin:24px 0; }
+    .submit-wrap { text-align:center; margin-top:12px; }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:15px 48px; font-size:17px; font-weight:700; border-radius:8px; cursor:pointer; width:100%; max-width:360px; transition:background 0.2s; }
+    .submit-btn:hover { background:var(--orange2); }
+    .submit-btn:disabled { background:var(--muted); cursor:not-allowed; }
+    #results-section { display:none; }
+    .result-card { border-radius:var(--radius); padding:28px; margin-bottom:20px; text-align:center; }
+    .result-card.pass { background:#EDFAF3; border:2px solid var(--green); }
+    .result-card.fail { background:#FEF0EE; border:2px solid var(--red); }
+    .result-icon  { font-size:52px; margin-bottom:12px; }
+    .result-title { font-size:26px; font-weight:800; margin-bottom:6px; }
+    .result-card.pass .result-title { color:var(--green); }
+    .result-card.fail .result-title { color:var(--red); }
+    .result-score { font-size:48px; font-weight:800; margin:12px 0 4px; }
+    .result-card.pass .result-score { color:var(--green); }
+    .result-card.fail .result-score { color:var(--red); }
+    .result-sub { font-size:15px; color:var(--muted); }
+    .cert-block { background:white; border:2px solid var(--navy); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+    .cert-block h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .cert-table { width:100%; border-collapse:collapse; }
+    .cert-table td { padding:9px 0; border-bottom:1px solid var(--border); font-size:15px; }
+    .cert-table td:first-child { color:var(--muted); font-size:13px; width:40%; }
+    .cert-table td:last-child  { font-weight:700; }
+    .cert-company { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+    .action-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .btn { flex:1; min-width:140px; padding:13px 18px; border-radius:8px; font-size:14px; font-weight:700; border:none; cursor:pointer; text-align:center; text-decoration:none; display:inline-block; transition:opacity 0.2s; }
+    .btn:hover { opacity:0.88; }
+    .btn-primary { background:var(--navy);   color:white; }
+    .btn-orange  { background:var(--orange); color:white; }
+    .btn-green   { background:var(--green);  color:white; }
+    .btn-outline { background:white; color:var(--navy); border:2px solid var(--navy); }
+    .retake-btn  { width:100%; padding:13px; font-size:16px; font-weight:700; background:var(--navy); color:white; border:none; border-radius:8px; cursor:pointer; margin-top:8px; }
+    @media print { header,.read-progress-wrap,.module-banner,.content-card,#quiz-section,.action-row,.retake-btn,footer { display:none !important; } body { background:white; } #results-section { display:block !important; } }
+    footer { background:var(--navy); color:#4A6785; text-align:center; font-size:12px; padding:20px; margin-top:40px; }
+    @media(max-width:600px) { .threshold-grid { grid-template-columns:1fr; } main { padding:20px 12px 60px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← All Modules</a>
+    <span class="header-title">Fall Protection Equipment Program</span>
+    <span class="header-std">SHP-BBB-008</span>
+  </div>
+  <div class="read-progress-wrap">
+    <span class="read-progress-label">Reading progress</span>
+    <div class="read-progress-bg"><div class="read-progress-fill" id="read-fill"></div></div>
+    <span class="scroll-pct" id="scroll-pct">0%</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="module-banner">
+    <div class="module-eyebrow">Module 008 · SHP-BBB-008</div>
+    <h1>Fall Protection Equipment Program</h1>
+    <div class="module-meta">
+      <span>📅 Rev. 10/31/2025</span>
+      <span>⚖ OSHA 29 CFR 1926.500</span>
+      <span>⏱ ~18 min read</span>
+      <span>📝 10-question quiz</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — PURPOSE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📋</span><span class="section-title">1. Purpose &amp; Scope</span></div>
+    <div class="section-body">
+      <p>This policy sets requirements and criteria for fall protection at all BBB Tank Services construction workplaces under 29 CFR Part 1926. It applies to all employees and subcontractors working within company-controlled job sites.</p>
+      <div class="callout callout-blue">
+        <strong>Exception</strong>
+        This policy does NOT apply when employees are only inspecting, investigating, or assessing workplace conditions <em>prior to the actual start</em> of construction work or <em>after all construction work has been completed</em>.
+      </div>
+      <p>Falls are the leading cause of death in construction. Fall protection is required whenever employees are potentially exposed to falls from heights of <strong>six feet or greater</strong> to lower levels, including near excavations. Guardrail systems, safety nets, or personal fall arrest systems are the primary methods of protection.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — HEIGHT THRESHOLDS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">📏</span><span class="section-title">3. Critical Height Thresholds — Know These</span></div>
+    <div class="section-body">
+      <div class="threshold-grid">
+        <div class="threshold-card threshold-4ft">
+          <div class="threshold-head">4 feet</div>
+          <div class="threshold-body">
+            Fall protection required for:<br>
+            • Leading edges under construction<br>
+            • Holes in walking/working surfaces<br>
+            • Ramps, runways, and walkways<br>
+            • Near dangerous equipment<br>
+            • Low-slope roofs (unprotected edges)<br>
+            • Wall openings<br>
+            • Pre-cast concrete erection<br>
+            • Hoist areas
+          </div>
+        </div>
+        <div class="threshold-card threshold-6ft">
+          <div class="threshold-head">6 feet</div>
+          <div class="threshold-body">
+            Fall protection required for:<br>
+            • All unprotected sides &amp; edges<br>
+            • Formwork or reinforcing steel<br>
+            • Steep roofs (unprotected edges)<br>
+            • Excavation edges (not readily visible)<br>
+            • Wells, pits, shafts (with guardrail)<br>
+            • General walking/working surfaces
+          </div>
+        </div>
+      </div>
+      <div class="callout callout-orange">
+        <strong>Dangerous Equipment — Special Rule</strong>
+        Employees <strong>less than 4 feet</strong> above dangerous equipment (tanks, machinery, electrical equipment) must be protected by guardrail systems or equipment guards. At 4 feet or more, all standard fall protection methods apply.
+      </div>
+      <div class="callout callout-blue">
+        <strong>Falling Objects</strong>
+        When employees are exposed to falling objects, hard hats are mandatory. The Site Supervisor must also implement toe boards, screens, canopy structures, or barricades to prevent objects from reaching employees below.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — GUARDRAIL SYSTEMS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🔩</span><span class="section-title">4. Guardrail Systems</span></div>
+    <div class="section-body">
+      <table class="spec-table">
+        <thead><tr><th>Requirement</th><th>Specification</th></tr></thead>
+        <tbody>
+          <tr><td>Top rail height</td><td><span class="spec-val">42 inches ± 3 inches</span> above walking/working surface</td></tr>
+          <tr><td>Mid-rail height</td><td>Midway between top rail and walking/working surface</td></tr>
+          <tr><td>Top rail strength</td><td>Must withstand <span class="spec-val">200 lbs</span> force in any outward or downward direction</td></tr>
+          <tr><td>Mid-rail strength</td><td>Must withstand <span class="spec-val">150 lbs</span> in any downward or outward direction</td></tr>
+          <tr><td>Member spacing</td><td>No openings wider than <span class="spec-val">19 inches</span></td></tr>
+          <tr><td>Minimum rail size</td><td>At least <span class="spec-val">¼ inch</span> diameter or thickness</td></tr>
+          <tr><td>Wire rope top rail</td><td>Must be flagged every <span class="spec-val">6 feet</span> with high-visibility material</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-red">
+        <strong>Prohibited Materials</strong>
+        <strong>Steel banding and plastic banding may NOT be used</strong> as top rails or mid-rails. All surfaces must be smooth to prevent punctures, lacerations, or snagging of clothing.
+      </div>
+      <ul class="resp-list">
+        <li>When guardrails are at hoisting areas, a chain, gate, or removable section must be placed across the access opening when hoisting is not taking place.</li>
+        <li>Holes covered by guardrails must have rails on ALL unprotected sides.</li>
+        <li>Safety nets may only be used after approval by the Company Safety Representative.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — PERSONAL FALL ARREST SYSTEMS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🦺</span><span class="section-title">5. Personal Fall Arrest Systems (PFAS)</span></div>
+    <div class="section-body">
+      <table class="spec-table">
+        <thead><tr><th>Component</th><th>Minimum Strength / Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>D-rings and snap hooks</td><td><span class="spec-val">5,000 lbs</span> minimum tensile strength</td></tr>
+          <tr><td>Lanyards &amp; vertical lifelines</td><td><span class="spec-val">5,000 lbs</span> minimum breaking strength</td></tr>
+          <tr><td>Anchorages</td><td><span class="spec-val">5,000 lbs per employee</span> attached, or safety factor of at least 2</td></tr>
+          <tr><td>Self-retracting lifelines (≤2 ft fall)</td><td><span class="spec-val">3,000 lbs</span> minimum tensile load in fully extended position</td></tr>
+          <tr><td>Self-retracting lifelines (&gt;2 ft fall)</td><td><span class="spec-val">5,000 lbs</span> minimum tensile load in fully extended position</td></tr>
+          <tr><td>Horizontal lifelines safety factor</td><td>At least <span class="spec-val">2</span> — must be supervised by a qualified person</td></tr>
+          <tr><td>Snap hooks (effective Jan 1, 1998)</td><td>Only <span class="spec-val">locking type</span> snap hooks permitted</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-orange">
+        <strong>Harness Attachment Point</strong>
+        The attachment point of the body harness must be in the <strong>center of the wearer's back near shoulder level, or above the wearer's head</strong>. The body belt attachment must be in the center of the wearer's back.
+      </div>
+
+      <div class="callout callout-red">
+        <strong>Impact Loading — Remove From Service Immediately</strong>
+        Any personal fall arrest system or component subjected to impact loading from a fall arrest must be <strong>immediately removed from service</strong> and must not be used again until inspected and determined undamaged by the Company Safety Representative.
+      </div>
+
+      <ul class="resp-list">
+        <li>PFAS must be inspected <strong>prior to each use</strong> for wear, damage, and deterioration. Defective components must be removed from service.</li>
+        <li>PFAS must <strong>not</strong> be attached to guardrail systems, nor to hoists.</li>
+        <li>Harnesses and components are for employee fall protection only — <strong>never for hoisting materials</strong>.</li>
+        <li>Ropes and straps used in lanyards, lifelines, and body harnesses must be made from <strong>synthetic fibers</strong>.</li>
+        <li>Snap hooks must not be engaged directly to webbing, rope, to each other, to a D-ring with another snap hook, or to a horizontal lifeline — unless the snap hook is a locking type designed for such connections.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 6 — POSITIONING DEVICE SYSTEMS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">⚓</span><span class="section-title">6. Positioning Device Systems</span></div>
+    <div class="section-body">
+      <div class="key-fact">
+        <div class="fact-num">2 ft</div>
+        <div class="fact-lbl">Positioning devices must be rigged so an employee <strong>cannot free fall more than 2 feet</strong>.</div>
+      </div>
+      <ul class="resp-list">
+        <li>Positioning devices must be secured to an anchorage capable of supporting at least <strong>twice the potential impact load</strong> of an employee's fall, or 3,000 lbs — whichever is greater.</li>
+        <li>Positioning device systems must be inspected prior to each use for wear, damage, and deterioration. Defective components must be removed from service.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 8 — CONTROLLED ACCESS ZONES -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🚧</span><span class="section-title">8. Controlled Access Zones &amp; Warning Line Systems</span></div>
+    <div class="section-body">
+      <p>Controlled access zones (CAZs) may only be used with approval from the Company Safety Representative. When control lines are used:</p>
+      <ul class="resp-list">
+        <li>Control lines must be erected <strong>not less than 6 feet and not more than 25 feet</strong> from the unprotected or leading edge.</li>
+        <li>Lines must run along the entire length of the unprotected edge and be parallel to it.</li>
+        <li>Lines must be flagged or marked at <strong>not more than 6-foot intervals</strong> with high-visibility material.</li>
+        <li>Lowest point of line (including sag) must be at least <strong>39 inches</strong> from the walking/working surface; highest point no more than <strong>45 inches</strong>.</li>
+        <li>Each line must have a <strong>minimum breaking strength of 200 lbs</strong>.</li>
+      </ul>
+      <div class="callout callout-orange">
+        <strong>Company Safety Representative Approval Required For:</strong>
+        Safety nets · Warning line systems · Controlled access zones · Safety monitoring systems
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10 — COVERS -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🔲</span><span class="section-title">10. Covers for Holes</span></div>
+    <div class="section-body">
+      <ul class="resp-list">
+        <li>Vehicle-area covers must support at least <strong>twice the maximum axle load</strong> of the largest vehicle expected to cross.</li>
+        <li>All other covers must support at least <strong>twice the weight</strong> of employees, equipment, and materials that may be imposed at any one time.</li>
+        <li>All covers must be <strong>secured</strong> when installed to prevent accidental displacement by wind, equipment, or employees.</li>
+      </ul>
+      <div class="callout callout-red">
+        <strong>Covers Must Be Marked</strong>
+        All covers must be <strong>color coded</strong> or marked with the word <strong>"HOLE"</strong> or <strong>"COVER"</strong> to provide warning of the hazard.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 — SAFETY MONITORING -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">👁</span><span class="section-title">9. Safety Monitoring Systems</span></div>
+    <div class="section-body">
+      <p>When no other alternative fall protection measure is feasible, a safety monitoring system may be implemented — but only with Company Safety Representative approval. The designated safety monitor must:</p>
+      <ul class="resp-list">
+        <li>Be competent to recognize fall hazards.</li>
+        <li>Warn employees when they are unaware of a fall hazard or are acting unsafely.</li>
+        <li>Be on the same walking/working surface and within visual sighting distance of employees being monitored.</li>
+        <li>Be close enough for oral communication.</li>
+        <li>Have <strong>no other responsibilities</strong> that could take attention away from the monitoring function.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 11-13 — TRAINING & RESCUE -->
+  <div class="content-card">
+    <div class="section-header"><span class="section-icon">🎓</span><span class="section-title">11–13. Training, Rescue &amp; Accident Investigation</span></div>
+    <div class="section-body">
+      <p>The company provides fall hazard training for every employee who may be exposed to fall hazards. Training must cover:</p>
+      <ul class="resp-list">
+        <li>The nature of fall hazards in the work area.</li>
+        <li>Correct procedures for erecting, maintaining, disassembling, and inspecting fall protection systems.</li>
+        <li>The use and operation of guardrail systems, PFAS, safety nets, warning line systems, safety monitoring systems, and controlled access zones.</li>
+        <li>Correct procedures for handling and storage of equipment and materials.</li>
+        <li>The employee's role in fall protection plans and safety monitoring systems.</li>
+      </ul>
+      <div class="callout callout-blue">
+        <strong>Training Documentation</strong>
+        Training must be documented with written certification records showing the employee's name, date(s) of training, and the trainer's signature. Retraining is required when deficiencies are noted, procedures change, or equipment modifications make prior training obsolete.
+      </div>
+      <div class="callout callout-orange">
+        <strong>Rescue Planning</strong>
+        The Site Supervisor must develop a site-specific rescue plan for employees who fall. This plan must include procedures allowing employees to rescue themselves when able. After any fall or near-miss, an accident investigation must be conducted to determine if the fall protection plan needs revision.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <h2>📝 Knowledge Check — Module 008</h2>
+      <p>Answer all 10 questions. You need 70% (7/10) or higher to pass.</p>
+    </div>
+    <div class="quiz-body">
+
+      <div class="name-block">
+        <label for="employee-name">Your Full Name (required for records)</label>
+        <input type="text" id="employee-name" placeholder="First Last" autocomplete="name">
+      </div>
+
+      <!-- Q1 -->
+      <div class="question-block">
+        <div class="question-num">Question 1 of 10</div>
+        <div class="question-text">At what height above a lower level must fall protection be provided for employees on walking/working surfaces with unprotected sides or edges?</div>
+        <div class="options" id="q1">
+          <label class="option-label"><input type="radio" name="q1" value="a"> 4 feet or more.</label>
+          <label class="option-label"><input type="radio" name="q1" value="b"> 6 feet or more.</label>
+          <label class="option-label"><input type="radio" name="q1" value="c"> 8 feet or more.</label>
+          <label class="option-label"><input type="radio" name="q1" value="d"> 10 feet or more.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q2 -->
+      <div class="question-block">
+        <div class="question-num">Question 2 of 10</div>
+        <div class="question-text">Fall protection is required for employees working near leading edges at what height?</div>
+        <div class="options" id="q2">
+          <label class="option-label"><input type="radio" name="q2" value="a"> 2 feet or more.</label>
+          <label class="option-label"><input type="radio" name="q2" value="b"> 6 feet or more.</label>
+          <label class="option-label"><input type="radio" name="q2" value="c"> 4 feet or more.</label>
+          <label class="option-label"><input type="radio" name="q2" value="d"> 10 feet or more.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q3 -->
+      <div class="question-block">
+        <div class="question-num">Question 3 of 10</div>
+        <div class="question-text">What is the required height for the top rail of a guardrail system?</div>
+        <div class="options" id="q3">
+          <label class="option-label"><input type="radio" name="q3" value="a"> 36 inches ± 3 inches above the walking/working surface.</label>
+          <label class="option-label"><input type="radio" name="q3" value="b"> 42 inches ± 3 inches above the walking/working surface.</label>
+          <label class="option-label"><input type="radio" name="q3" value="c"> 48 inches above the walking/working surface.</label>
+          <label class="option-label"><input type="radio" name="q3" value="d"> 39 inches minimum, with no upper limit.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q4 -->
+      <div class="question-block">
+        <div class="question-num">Question 4 of 10</div>
+        <div class="question-text">What is the minimum tensile strength required for D-rings and snap hooks on personal fall arrest systems?</div>
+        <div class="options" id="q4">
+          <label class="option-label"><input type="radio" name="q4" value="a"> 1,500 pounds.</label>
+          <label class="option-label"><input type="radio" name="q4" value="b"> 3,000 pounds.</label>
+          <label class="option-label"><input type="radio" name="q4" value="c"> 5,000 pounds.</label>
+          <label class="option-label"><input type="radio" name="q4" value="d"> 7,500 pounds.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q5 -->
+      <div class="question-block">
+        <div class="question-num">Question 5 of 10</div>
+        <div class="question-text">Where must the attachment point be located on a body harness for use in a personal fall arrest system?</div>
+        <div class="options" id="q5">
+          <label class="option-label"><input type="radio" name="q5" value="a"> On the front of the chest for easy inspection.</label>
+          <label class="option-label"><input type="radio" name="q5" value="b"> On the hip for maximum range of motion.</label>
+          <label class="option-label"><input type="radio" name="q5" value="c"> In the center of the wearer's back near shoulder level, or above the wearer's head.</label>
+          <label class="option-label"><input type="radio" name="q5" value="d"> At the waist — the same location as a body belt.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q6 -->
+      <div class="question-block">
+        <div class="question-num">Question 6 of 10</div>
+        <div class="question-text">What must be done immediately with a personal fall arrest system that has been subjected to impact loading from arresting a fall?</div>
+        <div class="options" id="q6">
+          <label class="option-label"><input type="radio" name="q6" value="a"> It may continue to be used if it passes a visual inspection by the user.</label>
+          <label class="option-label"><input type="radio" name="q6" value="b"> It must be removed from service immediately and not reused until inspected and approved by the Company Safety Representative.</label>
+          <label class="option-label"><input type="radio" name="q6" value="c"> It should be tagged and set aside for 30 days before returning to service.</label>
+          <label class="option-label"><input type="radio" name="q6" value="d"> It should be cleaned and lubricated before returning to service.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q7 -->
+      <div class="question-block">
+        <div class="question-num">Question 7 of 10</div>
+        <div class="question-text">What is the maximum free fall distance allowed in a positioning device system?</div>
+        <div class="options" id="q7">
+          <label class="option-label"><input type="radio" name="q7" value="a"> 6 feet.</label>
+          <label class="option-label"><input type="radio" name="q7" value="b"> 4 feet.</label>
+          <label class="option-label"><input type="radio" name="q7" value="c"> 2 feet.</label>
+          <label class="option-label"><input type="radio" name="q7" value="d"> 1 foot.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q8 -->
+      <div class="question-block">
+        <div class="question-num">Question 8 of 10</div>
+        <div class="question-text">What must all covers placed over holes in walking/working surfaces be marked with?</div>
+        <div class="options" id="q8">
+          <label class="option-label"><input type="radio" name="q8" value="a"> The date it was installed and the weight capacity.</label>
+          <label class="option-label"><input type="radio" name="q8" value="b"> The installer's name and the supervising engineer's signature.</label>
+          <label class="option-label"><input type="radio" name="q8" value="c"> Color coding or the word "HOLE" or "COVER" to warn of the hazard.</label>
+          <label class="option-label"><input type="radio" name="q8" value="d"> A standard orange safety cone placed on top of the cover.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q9 -->
+      <div class="question-block">
+        <div class="question-num">Question 9 of 10</div>
+        <div class="question-text">Which of the following materials are PROHIBITED from being used as top rails or mid-rails on guardrail systems?</div>
+        <div class="options" id="q9">
+          <label class="option-label"><input type="radio" name="q9" value="a"> Pipe railings and structural steel tubing.</label>
+          <label class="option-label"><input type="radio" name="q9" value="b"> Steel banding and plastic banding.</label>
+          <label class="option-label"><input type="radio" name="q9" value="c"> Wire rope flagged with high-visibility material at 6-foot intervals.</label>
+          <label class="option-label"><input type="radio" name="q9" value="d"> Synthetic rope rated for the required load.</label>
+        </div>
+      </div>
+      <hr class="question-divider">
+
+      <!-- Q10 -->
+      <div class="question-block">
+        <div class="question-num">Question 10 of 10</div>
+        <div class="question-text">Who must approve the use of safety nets, warning line systems, controlled access zones, and safety monitoring systems?</div>
+        <div class="options" id="q10">
+          <label class="option-label"><input type="radio" name="q10" value="a"> The individual site supervisor may approve these independently.</label>
+          <label class="option-label"><input type="radio" name="q10" value="b"> OSHA must be notified and provide advance approval.</label>
+          <label class="option-label"><input type="radio" name="q10" value="c"> The Company Safety Representative must approve each of these systems before use.</label>
+          <label class="option-label"><input type="radio" name="q10" value="d"> The crew foreman and at least two qualified employees must agree on their use.</label>
+        </div>
+      </div>
+
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+    <div id="result-card-pass" class="result-card pass" style="display:none">
+      <div class="result-icon">🏆</div><div class="result-title">Training Complete — PASSED!</div>
+      <div class="result-score" id="pass-pct"></div><div class="result-sub" id="pass-sub"></div>
+    </div>
+    <div id="result-card-fail" class="result-card fail" style="display:none">
+      <div class="result-icon">⚠️</div><div class="result-title">Quiz Not Passed</div>
+      <div class="result-score" id="fail-pct"></div><div class="result-sub" id="fail-sub"></div>
+    </div>
+    <div id="firebase-sync-status" style="display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;border:2px solid var(--border);background:#F7F9FC;font-size:14px;font-weight:600;margin-bottom:14px;"></div>
+    <div class="cert-block" id="cert-block" style="display:none">
+      <h3>📄 Training Completion Record</h3>
+      <table class="cert-table">
+        <tr><td>Employee Name</td><td id="cert-name">—</td></tr>
+        <tr><td>Module</td><td>008 — Fall Protection Equipment Program</td></tr>
+        <tr><td>Standard #</td><td>SHP-BBB-008</td></tr>
+        <tr><td>Score</td><td id="cert-score">—</td></tr>
+        <tr><td>Result</td><td id="cert-result">—</td></tr>
+        <tr><td>Date Completed</td><td id="cert-date">—</td></tr>
+        <tr><td>Company</td><td>BBB Tank Services, LLC</td></tr>
+      </table>
+      <div class="cert-company">Rev. 10/31/2025 · 162 Independence Pkwy N, Baytown, TX 77520</div>
+    </div>
+    <div class="action-row" id="pass-actions" style="display:none">
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Record</button>
+      <button class="btn btn-green"   onclick="downloadCSV()">⬇ Download CSV</button>
+      <a      class="btn btn-orange"  href="director.html">📊 Director Dashboard</a>
+      <a      class="btn btn-outline" href="index.html">← Back to Modules</a>
+    </div>
+    <button class="retake-btn" id="retake-btn" style="display:none" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+  </div>
+
+</main>
+<footer>BBB Tank Services, LLC · Safety Training Portal · SHP-BBB-008 · Rev. 10/31/2025</footer>
+
+<script>
+  document.addEventListener('scroll',()=>{const el=document.documentElement,h=el.scrollHeight-el.clientHeight,p=h>0?Math.round((el.scrollTop/h)*100):0;document.getElementById('read-fill').style.width=p+'%';document.getElementById('scroll-pct').textContent=p+'%';},{passive:true});
+  const ANSWERS={q1:'b',q2:'c',q3:'b',q4:'c',q5:'c',q6:'b',q7:'c',q8:'c',q9:'b',q10:'c'};
+  const STORAGE_KEY='bbb_training_records',FB_KEY='bbb_firebase_config';
+
+  function submitQuiz(){
+    const name=document.getElementById('employee-name').value.trim();
+    if(!name){document.getElementById('employee-name').classList.add('error');document.getElementById('employee-name').focus();alert('Please enter your full name before submitting.');return;}
+    for(let i=1;i<=10;i++){if(!document.querySelector(`input[name="q${i}"]:checked`)){alert(`Please answer Question ${i} before submitting.`);document.getElementById(`q${i}`).scrollIntoView({behavior:'smooth',block:'center'});return;}}
+    let correct=0;
+    for(const[q,ans]of Object.entries(ANSWERS)){const sel=document.querySelector(`input[name="${q}"]:checked`),val=sel?sel.value:null;document.querySelectorAll(`#${q} .option-label`).forEach(l=>{const r=l.querySelector('input');if(r.value===ans)l.classList.add('correct-ans');else if(r.value===val&&val!==ans)l.classList.add('wrong-ans');r.disabled=true;});if(val===ans)correct++;}
+    const pct=Math.round((correct/10)*100),passed=pct>=70;
+    const dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}),isoDate=new Date().toISOString().slice(0,10);
+    document.getElementById('submit-btn').disabled=true;
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('results-section').style.display='block';
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+    document.getElementById('cert-name').textContent=name;
+    document.getElementById('cert-score').textContent=correct+'/10 ('+pct+'%)';
+    document.getElementById('cert-result').textContent=passed?'✅ PASSED':'❌ DID NOT PASS';
+    document.getElementById('cert-date').textContent=dateStr;
+    document.getElementById('cert-block').style.display='block';
+    if(passed){document.getElementById('result-card-pass').style.display='block';document.getElementById('pass-pct').textContent=pct+'%';document.getElementById('pass-sub').textContent=correct+' out of 10 correct. Record saved.';document.getElementById('pass-actions').style.display='flex';document.getElementById('cert-result').style.color='#1D8348';}
+    else{document.getElementById('result-card-fail').style.display='block';document.getElementById('fail-pct').textContent=pct+'%';document.getElementById('fail-sub').textContent=correct+' out of 10 correct. You need 70% to pass. Review the material and try again.';document.getElementById('retake-btn').style.display='block';document.getElementById('cert-result').style.color='#C0392B';}
+    const record={id:Date.now().toString(),module:'008',moduleName:'Fall Protection Equipment Program',standardNum:'SHP-BBB-008',employeeName:name,score:correct,totalQ:10,percentage:pct,passed,dateISO:isoDate,dateDisplay:dateStr,completedAt:new Date().toISOString()};
+    try{const r=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');r.push(record);localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}catch(e){}
+    syncToFirebase(record);
+  }
+
+  function syncToFirebase(record){
+    const raw=localStorage.getItem(FB_KEY);if(!raw)return;
+    const syncEl=document.getElementById('firebase-sync-status');
+    if(syncEl){syncEl.style.display='flex';syncEl.innerHTML='<span>⏳</span>&nbsp; Sending to Safety Director...';}
+    loadFirebaseSDK().then(()=>{const cfg=JSON.parse(raw),app=firebase.apps.length?firebase.apps[0]:firebase.initializeApp(cfg);return firebase.firestore(app).collection('training_records').add(record);})
+    .then(()=>{if(syncEl){syncEl.innerHTML='✅ Record sent to Safety Director\'s dashboard.';syncEl.style.background='#EDFAF3';syncEl.style.borderColor='#1D8348';syncEl.style.color='#1D8348';}})
+    .catch(()=>{if(syncEl){syncEl.innerHTML='⚠️ Could not sync to Safety Director. Download your CSV as backup.';syncEl.style.background='#FFF8F4';syncEl.style.borderColor='#E8611A';syncEl.style.color='#C9510E';}});
+  }
+
+  function loadFirebaseSDK(){
+    if(window.firebase)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
+      s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';s2.onload=resolve;s2.onerror=reject;document.head.appendChild(s2);};
+      s1.onerror=reject;document.head.appendChild(s1);
+    });
+  }
+
+  function downloadCSV(){
+    try{const records=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),last=records.filter(r=>r.module==='008').pop();if(!last)return;
+    const csv='Employee Name,Module,Module Name,Standard #,Score,Percentage,Passed,Date Completed\n'+`"${last.employeeName}",${last.module},"${last.moduleName}",${last.standardNum},${last.score}/10,${last.percentage}%,${last.passed?'YES':'NO'},"${last.dateDisplay}"`;
+    const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`BBB_Training_${last.employeeName.replace(/\s+/g,'_')}_Module008_${last.dateISO}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+    catch(e){alert('Could not download CSV. Please print the record instead.');}
+  }
+
+  function retakeQuiz(){
+    for(let i=1;i<=10;i++){document.querySelectorAll(`#q${i} .option-label`).forEach(l=>{l.classList.remove('correct-ans','wrong-ans');const r=l.querySelector('input');r.checked=false;r.disabled=false;});}
+    document.getElementById('employee-name').value='';document.getElementById('submit-btn').disabled=false;
+    ['results-section','result-card-pass','result-card-fail','cert-block','pass-actions','retake-btn'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('quiz-section').style.display='block';document.getElementById('quiz-section').scrollIntoView({behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
